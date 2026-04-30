@@ -9,7 +9,7 @@ Monitor de saúde de máquinas rotativas com análise de vibração embarcada (F
 - ESP32-S3 MON16R8
 - Acelerômetro LIS3DH (SPI, 5.3 kHz)
 - Display TFT ILI9341 2.8"
-- Motor RS-550 / RS-775
+- Motor: a ser definido
 
 ## Firmware
 - Framework: ESP-IDF,  FreeRTOS
