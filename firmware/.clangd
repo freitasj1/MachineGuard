@@ -1,2 +1,6 @@
 CompileFlags:
-    Remove: [-f*, -m*]
+  CompilationDatabase: build/
+
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
