@@ -1,4 +1,4 @@
 idf_component_register(
-    SRCS "app_context.c"
+    SRCS "sensors.c"
     INCLUDE_DIRS "include"
 )
