@@ -1,5 +1,14 @@
+/**
+ * @file app_context.c
+ * @brief Implementação do contexto compartilhado do sistema
+ */
+
 #include "app_context.h"
 #include "esp_log.h"
+#include "esp_err.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/idf_additions.h"
 
 static const char *TAG = "app_context";
 

@@ -1,28 +1,29 @@
+/**
+ * @file sensors.c
+ * @brief Implementação da task de coleta de sensores
+ */
+
+#include "sensors.h"
 #include "app_context.h"
 #include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
-static const char *TAG = "app_context";
+static const char *TAG = "sensors";
 
-esp_err_t app_context_init(app_context_t *ctx)
+void task_sensors(void *arg)
 {
-    // Fila DSP: comprimento 1, overwrite — sempre o resultado mais recente
-    ctx->queue_dsp_result = xQueueCreate(1, sizeof(dsp_result_t));
-    if (ctx->queue_dsp_result == NULL) {
-        ESP_LOGE(TAG, "Falha ao criar queue_dsp_result");
-        return ESP_ERR_NO_MEM;
+    app_context_t *ctx = (app_context_t *)arg;
+    (void)ctx;  // Suprime warning de variável não utilizada
+    
+    ESP_LOGI(TAG, "task_sensors iniciada no Core 1");
+    ESP_LOGI(TAG, "Coleta de dados: acelerômetro + RPM");
+    
+    while (1) {
+        // TODO: Implementar leitura do acelerômetro via SPI2
+        // TODO: Implementar leitura do RPM via PCNT
+        // TODO: Enviar dados para queue_dsp_result quando prontos
+        
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
-
-    // Mutex SPI2 com herança de prioridade — previne priority inversion
-    // entre task_sd (prio 8) e task_dsp (prio 24)
-    ctx->mutex_spi2 = xSemaphoreCreateMutex();
-    if (ctx->mutex_spi2 == NULL) {
-        ESP_LOGE(TAG, "Falha ao criar mutex_spi2");
-        return ESP_ERR_NO_MEM;
-    }
-
-    // RPM começa em zero — task_pcnt atualiza após primeira leitura PCNT
-    atomic_init(&ctx->current_rpm, 0.0f);
-
-    ESP_LOGI(TAG, "app_context inicializado");
-    return ESP_OK;
 }

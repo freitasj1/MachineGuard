@@ -1,3 +1,11 @@
+/**
+ * @file app_context.h
+ * @brief Contexto compartilhado do sistema MachineGuard
+ * @details Define as estruturas de dados centrais (app_context_t, dsp_result_t)
+ *          e a função de inicialização. Todas as tasks recebem um ponteiro para
+ *          o contexto, eliminando a necessidade de variáveis globais.
+ */
+
 #pragma once
 
 #include <stdatomic.h>
@@ -11,45 +19,61 @@
 extern "C" {
 #endif
 
-// ─── Resultado de um ciclo DSP completo ──────────────────────────────────────
-// Produzido pelo Core 0 (task_dsp) e consumido pelo Core 1 (task_hmi, task_sd,
-// task_dac) via queue_dsp_result.
-// Campos marcados com TODO serão preenchidos quando os componentes existirem.
+/**
+ * @struct dsp_result_t
+ * @brief Resultado de um ciclo DSP completo
+ * @details Produzido pelo Core 0 (task_dsp) e consumido pelo Core 1
+ *          (task_hmi, task_sd, task_dac) via queue_dsp_result.
+ */
 typedef struct {
-    float    kurtosis;
-    float    rms;
-    float    crest_factor;
-    float    bin_1xrpm_amplitude;
-    float    zscore_kurtosis;
-    float    zscore_rms;
-    float    zscore_bin;
-    bool     alert_active;
-    bool     warmup_active;
-    // TODO: adicionar uint16_t fft_magnitudes[1024] quando dsp_pipeline existir
+    float    kurtosis;                /**< Curtose do sinal */
+    float    rms;                     /**< RMS (Root Mean Square) */
+    float    crest_factor;            /**< Fator de crista */
+    float    bin_1xrpm_amplitude;     /**< Amplitude do bin 1x RPM */
+    float    zscore_kurtosis;         /**< Z-score da curtose */
+    float    zscore_rms;              /**< Z-score do RMS */
+    float    zscore_bin;              /**< Z-score do bin */
+    bool     alert_active;            /**< Alerta ativo */
+    bool     warmup_active;           /**< Aquecimento ativo */
 } dsp_result_t;
 
-// ─── Contexto compartilhado do sistema ───────────────────────────────────────
-// Criado UMA vez em main.c, passado por ponteiro para todas as tasks.
-// Nenhum componente usa extern ou variável global — tudo passa por aqui.
+/**
+ * @struct app_context_t
+ * @brief Contexto compartilhado entre todas as tasks
+ * @details Criado UMA vez em main.c, passado por ponteiro para todas as tasks.
+ *          Nenhum componente usa extern ou variável global — tudo passa por aqui.
+ */
 typedef struct {
-    // Core 0 → Core 1: resultado completo do ciclo DSP
-    // len=1, xQueueOverwrite — sempre o valor mais recente, sem acumular
+    /**
+     * @brief Queue de resultados DSP (Core 0 → Core 1)
+     * @details Tamanho=1, overwrite — sempre o valor mais recente, sem acumular
+     */
     QueueHandle_t     queue_dsp_result;
 
-    // Core 1 → Core 0: RPM medido pelo PCNT a cada 100 ms
-    // _Atomic: thread-safe sem mutex para escalar de 32 bits
+    /**
+     * @brief RPM atual medido pelo PCNT
+     * @details _Atomic: thread-safe sem mutex para escalar de 32 bits
+     *          Atualizado por Core 1, lido por Core 0
+     */
     _Atomic float     current_rpm;
 
-    // SPI2: compartilhado entre LIS3DH (Core 0) e SD card (Core 1)
-    // Mutex com herança de prioridade — evita priority inversion
-    // Gerenciado internamente por storage — não acessar diretamente fora dele
+    /**
+     * @brief Mutex para SPI2 compartilhado
+     * @details Compartilhado entre LIS3DH (Core 0) e SD card (Core 1).
+     *          Mutex com herança de prioridade — evita priority inversion.
+     *          Gerenciado internamente por storage — não acessar diretamente.
+     */
     SemaphoreHandle_t mutex_spi2;
 
 } app_context_t;
 
-// ─── Inicialização ────────────────────────────────────────────────────────────
-// Chamar UMA vez em app_main(), antes de criar qualquer task.
-// Aloca queue, mutex e inicializa o atomic. Retorna ESP_OK ou ESP_ERR_NO_MEM.
+/**
+ * @brief Inicializa o contexto compartilhado do sistema
+ * @param ctx Ponteiro para estrutura app_context_t a ser inicializada
+ * @return ESP_OK se bem-sucedido, ESP_ERR_NO_MEM se falha em alocar recursos
+ * @details Chamar UMA vez em app_main(), antes de criar qualquer task.
+ *          Aloca queue, mutex e inicializa o atomic.
+ */
 esp_err_t app_context_init(app_context_t *ctx);
 
 #ifdef __cplusplus
