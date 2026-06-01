@@ -14,6 +14,8 @@
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 #include "esp_err.h"
+#include <stdint.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,6 +38,27 @@ typedef struct {
     bool     alert_active;            /**< Alerta ativo */
     bool     warmup_active;           /**< Aquecimento ativo */
 } dsp_result_t;
+
+/**
+ * @brief Tipo de amostra bruta do acelerômetro (int16)
+ */
+typedef struct {
+    int16_t x;
+    int16_t y;
+    int16_t z;
+} accel_sample_t;
+
+/** Tamanho da janela de amostras para o DSP */
+enum { ACCEL_WINDOW_SIZE = 256 };
+
+/** Sensibilidade padrão do acelerômetro em mg/LSB (±2g) */
+#define ACCEL_MG_PER_LSB 0.061f
+
+typedef struct {
+    accel_sample_t samples[ACCEL_WINDOW_SIZE];
+    size_t head;   /* índice de escrita */
+    size_t count;  /* número de amostras presentes */
+} accel_input_buffer_t;
 
 /**
  * @struct app_context_t
@@ -64,6 +87,13 @@ typedef struct {
      *          Gerenciado internamente por storage — não acessar diretamente.
      */
     SemaphoreHandle_t mutex_spi2;
+
+    /**
+     * @brief Mutex para proteger o buffer de amostras do acelerômetro
+     */
+    SemaphoreHandle_t mutex_accel_buffer;
+
+    accel_input_buffer_t accel_input;
 
 } app_context_t;
 

@@ -9,6 +9,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/idf_additions.h"
+#include <stdatomic.h>
 
 static const char *TAG = "app_context";
 
@@ -29,8 +30,19 @@ esp_err_t app_context_init(app_context_t *ctx)
         return ESP_ERR_NO_MEM;
     }
 
+    // Mutex para proteger o buffer de amostras do acelerômetro
+    ctx->mutex_accel_buffer = xSemaphoreCreateMutex();
+    if (ctx->mutex_accel_buffer == NULL) {
+        ESP_LOGE(TAG, "Falha ao criar mutex_accel_buffer");
+        return ESP_ERR_NO_MEM;
+    }
+
     // RPM começa em zero — task_pcnt atualiza após primeira leitura PCNT
     atomic_init(&ctx->current_rpm, 0.0f);
+
+    /* Inicializa buffer de amostras */
+    ctx->accel_input.head = 0;
+    ctx->accel_input.count = 0;
 
     ESP_LOGI(TAG, "app_context inicializado");
     return ESP_OK;
