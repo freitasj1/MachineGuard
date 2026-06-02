@@ -1,7 +1,6 @@
 /**
  * @file dac.h
- * @brief Interface da task de conversão digital-analógica (DAC)
- * @details Controle de áudio/alertas. Executa no Core 1 com prioridade 9.
+ * @brief Interface da task DAC
  */
 
 #pragma once
@@ -13,11 +12,8 @@ extern "C" {
 #endif
 
 /**
- * @brief Task de DAC e alertas sonoros
- * @param arg Ponteiro para app_context_t (contexto compartilhado)
- * @details Executa no Core 1 com prioridade 9.
- *          Gera alertas sonoros baseado em dados de queue_dsp_result.
- *          Converte sinais digitais em saída analógica.
+ * @brief Task de DAC
+ * @param arg Ponteiro para app_context_t
  */
 void task_dac(void *arg);
 

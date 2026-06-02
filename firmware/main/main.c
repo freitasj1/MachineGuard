@@ -1,8 +1,6 @@
 /**
  * @file main.c
- * @brief Arquivo principal - Inicialização do sistema MachineGuard
- * @details Configura o contexto compartilhado e cria todas as tasks FreeRTOS
- *          pinadas a cores específicos com prioridades definidas.
+ * @brief Inicialização do sistema MachineGuard
  */
 
 #include <stdio.h>
@@ -24,13 +22,7 @@ static const char *TAG = "main";  /**< Tag para logs ESP-IDF */
 static app_context_t ctx;           /**< Contexto compartilhado do sistema */
 
 /**
- * @brief Função principal da aplicação
- * @details Inicializa o contexto compartilhado e cria todas as tasks:
- *          - Core 0: task_dsp (DSP, prioridade 24, 8KB stack)
- *          - Core 1: task_sensors (Sensores, prioridade 12, 4KB stack)
- *          - Core 1: task_hmi (Interface, prioridade 10, 4KB stack)
- *          - Core 1: task_dac (Áudio, prioridade 9, 4KB stack)
- *          - Core 1: task_sd (Armazenamento, prioridade 8, 4KB stack)
+ * @brief Ponto de entrada da aplicação
  */
 void app_main(void)
 {

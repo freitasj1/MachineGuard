@@ -1,7 +1,6 @@
 /**
  * @file storage.h
- * @brief Interface da task de armazenamento em SD Card
- * @details Escreve dados em cartão SD. Executa no Core 1 com prioridade 8.
+ * @brief Interface da task de armazenamento
  */
 
 #pragma once
@@ -13,11 +12,8 @@ extern "C" {
 #endif
 
 /**
- * @brief Task de armazenamento em SD card
- * @param arg Ponteiro para app_context_t (contexto compartilhado)
- * @details Executa no Core 1 com prioridade 8 (mais baixa).
- *          Lê dados de queue_dsp_result e os escreve em arquivo no SD card.
- *          Gerencia mutex_spi2 para acesso exclusivo ao barramento.
+ * @brief Task de gravação de dados
+ * @param arg Ponteiro para app_context_t
  */
 void task_sd(void *arg);
 

@@ -1,9 +1,6 @@
 /**
  * @file app_context.h
- * @brief Contexto compartilhado do sistema MachineGuard
- * @details Define as estruturas de dados centrais (app_context_t, dsp_result_t)
- *          e a função de inicialização. Todas as tasks recebem um ponteiro para
- *          o contexto, eliminando a necessidade de variáveis globais.
+ * @brief Contexto compartilhado do sistema
  */
 
 #pragma once
@@ -98,11 +95,8 @@ typedef struct {
 } app_context_t;
 
 /**
- * @brief Inicializa o contexto compartilhado do sistema
- * @param ctx Ponteiro para estrutura app_context_t a ser inicializada
- * @return ESP_OK se bem-sucedido, ESP_ERR_NO_MEM se falha em alocar recursos
- * @details Chamar UMA vez em app_main(), antes de criar qualquer task.
- *          Aloca queue, mutex e inicializa o atomic.
+ * @brief Inicializa o contexto
+ * @param ctx Ponteiro para app_context_t
  */
 esp_err_t app_context_init(app_context_t *ctx);
 

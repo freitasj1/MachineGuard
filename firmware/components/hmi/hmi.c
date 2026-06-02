@@ -17,11 +17,9 @@ static const char *TAG = "hmi";
 
 void task_hmi(void *arg)
 {
-    app_context_t *ctx = (app_context_t *)arg;
-    (void)ctx;  // Suprime warning
-    ESP_LOGI(TAG, "task_hmi iniciada no Core 1");
+    (void)arg;
+    ESP_LOGI(TAG, "task_hmi iniciada");
 
-    gpio_config_t io_conf = {
         .pin_bit_mask = (1ULL << LED_GPIO),
         .mode = GPIO_MODE_INPUT_OUTPUT, // IMPORTANTE: permite ler e escrever
         .pull_up_en = GPIO_PULLUP_DISABLE,
