@@ -27,12 +27,13 @@
 #define ACCEL_SPI_MODE                 0
 
 #define ACCEL_BUFFER_SIZE              ACCEL_BLOCK_SIZE
-#define ACCEL_FIFO_SAMPLES_PER_READ    128U
+#define ACCEL_FIFO_SAMPLES_PER_READ    64U
 #define ACCEL_FIFO_WORDS_PER_SAMPLE    3U
 #define ACCEL_FIFO_READ_BYTES          \
     (ACCEL_FIFO_SAMPLES_PER_READ * ACCEL_FIFO_WORDS_PER_SAMPLE * sizeof(int16_t))
-#define ACCEL_FIFO_WATERMARK_WORDS     \
-    (ACCEL_FIFO_SAMPLES_PER_READ * ACCEL_FIFO_WORDS_PER_SAMPLE)
+// #define ACCEL_FIFO_WATERMARK_WORDS     
+//     (ACCEL_FIFO_SAMPLES_PER_READ * ACCEL_FIFO_WORDS_PER_SAMPLE)
+#define ACCEL_FIFO_WATERMARK_WORDS (ACCEL_FIFO_SAMPLES_PER_READ * ACCEL_FIFO_WORDS_PER_SAMPLE)
 
 #define ACCEL_AXIS_X                   0U
 #define ACCEL_AXIS_Y                   1U
@@ -70,10 +71,10 @@ static const char *TAG = "accelerometer";
 
 /** Private ping-pong buffers; they never live in app_context. */
 typedef struct {
-    accel_sample_t ping[ACCEL_BUFFER_SIZE];
-    accel_sample_t pong[ACCEL_BUFFER_SIZE];
-    accel_sample_t *write;
-    accel_sample_t *process;
+    accel_block_t ping;
+    accel_block_t pong;
+    accel_block_t *write;
+    accel_block_t *process;
     uint16_t index;
     bool ping_active;
 } accel_data_t;
@@ -92,7 +93,7 @@ static esp_err_t write_register(uint8_t reg, uint8_t value);
 static esp_err_t sensor_reset(void);
 static esp_err_t sensor_configure(void);
 static esp_err_t fifo_configure(void);
-static esp_err_t fifo_get_level(uint16_t *word_count);
+static esp_err_t fifo_get_level(uint16_t *word_count, bool *overrun);
 static esp_err_t fifo_read_samples(uint16_t sample_count);
 static void process_fifo_samples(uint16_t sample_count);
 static void publish_completed_buffer(void);
@@ -111,8 +112,8 @@ esp_err_t accel_init(app_context_t *context)
 
     s_ctx = context;
     memset(&s_data, 0, sizeof(s_data));
-    s_data.write = s_data.ping;
-    s_data.process = s_data.pong;
+    s_data.write = &s_data.ping;
+    s_data.process = &s_data.pong;
     s_data.ping_active = true;
 
     const spi_device_interface_config_t device_config = {
@@ -155,7 +156,8 @@ void task_accel(void *arg)
 
     while (true) {
         uint16_t fifo_words;
-        err = fifo_get_level(&fifo_words);
+        bool fifo_overrun = false;
+        err = fifo_get_level(&fifo_words, &fifo_overrun);
         if (err != ESP_OK) {
             ESP_LOGE(TAG, "FIFO status read failed: %s", esp_err_to_name(err));
             vTaskDelay(pdMS_TO_TICKS(10));
@@ -310,7 +312,7 @@ static esp_err_t fifo_configure(void)
                           LSM6DS3TR_C_FIFO_MODE_CONTINUOUS);
 }
 
-static esp_err_t fifo_get_level(uint16_t *word_count)
+static esp_err_t fifo_get_level(uint16_t *word_count, bool *overrun)
 {
     if (word_count == NULL) {
         return ESP_ERR_INVALID_ARG;
@@ -326,8 +328,14 @@ static esp_err_t fifo_get_level(uint16_t *word_count)
     if (err != ESP_OK) {
         return err;
     }
-    if ((status2 & LSM6DS3TR_C_FIFO_STATUS2_OVERRUN) != 0U) {
+
+    bool overrun_detected = (status2 & LSM6DS3TR_C_FIFO_STATUS2_OVERRUN) != 0U;
+    if (overrun_detected) {
         ESP_LOGW(TAG, "FIFO overrun; oldest samples were discarded");
+    }
+
+    if (overrun != NULL) {
+        *overrun = overrun_detected;
     }
 
     *word_count = ((uint16_t)(status2 & LSM6DS3TR_C_FIFO_STATUS2_DIFF_FIFO_MASK) << 8) |
@@ -368,9 +376,8 @@ static void process_fifo_samples(uint16_t sample_count)
                               ACCEL_SELECTED_AXIS * sizeof(int16_t);
         const accel_sample_t selected = (accel_sample_t)((uint16_t)s_fifo_rx[offset] |
             ((uint16_t)s_fifo_rx[offset + 1U] << 8));
-        s_data.write[s_data.index++] = selected;
-
-        if (s_data.index == ACCEL_BUFFER_SIZE) {
+        s_data.write->samples[s_data.index++] = selected;
+        if (s_data.index == ACCEL_BLOCK_SIZE) {
             publish_completed_buffer();
         }
     }
@@ -378,11 +385,11 @@ static void process_fifo_samples(uint16_t sample_count)
 
 static void publish_completed_buffer(void)
 {
-    accel_sample_t *completed = s_data.write;
+    accel_block_t *completed = s_data.write;
     s_data.write = s_data.process;
     s_data.process = completed;
     s_data.index = 0;
-    s_data.ping_active = (s_data.write == s_data.ping);
+    s_data.ping_active = (s_data.write == &s_data.ping);
 
     ESP_LOGI(TAG,
          "block: [%d, %d, %d, %d, %d, %d, %d, %d]",

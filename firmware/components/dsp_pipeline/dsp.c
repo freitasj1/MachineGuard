@@ -5,9 +5,12 @@
 
 #include "dsp.h"
 
+#include "app_context.h"
 #include "esp_log.h"
+#include "freertos/projdefs.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
+#include "portmacro.h"
 
 static const char *TAG = "dsp";
 
