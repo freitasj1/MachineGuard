@@ -1,24 +1,45 @@
 /**
  * @file app_context.c
- * @brief Implementação do contexto compartilhado do sistema
+ * @brief Shared application context implementation.
  */
 
 #include "app_context.h"
-#include "esp_log.h"
+
+#include <string.h>
+
 #include "esp_err.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/idf_additions.h"
-#include <stdatomic.h>
+#include "esp_log.h"
+#include "freertos/queue.h"
+#include "freertos/semphr.h"
 
 static const char *TAG = "app_context";
 
 esp_err_t app_context_init(app_context_t *ctx)
 {
-    (void)ctx;
-    ESP_LOGI(TAG, "app_context_init chamado");
-    // TODO: criar queue_dsp_result e mutexes
+    if (ctx == NULL) {
+        return ESP_ERR_INVALID_ARG;
+    }
 
-    // TODO: inicializar demais dados do contexto
+    memset(ctx, 0, sizeof(*ctx));
+    ctx->queue_accel_block = xQueueCreate(1, sizeof(accel_block_t));
+    ctx->queue_dsp_result = xQueueCreate(1, sizeof(dsp_result_t));
+    ctx->mutex_spi2 = xSemaphoreCreateMutex();
+
+    if (ctx->queue_accel_block == NULL || ctx->queue_dsp_result == NULL ||
+        ctx->mutex_spi2 == NULL) {
+        if (ctx->queue_accel_block != NULL) {
+            vQueueDelete(ctx->queue_accel_block);
+        }
+        if (ctx->queue_dsp_result != NULL) {
+            vQueueDelete(ctx->queue_dsp_result);
+        }
+        if (ctx->mutex_spi2 != NULL) {
+            vSemaphoreDelete(ctx->mutex_spi2);
+        }
+        memset(ctx, 0, sizeof(*ctx));
+        return ESP_ERR_NO_MEM;
+    }
+
+    ESP_LOGI(TAG, "context initialized");
     return ESP_OK;
 }

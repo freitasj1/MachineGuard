@@ -1,103 +1,63 @@
 /**
  * @file app_context.h
- * @brief Contexto compartilhado do sistema
+ * @brief Shared application context.
  */
 
 #pragma once
 
-#include <stdatomic.h>
+#include <stdbool.h>
+#include <stdint.h>
 
+#include "esp_err.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
-#include "esp_err.h"
-#include <stdint.h>
-#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * @struct dsp_result_t
- * @brief Resultado de um ciclo DSP completo
- * @details Produzido pelo Core 0 (task_dsp) e consumido pelo Core 1
- *          (task_hmi, task_sd, task_dac) via queue_dsp_result.
- */
 typedef struct {
-    float    kurtosis;                /**< Curtose do sinal */
-    float    rms;                     /**< RMS (Root Mean Square) */
-    float    crest_factor;            /**< Fator de crista */
-    float    bin_1xrpm_amplitude;     /**< Amplitude do bin 1x RPM */
-    float    zscore_kurtosis;         /**< Z-score da curtose */
-    float    zscore_rms;              /**< Z-score do RMS */
-    float    zscore_bin;              /**< Z-score do bin */
-    bool     alert_active;            /**< Alerta ativo */
-    bool     warmup_active;           /**< Aquecimento ativo */
+    float kurtosis;
+    float rms;
+    float crest_factor;
+    float bin_1xrpm_amplitude;
+    float zscore_kurtosis;
+    float zscore_rms;
+    float zscore_bin;
+    bool alert_active;
+    bool warmup_active;
 } dsp_result_t;
 
-/**
- * @brief Tipo de amostra bruta do acelerômetro (int16)
- */
-typedef struct {
-    int16_t x;
-    int16_t y;
-    int16_t z;
-} accel_sample_t;
+/** One selected-axis accelerometer sample. */
+typedef int16_t accel_sample_t;
 
-/** Tamanho da janela de amostras para o DSP */
-enum { ACCEL_WINDOW_SIZE = 256 };
-
-/** Sensibilidade padrão do acelerômetro em mg/LSB (±2g) */
-#define ACCEL_MG_PER_LSB 0.061f
-
-typedef struct {
-    accel_sample_t samples[ACCEL_WINDOW_SIZE];
-    size_t head;   /* índice de escrita */
-    size_t count;  /* número de amostras presentes */
-} accel_input_buffer_t;
+/** Samples delivered in each acquisition-to-DSP message. */
+enum { ACCEL_BLOCK_SIZE = 2048 };
 
 /**
- * @struct app_context_t
- * @brief Contexto compartilhado entre todas as tasks
- * @details Criado UMA vez em main.c, passado por ponteiro para todas as tasks.
- *          Nenhum componente usa extern ou variável global — tudo passa por aqui.
+ * Queue payload from accelerometer to DSP.
+ * The queue copies this block; acquisition ping-pong buffers stay private.
  */
 typedef struct {
-    /**
-     * @brief Queue de resultados DSP (Core 0 → Core 1)
-     * @details Tamanho=1, overwrite — sempre o valor mais recente, sem acumular
-     */
-    QueueHandle_t     queue_dsp_result;
+    accel_sample_t samples[ACCEL_BLOCK_SIZE];
+} accel_block_t;
 
-    /**
-     * @brief RPM atual medido pelo PCNT
-     * @details _Atomic: thread-safe sem mutex para escalar de 32 bits
-     *          Atualizado por Core 1, lido por Core 0
-     */
-    _Atomic float     current_rpm;
+/**
+ * Shared synchronization and inter-task communication resources.
+ * This context never owns a component's private acquisition buffers.
+ */
+typedef struct {
+    /** Latest DSP result, written by DSP and read by Core 1 consumers. */
+    QueueHandle_t queue_dsp_result;
 
-    /**
-     * @brief Mutex para SPI2 compartilhado
-     * @details Compartilhado entre LIS3DH (Core 0) e SD card (Core 1).
-     *          Mutex com herança de prioridade — evita priority inversion.
-     *          Gerenciado internamente por storage — não acessar diretamente.
-     */
+    /** Latest selected-axis acquisition block, written by accelerometer. */
+    QueueHandle_t queue_accel_block;
+
+    /** SPI2 mutex shared by accelerometer and storage. */
     SemaphoreHandle_t mutex_spi2;
-
-    /**
-     * @brief Mutex para proteger o buffer de amostras do acelerômetro
-     */
-    SemaphoreHandle_t mutex_accel_buffer;
-
-    accel_input_buffer_t accel_input;
-
 } app_context_t;
 
-/**
- * @brief Inicializa o contexto
- * @param ctx Ponteiro para app_context_t
- */
 esp_err_t app_context_init(app_context_t *ctx);
 
 #ifdef __cplusplus
