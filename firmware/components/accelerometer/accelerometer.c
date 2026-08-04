@@ -391,17 +391,6 @@ static void publish_completed_buffer(void)
     s_data.index = 0;
     s_data.ping_active = (s_data.write == &s_data.ping);
 
-    ESP_LOGI(TAG,
-         "block: [%d, %d, %d, %d, %d, %d, %d, %d]",
-         s_data.process[0],
-         s_data.process[1],
-         s_data.process[2],
-         s_data.process[3],
-         s_data.process[4],
-         s_data.process[5],
-         s_data.process[6],
-         s_data.process[7]);
-
     if (xQueueOverwrite(s_ctx->queue_accel_block, s_data.process) != pdPASS) {
         ESP_LOGW(TAG, "accelerometer block queue overwrite failed");
     }

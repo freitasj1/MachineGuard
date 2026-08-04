@@ -12,6 +12,7 @@
 #include "freertos/task.h"
 #include "portmacro.h"
 #include <stdint.h>
+#include <string.h>
 
 #include <float.h>
 #include <math.h>
@@ -19,6 +20,11 @@
 /* ============================================================================
 * Private constants and macros  
 * ========================================================================== */
+
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846f
+#endif
 
 static const char *TAG = "dsp";
 typedef struct
@@ -35,6 +41,14 @@ typedef struct
 typedef struct
 {
     float time_signal[ACCEL_BLOCK_SIZE];
+
+    float hann_window[ACCEL_BLOCK_SIZE];
+
+    float hann_signal[ACCEL_BLOCK_SIZE];
+
+    float fft_buffer[ACCEL_BLOCK_SIZE * 2];
+
+    float magnitude[ACCEL_BLOCK_SIZE / 2];
 
     dsp_time_stats_t time_stats;
 
@@ -53,9 +67,13 @@ static dsp_context_t s_dsp;
 * ========================================================================== */
  
 static float remove_dc_offset(const accel_block_t *input,
-                               float *output);
-static void calculate_time_stats(const float *signal, 
-    dsp_time_stats_t *stats);
+    float *output);
+
+static void calculate_time_stats(const float *signal, dsp_time_stats_t *stats);
+
+static void init_hann_window(float *window);
+
+static void apply_hann_window(const float *window, float *signal);
 
 /* ============================================================================
  * Public function implementations
@@ -70,6 +88,8 @@ void task_dsp(void *arg)
         vTaskDelete(NULL);
     }
 
+    init_hann_window(s_dsp.hann_window);
+
     ESP_LOGI(TAG, "task started");
     while (true) {
         accel_block_t block;
@@ -82,6 +102,12 @@ void task_dsp(void *arg)
             calculate_time_stats(s_dsp.time_signal,
                      &s_dsp.time_stats);
 
+            // ESP_LOGD(TAG, "Centered: [%.2f, %.2f, %.2f, %.2f",
+            //     s_dsp.time_signal[0],
+            //     s_dsp.time_signal[1],
+            //     s_dsp.time_signal[2],
+            //     s_dsp.time_signal[3]);
+
             ESP_LOGI(TAG,
                 "Mean: %.2f | RMS: %.2f | Min: %.2f | Max: %.2f | PkPk: %.2f",
                 s_dsp.time_stats.mean,
@@ -89,6 +115,24 @@ void task_dsp(void *arg)
                 s_dsp.time_stats.minimum,
                 s_dsp.time_stats.maximum,
                 s_dsp.time_stats.peak_to_peak);
+
+
+            memcpy(s_dsp.hann_signal, s_dsp.time_signal, sizeof(s_dsp.time_signal));
+
+            apply_hann_window(s_dsp.hann_window, s_dsp.hann_signal);    
+            
+            ESP_LOGD(TAG,
+                "Hann: %.6f %.6f %.6f %.6f ... %.6f ... %.6f %.6f %.6f %.6f",
+                s_dsp.hann_signal[0],
+                s_dsp.hann_signal[1],
+                s_dsp.hann_signal[2],
+                s_dsp.hann_signal[3],
+                s_dsp.hann_signal[ACCEL_BLOCK_SIZE / 2],
+                s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 4],
+                s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 3],
+                s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 2],
+                s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 1]);
+
         }
     }
 }
@@ -143,4 +187,22 @@ static void calculate_time_stats(const float *signal,
 
     /* Calculated in a future step. */
     stats->stddev = 0.0f;
+}
+
+static void init_hann_window(float *window)
+{
+    const float denominator = (float)(ACCEL_BLOCK_SIZE - 1U);
+
+    for (uint16_t i = 0; i < ACCEL_BLOCK_SIZE; ++i) {
+        window[i] =
+            0.5f * (1.0f - cosf((2.0f * M_PI * (float)i) / denominator));
+    }
+}
+
+static void apply_hann_window(const float *window,
+                              float *signal)
+{
+    for (uint16_t i = 0; i < ACCEL_BLOCK_SIZE; ++i) {
+        signal[i] *= window[i];
+    }
 }

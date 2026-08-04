@@ -129,7 +129,7 @@ Componentes atuais: `main`, `app_context`, `accelerometer`, `dsp_pipeline`,
 
 | | |
 |---|---|
-| Status | em desenvolvimento (`feat_accelerometer`) |
+| Status | Concluído (`feat_accelerometer`) |
 | Responsabilidade | configurar LSM6DS3TR-C, SPI, DMA, FIFO, ping-pong, seleção de eixo, envio de bloco para o DSP |
 | NÃO faz | FFT, RMS, kurtosis, HMI, storage |
 | Dependências | SPI2 (criado pelo `main`), `mutex_spi2` |
@@ -142,7 +142,7 @@ Componentes atuais: `main`, `app_context`, `accelerometer`, `dsp_pipeline`,
 
 | | |
 |---|---|
-| Status | não implementado |
+| Status |Em desenvolvimento (`feature_dsp`) |
 | Responsabilidade | pipeline de indicadores + decisão de estado (seção 7) |
 | Dependências | queue de blocos do `accelerometer` |
 | Interfaces públicas | `task_dsp(void *arg)` |
