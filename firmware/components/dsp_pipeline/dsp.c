@@ -121,17 +121,17 @@ void task_dsp(void *arg)
 
             apply_hann_window(s_dsp.hann_window, s_dsp.hann_signal);    
             
-            ESP_LOGD(TAG,
-                "Hann: %.6f %.6f %.6f %.6f ... %.6f ... %.6f %.6f %.6f %.6f",
-                s_dsp.hann_signal[0],
-                s_dsp.hann_signal[1],
-                s_dsp.hann_signal[2],
-                s_dsp.hann_signal[3],
-                s_dsp.hann_signal[ACCEL_BLOCK_SIZE / 2],
-                s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 4],
-                s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 3],
-                s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 2],
-                s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 1]);
+            // ESP_LOGD(TAG,
+            //     "Hann: %.6f %.6f %.6f %.6f ... %.6f ... %.6f %.6f %.6f %.6f",
+            //     s_dsp.hann_signal[0],
+            //     s_dsp.hann_signal[1],
+            //     s_dsp.hann_signal[2],
+            //     s_dsp.hann_signal[3],
+            //     s_dsp.hann_signal[ACCEL_BLOCK_SIZE / 2],
+            //     s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 4],
+            //     s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 3],
+            //     s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 2],
+            //     s_dsp.hann_signal[ACCEL_BLOCK_SIZE - 1]);
 
         }
     }
