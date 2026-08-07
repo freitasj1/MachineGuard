@@ -54,6 +54,9 @@ MachineGuard is organized into four main layers: hardware, firmware, digital sig
 
 The system is built around an ESP32-S3 and a triaxial LSM6DS3TR-C accelerometer mounted magnetically on the motor housing. Additional peripherals provide visualization, temperature monitoring and user interaction.
 
+### Used motor:
+![Motor](docs/imgs/esquerda01.jpeg)
+
 | Component | Model |
 |-----------|-------|
 | MCU | ESP32-S3 N16R8 |
