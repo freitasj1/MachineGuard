@@ -1,144 +1,134 @@
-<div align="center">
-
 # MachineGuard
+
 ### Embedded Predictive Maintenance System for Rotating Machinery
 
-Embedded DSP · Anomaly Detection · Edge Computing · No Infrastructure Required
+**Embedded DSP • Edge Computing • Condition Monitoring • ESP32-S3**
 
-[![Version](https://img.shields.io/badge/version%20v1.4-blue?style=for-the-badge)]()
-[![Status](https://img.shields.io/badge/status-In%20Development-yellow?style=for-the-badge)]()
-<!--[![Platform](https://img.shields.io/badge/ESP32--S3-N16R8-red?style=for-the-badge)]() -->
-[![Event](https://img.shields.io/badge/FETIN-2026-orange?style=for-the-badge)]()
+![Version](https://img.shields.io/badge/version-v1.0-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-Active%20Development-orange?style=for-the-badge)
+![Target](https://img.shields.io/badge/FETIN-2026-red?style=for-the-badge)
+![Platform](https://img.shields.io/badge/MCU-ESP32--S3-success?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
 
-</div>
-
----
-
-## Overview
-
-MachineGuard is an embedded predictive maintenance system for rotating motors. It runs a full DSP pipeline — FFT, kurtosis, RMS, adaptive baseline — entirely on an ESP32-S3, with no cloud, no gateway, and no subscription required.
-
-The system targets the gap between reactive maintenance and expensive professional solutions (SKF, TRACTIAN, Emerson AMS cost R$8k–R$40k per monitoring point). MachineGuard delivers early fault detection at approximately **R$239 in hardware**.
-
-> Currently in active development. Target: **FETIN 2026** — INATEL Technology and Science Fair.
+> 📷 *Prototype image (in development)* 
 
 ---
 
-## The Problem
+# Overview
 
-Vibration captures mechanical deterioration at an early stage — an imbalanced rotor generates a 1×RPM force component that shows up as an isolated peak in the FFT spectrum long before any temperature rise is measurable. Temperature-only monitoring detects problems only when damage is already severe.
+MachineGuard is an embedded predictive maintenance system for rotating electric motors. It performs vibration acquisition, digital signal processing and anomaly detection entirely on an ESP32-S3, without cloud services or external processing.
 
-Most of the industry still operates reactively or on calendar-based maintenance schedules — both wasteful — because continuous vibration monitoring systems have historically been restricted to large operations with high instrumentation budgets.
+The project aims to demonstrate that early fault detection can be achieved using a low-cost embedded platform while maintaining a transparent and reproducible signal processing pipeline.
+
+---
+
+# The Problem
+
+Mechanical faults such as rotor imbalance and bearing wear produce measurable vibration changes long before temperature increases. However, continuous vibration monitoring is still largely restricted to expensive industrial solutions, making predictive maintenance inaccessible for many applications.
 
 ---
 
-## Technical Approach
+# The Solution
 
-The LIS3DH accelerometer samples vibration at **5 kHz via SPI DMA**, writing directly to memory without CPU intervention. A DSP pipeline runs continuously on **Core 0** of the ESP32-S3 at maximum FreeRTOS priority, fully isolated from I/O operations.
+MachineGuard combines embedded hardware and digital signal processing to continuously monitor machine vibration in real time.
 
-### DSP Pipeline
+The entire processing pipeline executes locally on the microcontroller, providing:
 
-> 📌 FreeRTOS task diagram to be added.
-
-
-**Detection logic:** an alert fires only when at least 2 of 3 indicators (kurtosis, RMS, 1×RPM bin) simultaneously exceed 2.5 sigma above the learned baseline — reducing false positives without sacrificing sensitivity.
-
-### Core Architecture
-<!--
-| Core | Role | Peripherals |
-|---|---|---|
-| **Core 0** | DSP only — max priority, no I/O ever | LIS3DH via SPI2 DMA |
-| **Core 1** | All I/O | ILI9341 display, SD card, MCP4725 DAC, DS18B20, PCNT |
-
-Inter-core communication via FreeRTOS queues only — no unprotected shared globals.
-
-### Fault Injection
-
-Faults are injected deterministically via a 3D-printed PLA piece coupled to the motor shaft, with two symmetric M5 bolt holes positioned ~20 mm from the geometric center. Removing one bolt (~4–5 g) generates a centrifugal force at 1×RPM — a textbook imbalance signature. The experiment is fully reversible and repeatable.
-
-```
-Balanced:    [bolt] ── center ── [bolt]   →  baseline vibration
-Unbalanced:  [ — ] ── center ── [bolt]   →  growing 1xRPM peak in FFT
-```
+- Fully embedded processing
+- No cloud or gateway dependency
+- Real-time operation
+- Low hardware cost (~R$239)
+- Transparent and reproducible architecture
 
 ---
--->
+# System Architecture
+
+MachineGuard is organized into four main layers: hardware, firmware, digital signal processing, and user interface. The architecture separates real-time signal processing from peripheral management, ensuring deterministic execution while maintaining a responsive interface.
+
+---
+
 ## Hardware
-<!-- Add system photo here -->
-<!-- ![MachineGuard Hardware](img/hardware.jpg) -->
-<!--
 
-| Component | Model | Role |
-|---|---|---|
-| MCU | ESP32-S3 N16R8 | Dual-core Xtensa LX7, 16 MB Flash, 8 MB PSRAM OPI |
-| Accelerometer | LIS3DH SPI breakout | 5 kHz ODR via SPI DMA — vibration acquisition |
-| Display | ILI9341 2.8" TFT | 320×240 px — 4 navigable screens |
-| External DAC | MCP4725 I2C | 12-bit analog output for oscilloscope visualization |
-| RPM Sensor | Hall A3144 + neodymium magnet | Hardware pulse counting via ESP32-S3 PCNT |
-| Temperature | DS18B20 1-Wire | Bearing temperature — validates vibration-first detection |
-| Storage | MicroSD SPI | Offline CSV logging |
+![HW-diagram](docs/diagrams/diagramaHardware.png)
+> 📷 Outdated Hardware diagram
 
--->
+The system is built around an ESP32-S3 and a triaxial LSM6DS3TR-C accelerometer mounted magnetically on the motor housing. Additional peripherals provide visualization, temperature monitoring and user interaction.
 
-### Hardware Diagram
-
-<!-- Add schematic diagram here -->
-<!-- ![Hardware Diagram](img/hardware_diagram.png) -->
-
-> 📌 Schematic to be added during PCB revision (JLCPCB — month 6).
+| Component | Model |
+|-----------|-------|
+| MCU | ESP32-S3 N16R8 |
+| Accelerometer | LSM6DS3TR-C |
+| Display | ILI9341 2.8" SPI |
+| Temperature Sensor | DS18B20 |
+| Motor | Equacional EA2-80-B3/4 |
+| Mounting | Magnetic |
 
 ---
 
-## Firmware Architecture
+## Firmware
 
-<!-- Add firmware diagram here -->
-<!-- ![Firmware Architecture](img/firmware_diagram.png) -->
+![FW-diagram](docs/diagrams/DiagramaFirmware.png)
+> 📷 Outdated Firmware architecture diagram
 
-> 📌 FreeRTOS task diagram to be added.
+The firmware is divided into two independent execution domains:
 
----
+- **Core 0** — Real-time DSP pipeline
+- **Core 1** — Display, peripherals and system services
 
-## Display Screens
-<!--
-Four navigable TFT screens (320×240 px):
-
-| Dashboard | FFT Spectrum |
-|:---------:|:------------:|
-| ![Dashboard](img/screen_dashboard.png) | ![FFT](img/screen_fft.png) |
-
-| Waveform | SD History |
-|:--------:|:----------:|
-| ![Waveform](img/screen_waveform.png) | ![History](img/screen_history.png) |
-
-> 📌 Screen captures to be added during hardware testing.
+Communication between tasks is performed through FreeRTOS queues, avoiding shared data between cores.
 
 ---
 
-## Project Status
+## DSP Pipeline
 
-- [x] System architecture defined (dual-core isolation, DMA pipeline)
-- [x] GPIO mapping and bus allocation documented
-- [x] DSP pipeline designed (FFT, kurtosis, RMS, EMA Z-score)
-- [x] Hardware BOM finalized (≈ R$239 Tier 1+2)
-- [ ] DSP pipeline validated with synthetic signal
-- [ ] Physical prototype assembled
-- [ ] EMA alpha empirical calibration
-- [ ] PCB manufactured (JLCPCB)
-- [ ] Full validation with Equacional EA2-80-B3/4 motor
-- [ ] FETIN 2026 presentation
+```text
+Acquisition
+    │
+Remove Offset
+    │
+Convert to g
+    │
+Time Statistics
+    │
+FFT
+    │
+RPM Estimation
+    │
+1×RPM Amplitude
+    │
+Adaptive Baseline
+    │
+Alarms
+```
+
+The DSP pipeline continuously processes vibration data and extracts statistical and spectral features used for machine condition monitoring.
 
 ---
--->
-## Team
 
-| Name | Role |
-|---|---|
-| João Pedro Maciel Freitas | Firmware, HW/FW integration, DSP, embedded systems, documentation |
-| João Pedro Siqueira Job | Mechanics, hardware, 3D prototyping |
-| Núbia Ariela Rezende Costa | Documentation, organization, project management, hardware support |
+## User Interface
+
+![screen01](docs/screens/MENU.png)
+![screen02](docs/screens/ESPECTRO_FFT.png)
+![screen03](docs/screens/SENOIDE.png)
+![screen04](docs/screens/SD_CARD.png)
+> 📷 Display screenshots
+
+The TFT interface provides real-time visualization of the machine state, signal statistics and vibration spectrum, allowing the processing pipeline to be inspected during operation.
 
 ---
 
-## License
+# Team
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+| Name | Responsibilities |
+|------|-------------------|
+| **João Pedro Maciel Freitas** | Embedded firmware, DSP, hardware/software integration and documentation |
+| **João Pedro Siqueira Job** | Mechanical design, prototype manufacturing and hardware |
+| **Núbia Ariela Rezende Costa** | Documentation, organization and project management |
+
+---
+
+# License
+
+This project is licensed under the **MIT License**.
+
+See the [LICENSE](LICENSE) file for more information.
