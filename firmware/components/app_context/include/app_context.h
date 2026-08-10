@@ -48,11 +48,17 @@ typedef struct {
  * This context never owns a component's private acquisition buffers.
  */
 typedef struct {
-    /** Latest DSP result, written by DSP and read by Core 1 consumers. */
-    QueueHandle_t queue_dsp_result;
+    /** Latest selected-axis acquisition block. */
+    QueueHandle_t queue_accel_block_to_dsp;
 
-    /** Latest selected-axis acquisition block, written by accelerometer. */
-    QueueHandle_t queue_accel_block;
+    /** Latest DSP result for HMI. */
+    QueueHandle_t queue_dsp_to_hmi;
+
+    /** Latest DSP result for storage. */
+    QueueHandle_t queue_dsp_to_storage;
+
+    /** Latest DSP result for DAC. */
+    QueueHandle_t queue_dsp_to_dac;
 
     /** SPI2 mutex shared by accelerometer and storage. */
     SemaphoreHandle_t mutex_spi2;

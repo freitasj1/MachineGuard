@@ -46,7 +46,7 @@ void task_hmi(void *arg)
         led_ligado = !led_ligado;
         gpio_set_level(LED_GPIO, led_ligado);
 
-        ESP_LOGD(TAG, "Alternando estado do LED");
+        //ESP_LOGD(TAG, "Switching led state");
 
         vTaskDelay(pdMS_TO_TICKS(1000));
     }

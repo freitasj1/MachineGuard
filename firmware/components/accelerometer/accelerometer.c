@@ -103,7 +103,7 @@ esp_err_t accel_init(app_context_t *context)
     if (context == NULL) {
         return ESP_ERR_INVALID_ARG;
     }
-    if (context->mutex_spi2 == NULL || context->queue_accel_block == NULL) {
+    if (context->mutex_spi2 == NULL || context->queue_accel_block_to_dsp == NULL) {
         return ESP_ERR_INVALID_STATE;
     }
     if (s_spi_device != NULL) {
@@ -157,6 +157,7 @@ void task_accel(void *arg)
     while (true) {
         uint16_t fifo_words;
         bool fifo_overrun = false;
+        
         err = fifo_get_level(&fifo_words, &fifo_overrun);
         if (err != ESP_OK) {
             ESP_LOGE(TAG, "FIFO status read failed: %s", esp_err_to_name(err));
@@ -164,7 +165,14 @@ void task_accel(void *arg)
             continue;
         }
 
-        // ESP_LOGD(TAG, "fifo_words = %u", fifo_words);
+        if (fifo_overrun) {
+            ESP_LOGW(TAG, "FIFO overrun — descartando bloco em construção");
+            s_data.index = 0;
+            /* Não faz 'continue' aqui — o fluxo abaixo deve seguir e drenar
+            * o FIFO normalmente, senão o overrun nunca é resolvido e o
+            * sistema para de processar blocos indefinidamente. */
+        }
+
         if (fifo_words < ACCEL_FIFO_WATERMARK_WORDS) {
             vTaskDelay(pdMS_TO_TICKS(1));
             continue;
@@ -372,8 +380,9 @@ static esp_err_t fifo_read_samples(uint16_t sample_count)
 static void process_fifo_samples(uint16_t sample_count)
 {
     for (uint16_t sample = 0; sample < sample_count; ++sample) {
-        const size_t offset = 1U + sample * ACCEL_FIFO_WORDS_PER_SAMPLE * sizeof(int16_t) +
-                              ACCEL_SELECTED_AXIS * sizeof(int16_t);
+        const size_t offset = 1U +
+            sample * ACCEL_FIFO_WORDS_PER_SAMPLE * sizeof(int16_t) + 
+            ACCEL_SELECTED_AXIS * sizeof(int16_t);
         const accel_sample_t selected = (accel_sample_t)((uint16_t)s_fifo_rx[offset] |
             ((uint16_t)s_fifo_rx[offset + 1U] << 8));
         s_data.write->samples[s_data.index++] = selected;
@@ -391,18 +400,7 @@ static void publish_completed_buffer(void)
     s_data.index = 0;
     s_data.ping_active = (s_data.write == &s_data.ping);
 
-    ESP_LOGI(TAG,
-         "block: [%d, %d, %d, %d, %d, %d, %d, %d]",
-         s_data.process[0],
-         s_data.process[1],
-         s_data.process[2],
-         s_data.process[3],
-         s_data.process[4],
-         s_data.process[5],
-         s_data.process[6],
-         s_data.process[7]);
-
-    if (xQueueOverwrite(s_ctx->queue_accel_block, s_data.process) != pdPASS) {
+    if (xQueueOverwrite(s_ctx->queue_accel_block_to_dsp, s_data.process) != pdPASS) {
         ESP_LOGW(TAG, "accelerometer block queue overwrite failed");
     }
 }

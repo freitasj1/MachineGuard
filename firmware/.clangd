@@ -1,5 +1,10 @@
 CompileFlags:
   CompilationDatabase: build/
+  Add:
+    - -isystem
+    - /home/freitasj1/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/xtensa-esp-elf/include
+    - -isystem
+    - /home/freitasj1/.espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/xtensa-esp-elf/sys-include
 
 Diagnostics:
   UnusedIncludes: Strict
