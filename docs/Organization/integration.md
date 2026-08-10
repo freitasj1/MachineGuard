@@ -1,268 +1,602 @@
 # MachineGuard
+
 # Hardware/Firmware Interface Specification (HFIS)
 
-> Documento oficial de integração entre Hardware e Firmware  
-> Responsável por definir:
-> - Alocação de GPIOs
-> - Barramentos
-> - Restrições elétricas
-> - Restrições de boot
-> - Ownership de periféricos
-> - Regras de integração HW/FW
-> - Expansões futuras
+> Documento de apoio para desenvolvimento de Hardware, Mecânica e Firmware.
+>
+> Define as conexões físicas, GPIOs, barramentos, alimentação, pull-ups e
+> interfaces externas necessárias ao funcionamento do MachineGuard.
+>
+> Este documento deve ser utilizado como referência para:
+>
+> * desenvolvimento da PCB;
+> * integração dos periféricos;
+> * desenvolvimento mecânico;
+> * implementação do Firmware.
+>
+> A arquitetura interna do Firmware é documentada separadamente em
+> `architecture.md`.
 
 ---
 
 # 1. Document Information
 
-...
+| Item      | Informação                                |
+| --------- | ----------------------------------------- |
+| Projeto   | MachineGuard                              |
+| Documento | Hardware/Firmware Interface Specification |
+| Versão    | v1.1                                      |
+| Data      | 10/08/2026                                |
+| MCU       | ESP32-S3-WROOM-1                          |
+| Variante  | MON16R8                                   |
+| Framework | ESP-IDF                                   |
 
 ---
 
-# 2. System Overview
+# 2. Hardware Overview
 
-## 2.1 Objective
-
-...
-
-## 2.2 Architecture Summary
-
-| Module | Description |
-|---|---|
-| MCU | ESP32-S3 |
-| Sensor Acquisition | SPI + DMA |
-| Temperature Monitoring | 1-Wire |
-| RPM Measurement | PCNT |
-| Display | SPI TFT |
-| Storage | SD Card |
+| Periférico      | Dispositivo              | Interface   | Status  |
+| --------------- | ------------------------ | ----------- | ------- |
+| MCU             | ESP32-S3-WROOM-1 MON16R8 | —           | IN_USE  |
+| Acelerômetro    | LSM6DS3TR-C              | SPI2        | IN_USE  |
+| Display         | ILI9341                  | SPI3        | PLANNED |
+| Temperatura     | DS18B20                  | 1-Wire      | PLANNED |
+| Storage         | SD Card                  | SPI2        | PLANNED |
+| DAC             | MCP4725                  | I2C         | PLANNED |
+| Saída analógica | BNC fêmea                | MCP4725 OUT | PLANNED |
+| LED             | LED de status            | GPIO        | IN_USE  |
 
 ---
 
-# 3. GPIO Allocation Table
+# 3. GPIO Allocation
 
-## 3.1 GPIO Mapping
+## 3.1 GPIOs em uso
 
-| GPIO | Signal Name   | Peripheral       | Bus      | Direction | Core | Status   | Description               | Supply | Notes                                       |
-| ---- | ------------- | ---------------- | -------- | --------- | ---- | -------- | ------------------------- | ------ | ------------------------------------------- |
-| 0    | BTN_BOOT      | Boot Button      | GPIO     | IN        | -    | RESERVED | Boot mode button          | 3.3V   | Strapping pin. Não conectar cargas externas |
-| 1    | TFT_DC        | ILI9341 Display  | SPI3     | OUT       | 1    | IN_USE   | Display Data/Command      | 3.3V   | Controle D/C do display                     |
-| 2    | GPIO_RESERVED | -                | -        | -         | -    | RESERVED | Reservado para boot       | 3.3V   | Strapping pin. Evitar uso                   |
-| 3    | TFT_CS        | ILI9341 Display  | SPI3     | OUT       | 1    | IN_USE   | Chip Select display       | 3.3V   | CS dedicado                                 |
-| 4    | TFT_RST       | ILI9341 Display  | GPIO     | OUT       | 1    | IN_USE   | Reset hardware display    | 3.3V   | Reset dedicado                              |
-| 5    | TEMP_1WIRE    | DS18B20          | 1-WIRE   | IN/OUT    | 1    | IN_USE   | Sensor temperatura mancal | 3.3V   | Pull-up 4k7 obrigatório                     |
-| 6    | RPM_PULSE     | Hall Sensor      | PCNT     | IN        | 1    | IN_USE   | Entrada RPM via PCNT      | 3.3V   | Sem interrupções CPU                        |
-| 7    | STATUS_LED    | Status LED       | GPIO     | OUT       | 1    | IN_USE   | Indicador alimentação     | 3.3V   | LED heartbeat                               |
-| 8    | LIS3DH_INT1   | LIS3DH           | GPIO     | IN        | 0    | RESERVED | Interrupção Data Ready    | 3.3V   | Reservado para DMA trigger                  |
-| 9    | SD_CS         | SD Card          | SPI2     | OUT       | 1    | IN_USE   | Chip Select SD card       | 3.3V   | SPI2 compartilhado                          |
-| 10   | LIS3DH_CS     | LIS3DH           | SPI2     | OUT       | 0    | IN_USE   | Chip Select acelerômetro  | 3.3V   | Prioridade máxima Core 0                    |
-| 11   | SPI2_MOSI     | LIS3DH + SD      | SPI2     | OUT       | 0    | IN_USE   | SPI2 MOSI                 | 3.3V   | Barramento compartilhado                    |
-| 12   | SPI2_SCK      | LIS3DH + SD      | SPI2     | OUT       | 0    | IN_USE   | SPI2 Clock                | 3.3V   | DMA acquisition                             |
-| 13   | SPI2_MISO     | LIS3DH + SD      | SPI2     | IN        | 0    | IN_USE   | SPI2 MISO                 | 3.3V   | Barramento compartilhado                    |
-| 14   |      | | GPIO     | -         | -    | FREE     |            | 3.3V   |                               |
-| 15   | BTN_A         | HMI              | GPIO     | IN        | 1    | IN_USE   | Botão navegação           | 3.3V   | Pull-up interno                             |
-| 16   | BTN_B         | HMI              | GPIO     | IN        | 1    | IN_USE   | Botão debug/pause         | 3.3V   | Pull-up interno                             |
-| 17   | I2C_SDA       | MCP4725 DAC      | I2C      | IN/OUT    | 1    | IN_USE   | I2C SDA                   | 3.3V   | Pull-up 4k7                                 |
-| 18   | I2C_SCL       | MCP4725 DAC      | I2C      | OUT       | 1    | IN_USE   | I2C Clock                 | 3.3V   | 400 kHz                                     |
-| 19   | USB_D-        | USB Native       | USB      | IN/OUT    | -    | RESERVED | USB D-                    | 3.3V   | Interno USB                                 |
-| 20   | USB_D+        | USB Native       | USB      | IN/OUT    | -    | RESERVED | USB D+                    | 3.3V   | Interno USB                                 |
-| 21   |     |  | GPIO     | -         | -    | FREE     |            | 3.3V   |                        |
-| 35   | OPI_PSRAM     | Internal PSRAM   | INTERNAL | -         | -    | RESERVED | PSRAM OPI                 | 3.3V   | Não utilizar                                |
-| 36   | OPI_PSRAM     | Internal PSRAM   | INTERNAL | -         | -    | RESERVED | PSRAM OPI                 | 3.3V   | Não utilizar                                |
-| 37   | OPI_PSRAM     | Internal PSRAM   | INTERNAL | -         | -    | RESERVED | PSRAM OPI                 | 3.3V   | Não utilizar                                |
-| 38   | RGB_LED       | Onboard RGB      | GPIO     | OUT       | 1    | IN_USE*  | RGB status LED            | 3.3V   | Confirmar DevKit                            |
-| 39   |     | | GPIO     | -         | -    | FREE     |           | 3.3V   | interrupt                          |
-| 40   | TFT_SCK       | ILI9341 Display  | SPI3     | OUT       | 1    | IN_USE   | SPI3 Clock                | 3.3V   | Barramento isolado                          |
-| 41   | TFT_MOSI      | ILI9341 Display  | SPI3     | OUT       | 1    | IN_USE   | SPI3 MOSI                 | 3.3V   | Display write                               |
-| 42   | TFT_MISO      | ILI9341 Display  | SPI3     | IN        | 1    | OPTIONAL | SPI3 MISO                 | 3.3V   | Pode ficar NC                               |
-| 43   | UART0_TX      | Debug UART       | UART     | OUT       | -    | RESERVED | Serial TX                 | 3.3V   | USB-UART bridge                             |
-| 44   | UART0_RX      | Debug UART       | UART     | IN        | -    | RESERVED | Serial RX                 | 3.3V   | USB-UART bridge                             |
-| 45   | GPIO_STRAP    | Future Expansion | GPIO     | IN/OUT    | -    | RESERVED | Strapping pin             | 3.3V   | Usar com extrema cautela                    |
-| 46   |      |  | GPIO     |         | -    | FREE     |           | 3.3V   |                        |
-| 47   |     |  | GPIO     |     | -    | FREE     |            | 3.3V   |                            |
-| 48   |     |  | GPIO     |    | -    | FREE     |            | 3.3V   |                            |
+| GPIO | Sinal      | Função                  | Interface | Status |
+| ---: | ---------- | ----------------------- | --------- | ------ |
+|   10 | ACCEL_CS   | Chip Select LSM6DS3TR-C | SPI2      | IN_USE |
+|   11 | SPI2_MOSI  | MOSI                    | SPI2      | IN_USE |
+|   12 | SPI2_SCLK  | Clock                   | SPI2      | IN_USE |
+|   13 | SPI2_MISO  | MISO                    | SPI2      | IN_USE |
+|   48 | STATUS_LED | LED de status           | GPIO      | IN_USE |
 
 ---
 
+## 3.2 GPIOs planejados
 
+| GPIO | Sinal      | Função               | Interface | Status  |
+| ---: | ---------- | -------------------- | --------- | ------- |
+|    4 | TEMP_1WIRE | DS18B20 DATA         | 1-Wire    | PLANNED |
+|   14 | SD_CS      | Chip Select SD Card  | SPI2      | PLANNED |
+|   17 | I2C_SDA    | DAC SDA              | I2C       | PLANNED |
+|   18 | I2C_SCL    | DAC SCL              | I2C       | PLANNED |
+|   21 | TFT_RST    | Reset ILI9341        | GPIO      | PLANNED |
+|   38 | TFT_SCK    | Clock ILI9341        | SPI3      | PLANNED |
+|   39 | TFT_MOSI   | MOSI ILI9341         | SPI3      | PLANNED |
+|   40 | TFT_MISO   | MISO ILI9341         | SPI3      | PLANNED |
+|   41 | TFT_CS     | Chip Select ILI9341  | SPI3      | PLANNED |
+|   42 | TFT_DC     | Data/Command ILI9341 | GPIO      | PLANNED |
 
-
-## 3.2 GPIO Usage Rules
-
-### Reserved GPIOs
-
-| GPIO | Reason |
-|---|---|
-| 19 | USB D- |
-| 20 | USB D+ |
-| 35-37 | OPI PSRAM |
-| 43 | UART0 TX |
-| 44 | UART0 RX |
-
----
-
-### Strapping Pins
-
-| GPIO | Constraint |
-|---|---|
-| 0 | Boot mode selection |
-| 2 | Não utilizar saída ativa no boot |
-| 45 | Afeta tensão interna no boot |
+> Os GPIOs planejados devem ser considerados parte da interface proposta,
+> mas ainda podem ser alterados antes da fabricação da PCB.
 
 ---
 
-# 4. Bus Architecture
+# 4. GPIOs que não devem ser utilizados
+
+|  GPIO | Motivo                            |
+| ----: | --------------------------------- |
+|     0 | Strapping / boot                  |
+|     3 | Strapping                         |
+|    19 | USB-JTAG                          |
+|    20 | USB-JTAG                          |
+| 26–32 | Flash/PSRAM                       |
+| 33–37 | Flash/PSRAM em configuração Octal |
+|    45 | Strapping                         |
+|    46 | Strapping                         |
+
+O ESP32-S3 possui GPIO Matrix, portanto os sinais de periféricos podem ser
+roteados para diferentes GPIOs. Entretanto, os GPIOs acima possuem restrições
+específicas e não devem ser utilizados como primeira opção de expansão.
 
 ---
 
-# 4.1 SPI2 — Sensor Bus
+# 5. SPI2 — Acelerômetro + SD Card
 
-## Devices
-- LIS3DH
-- SD Card
+SPI2 é compartilhado entre o acelerômetro e o storage.
 
-## Configuration
+## 5.1 Sinais do barramento
 
-| Signal | GPIO |
-|---|---|
-| MOSI | 11 |
-| MISO | 13 |
-| SCK | 12 |
+| Sinal | GPIO |
+| ----- | ---: |
+| MOSI  |   11 |
+| MISO  |   13 |
+| SCLK  |   12 |
 
-## Chip Selects
+## 5.2 Chip Select
 
-| Device | GPIO |
-|---|---|
-| LIS3DH CS | 10 |
-| SD Card CS | 9 |
+| Dispositivo |     CS |
+| ----------- | -----: |
+| LSM6DS3TR-C | GPIO10 |
+| SD Card     | GPIO14 |
 
-## Firmware Rules
+## 5.3 Prioridade
 
-- SPI2 dedicado à aquisição de sensores
-- Operação via DMA
-- Prioridade máxima no Core 0
-- Evitar acessos concorrentes sem mutex
-- Clock máximo definido em: ___ MHz
+```text
+SPI2
+ │
+ ├── LSM6DS3TR-C
+ │      CRÍTICO
+ │
+ └── SD Card
+        NÃO CRÍTICO
+```
 
----
+A aquisição do acelerômetro possui prioridade sobre o acesso ao SD Card.
 
-# 4.2 SPI3 — Display Bus
-
-## Devices
-- ILI9341
-
-## Configuration
-
-| Signal | GPIO |
-|---|---|
-| MOSI | 41 |
-| MISO | 42 |
-| SCK | 40 |
-| CS | 3 |
-| DC | 1 |
-| RST | 4 |
-
-## Firmware Rules
-
-- Barramento isolado do SPI2
-- Atualização de display executada no Core 1
-- SPI display não deve bloquear aquisição
+O acesso ao storage não deve comprometer a aquisição contínua do
+LSM6DS3TR-C. O compartilhamento do SPI deve considerar também a carga
+capacitiva e os pull-ups do SD Card.
 
 ---
 
-# 4.3 I2C Bus
+# 6. LSM6DS3TR-C
 
-## Devices
-- MCP4725
+## 6.1 Conexões
 
-## Configuration
+| LSM6DS3TR-C | Conexão |
+| ----------- | ------- |
+| VDD         | 3.3 V   |
+| VDDIO       | 3.3 V   |
+| GND         | GND     |
+| CS          | GPIO10  |
+| SCL/SPC     | GPIO12  |
+| SDA/SDI     | GPIO11  |
+| SDO         | GPIO13  |
 
-| Signal | GPIO |
-|---|---|
-| SDA | 17 |
-| SCL | 18 |
+O sensor é utilizado em SPI de 4 fios.
 
-## Firmware Rules
+## 6.2 Configuração atual
 
-- Clock: 400 kHz
-- Nunca acessar a partir do Core 0
-- Mutex obrigatório em acessos compartilhados
+| Parâmetro       | Valor                    |
+| --------------- | ------------------------ |
+| Interface       | SPI                      |
+| SPI Mode        | 0                        |
+| Clock SPI       | 10 MHz                   |
+| ODR             | 6.66 kHz                 |
+| Full Scale      | ±2 g                     |
+| FIFO            | Continuous               |
+| DMA             | Sim                      |
+| Eixo processado | Configurável no Firmware |
 
----
+O Firmware atualmente utiliza FIFO e DMA para aquisição dos dados.
 
-# 5. Core Responsibilities
+## 6.3 Pull-up / estado de CS
 
-| Core | Responsibilities |
-|---|---|
-| Core 0 | Aquisição crítica, DMA, sensores |
-| Core 1 | HMI, display, UI, telemetria |
+O `CS` deve permanecer em estado inativo durante inicialização/reset do
+sistema.
 
----
+Recomenda-se prever:
 
-# 6. Interrupt Architecture
+```text
+GPIO10 / ACCEL_CS
+        │
+       10 kΩ
+        │
+       3.3 V
+```
 
-| Source | GPIO | Priority | Handler | Notes |
-|---|---|---|---|---|
-| LIS3DH INT1 | 8 | HIGH | DMA Trigger | Reservado |
-| Hall Sensor | 6 | HARDWARE | PCNT | Sem ISR |
-| Buttons | 15,16 | LOW | GPIO ISR | Debounce software |
+A necessidade final desse resistor deve ser validada junto ao esquemático
+do módulo/sensor utilizado.
 
----
+## 6.4 Desacoplamento
 
-# 7. DMA Usage
+Prever capacitores de desacoplamento próximos aos pinos de alimentação do
+sensor, conforme recomendação do fabricante.
 
-| Peripheral | DMA | Core | Notes |
-|---|---|---|---|
-| SPI2 | YES | 0 | Aquisição acelerômetro |
-| SPI3 | OPTIONAL | 1 | Display |
-| I2C | NO | 1 | Baixa prioridade |
+## 6.5 Mecânica
 
----
+O acelerômetro deve ser rigidamente acoplado à estrutura monitorada.
 
-# 8. Power & Electrical Constraints
+A montagem deve:
 
-## 8.1 Voltage Levels
-
-| Interface | Voltage |
-|---|---|
-| GPIO | 3.3V |
-| SPI | 3.3V |
-| I2C | 3.3V |
-
----
-
-## 8.2 Pull-ups / Pull-downs
-
-| Signal | Type | Value |
-|---|---|---|
-| 1-Wire | Pull-up | 4k7 |
-| I2C SDA | Pull-up | 4k7 |
-| I2C SCL | Pull-up | 4k7 |
+* minimizar folgas;
+* evitar movimento relativo entre sensor e máquina;
+* manter orientação conhecida dos eixos;
+* permitir repetibilidade de montagem;
+* permitir acesso ao acoplamento utilizado durante os testes.
 
 ---
 
-# 9. Boot Constraints
+# 7. SD Card
 
-| GPIO | Restriction | Impact |
-|---|---|---|
-| GPIO0 | Boot strap | Modo boot |
-| GPIO2 | Não dirigir no boot | Boot failure |
-| GPIO45 | Strapping | Tensão interna |
+## 7.1 Conexões
+
+| SD Card     | Conexão            |
+| ----------- | ------------------ |
+| VCC         | 3.3 V              |
+| GND         | GND                |
+| SCLK        | SPI2 SCLK / GPIO12 |
+| MOSI / CMD  | SPI2 MOSI / GPIO11 |
+| MISO / DAT0 | SPI2 MISO / GPIO13 |
+| CS / DAT3   | GPIO14             |
+
+Os sinais não utilizados do cartão devem seguir a recomendação do fabricante
+do socket/módulo utilizado.
+
+## 7.2 Pull-ups
+
+Prever resistores externos de:
+
+```text
+10 kΩ
+```
+
+nas linhas SD que requerem estado alto durante inicialização.
+
+Para o modo SPI utilizado pelo projeto, a implementação deve seguir as
+recomendações de pull-up da Espressif para SD.
+
+Não adicionar pull-up ao `SCLK` sem necessidade.
+
+## 7.3 Regra de integração
+
+O SD Card é **não crítico**.
+
+```text
+LSM6DS3TR-C → prioridade máxima
+SD Card      → prioridade secundária
+```
+
+O Firmware deve garantir que operações de armazenamento não bloqueiem a
+aquisição do acelerômetro.
 
 ---
 
+# 8. SPI3 — Display ILI9341
 
-# 10. Firmware Integration Notes
+## 8.1 Conexões
+
+| ILI9341 | GPIO / conexão |
+| ------- | -------------- |
+| VCC     | 3.3 V          |
+| GND     | GND            |
+| SCK     | GPIO38         |
+| MOSI    | GPIO39         |
+| MISO    | GPIO40         |
+| CS      | GPIO41         |
+| DC      | GPIO42         |
+| RST     | GPIO21         |
+
+## 8.2 MISO
+
+Se o módulo ILI9341 utilizado não exigir leitura do display, o `MISO` pode
+ser deixado não conectado.
+
+Nesse caso:
+
+```text
+ILI9341 MISO → NC
+```
+
+e o Firmware deve operar somente com escrita.
+
+## 8.3 Backlight
+
+A alimentação do backlight deve seguir o circuito específico do módulo
+ILI9341 utilizado.
+
+Não conectar diretamente um LED de backlight ao GPIO do ESP32-S3 sem o
+circuito de limitação/acionamento adequado.
+
+## 8.4 Desacoplamento
+
+Prever desacoplamento próximo à alimentação do display.
 
 ---
 
-# 11. Hardware Integration Notes
+# 9. I2C — MCP4725
 
-## PCB Requirements
+## 9.1 Conexões
+
+| MCP4725 | Conexão                     |
+| ------- | --------------------------- |
+| VDD     | 3.3 V                       |
+| VSS/GND | GND                         |
+| SDA     | GPIO17                      |
+| SCL     | GPIO18                      |
+| A0      | GND                         |
+| VOUT    | Circuito de saída analógica |
+
+O MCP4725 possui interface I2C open-drain e necessita de pull-ups em SDA e
+SCL. O pino A0 define parte do endereço I2C e será fixado em GND nesta
+implementação.
+
+## 9.2 Pull-ups
+
+Prever:
+
+```text
+GPIO17 / SDA
+      │
+     4.7 kΩ
+      │
+     3.3 V
+```
+
+e:
+
+```text
+GPIO18 / SCL
+      │
+     4.7 kΩ
+      │
+     3.3 V
+```
+
+Os resistores devem ficar fisicamente próximos ao barramento/dispositivo,
+considerando a capacitância total da conexão.
+
+## 9.3 A0
+
+```text
+MCP4725 A0
+     │
+     └── GND
+```
+
+Isso fixa o endereço do dispositivo para a configuração correspondente a
+`A0 = 0`.
+
+## 9.4 Desacoplamento
+
+Prever capacitor de desacoplamento entre:
+
+```text
+VDD ── capacitor ── GND
+```
+
+próximo ao MCP4725.
+
+O datasheet da Microchip mostra desacoplamento local de 0,1 µF e capacitor de
+reservatório de 10 µF como referência de aplicação. O dimensionamento final
+pode ser ajustado conforme a fonte e o projeto da PCB.
 
 ---
 
-# 12. Revision History
+# 10. Saída Analógica — BNC
 
-| Version | Date | Author | Changes |
-|---|---|---|---|
-| v1.0 | 20/05/2026 | João Pedro | Initial version |
+O MCP4725 será utilizado para gerar o sinal analógico destinado à visualização
+em osciloscópio.
+
+## 10.1 Conexão
+
+```text
+MCP4725 VOUT
+     │
+     ▼
+ BNC fêmea
+  center
+```
+
+e:
+
+```text
+GND do sistema
+     │
+     ▼
+ BNC fêmea
+  shield
+```
+
+Portanto:
+
+| BNC              | Conexão      |
+| ---------------- | ------------ |
+| Pino central     | MCP4725 VOUT |
+| Carcaça / Shield | GND          |
+
+## 10.2 Objetivo
+
+A saída representa o sinal temporal de vibração produzido pelo processamento
+do acelerômetro.
+
+Durante a demonstração, o sinal poderá ser observado em um osciloscópio.
+
+Espera-se que uma condição de maior vibração, como um desbalanceamento,
+produza aumento observável da amplitude do sinal.
+
+## 10.3 Layout
+
+O caminho:
+
+```text
+MCP4725 VOUT → BNC
+```
+
+deve ser mantido curto e com referência de GND adequada.
+
+Evitar passar a trilha analógica do DAC junto a sinais digitais de alta
+velocidade quando isso puder ser evitado.
+
+---
+
+# 11. 1-Wire — DS18B20
+
+## 11.1 Conexões
+
+| DS18B20 | Conexão |
+| ------- | ------- |
+| VDD     | 3.3 V   |
+| GND     | GND     |
+| DATA    | GPIO4   |
+
+## 11.2 Pull-up
+
+Prever:
+
+```text
+3.3 V
+ │
+4.7 kΩ
+ │
+DATA ───────── GPIO4
+```
+
+O resistor deve ser externo.
+
+## 11.3 Desacoplamento
+
+Prever capacitor de desacoplamento próximo ao sensor quando a alimentação
+for realizada em modo normal.
+
+---
+
+# 12. LED de Status
+
+## Conexão atual
+
+```text
+GPIO48 → LED_STATUS
+```
+
+O circuito do LED deve incluir o resistor de limitação de corrente adequado.
+
+O Firmware configura GPIO48 como saída digital.
+
+---
+
+# 13. Alimentação
+
+Todos os periféricos digitais devem utilizar níveis compatíveis com 3.3 V.
+
+## Alimentações principais
+
+```text
+3.3 V
+ │
+ ├── ESP32-S3
+ ├── LSM6DS3TR-C
+ ├── SD Card
+ ├── ILI9341
+ ├── MCP4725
+ └── DS18B20
+```
+
+Todos os dispositivos devem possuir caminho de GND comum adequado.
+
+---
+
+# 14. Pull-ups e Componentes Externos
+
+Resumo dos componentes externos obrigatórios/recomendados:
+
+| Circuito     | Componente     |              Valor | Observação                       |
+| ------------ | -------------- | -----------------: | -------------------------------- |
+| I2C SDA      | Pull-up        |             4.7 kΩ | 3.3 V → SDA                      |
+| I2C SCL      | Pull-up        |             4.7 kΩ | 3.3 V → SCL                      |
+| DS18B20 DATA | Pull-up        |             4.7 kΩ | 3.3 V → DATA                     |
+| SD Card      | Pull-up        |              10 kΩ | Conforme sinais exigidos pelo SD |
+| ACCEL CS     | Pull-up        |              10 kΩ | Manter CS inativo durante boot   |
+| MCP4725 VDD  | Desacoplamento |             100 nF | Próximo ao dispositivo           |
+| MCP4725 VDD  | Reservatório   |              10 µF | Próximo ao dispositivo           |
+| DS18B20      | Desacoplamento | conforme aplicação | Próximo ao sensor                |
+| LSM6DS3TR-C  | Desacoplamento | conforme datasheet | Próximo ao sensor                |
+| ILI9341      | Desacoplamento |    conforme módulo | Próximo ao display               |
+
+Os valores indicados como recomendação devem ser confirmados no esquemático
+final dos componentes/módulos efetivamente utilizados.
+
+---
+
+# 15. Resumo de Conexões
+
+## MCU → Periféricos
+
+```text
+ESP32-S3
+│
+├── SPI2
+│   ├── GPIO11 → MOSI ─────────┬── LSM6DS3TR-C
+│   ├── GPIO12 → SCLK ─────────┤
+│   ├── GPIO13 ← MISO ─────────┤
+│   ├── GPIO10 → CS ───────────┘
+│   │
+│   └── GPIO14 → SD_CS ───────── SD Card
+│
+├── I2C
+│   ├── GPIO17 ↔ SDA ─────────── MCP4725
+│   └── GPIO18 ↔ SCL ─────────── MCP4725
+│
+├── GPIO4 ←→ 1-Wire ──────────── DS18B20
+│
+├── SPI3
+│   ├── GPIO38 → SCK ──────────── ILI9341
+│   ├── GPIO39 → MOSI ─────────── ILI9341
+│   ├── GPIO40 ← MISO ─────────── ILI9341
+│   ├── GPIO41 → CS ───────────── ILI9341
+│   └── GPIO42 → DC ───────────── ILI9341
+│
+├── GPIO21 → RST ──────────────── ILI9341
+│
+└── GPIO48 → LED_STATUS
+```
+
+## DAC → BNC
+
+```text
+MCP4725 VOUT ────────── BNC center
+GND ─────────────────── BNC shield
+```
+
+---
+
+# 16. Regras de Integração
+
+1. GPIOs `IN_USE` não devem ser reutilizados.
+2. GPIOs `PLANNED` podem ser alterados antes da fabricação da PCB.
+3. Qualquer alteração de GPIO deve ser refletida simultaneamente no Hardware,
+   Firmware e HFIS.
+4. SPI2 deve priorizar a aquisição do LSM6DS3TR-C.
+5. O SD Card é um periférico não crítico.
+6. Storage não deve bloquear a aquisição do acelerômetro.
+7. HMI, storage e DAC não devem introduzir interferência no caminho crítico de
+   aquisição.
+8. Pull-ups externos devem ser utilizados quando especificados neste documento.
+9. Todos os periféricos devem possuir alimentação e GND adequados.
+10. O BNC deve possuir GND comum com o circuito do DAC.
+11. O acelerômetro deve possuir acoplamento mecânico rígido e orientação
+    conhecida.
+12. Não utilizar GPIOs reservados para Flash/PSRAM, USB-JTAG ou strapping sem
+    uma revisão específica do projeto.
+13. O projeto mecânico deve permitir instalação e remoção consistente do
+    conjunto do acelerômetro.
+14. O layout deve manter separação adequada entre sinais analógicos do DAC e
+    sinais digitais de alta velocidade.
+
+---
+
+# 17. Status da Integração
+
+| Item                      | Status  |
+| ------------------------- | ------- |
+| ESP32-S3-WROOM-1          | IN_USE  |
+| SPI2                      | IN_USE  |
+| LSM6DS3TR-C               | IN_USE  |
+| LED                       | IN_USE  |
+| SD Card                   | PLANNED |
+| ILI9341                   | PLANNED |
+| DS18B20                   | PLANNED |
+| MCP4725                   | PLANNED |
+| BNC                       | PLANNED |
+| PCB final                 | PLANNED |
+| Integração mecânica final | PLANNED |
+
+---
+
+# 18. Revision History
+
+| Version | Date       | Author     | Changes                                                                                                                                                                                      |
+| ------- | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v1.0    | 20/05/2026 | João Pedro | Initial version                                                                                                                                                                              |
+| v1.1    | 10/08/2026 | João Pedro | Atualização completa da interface HW/FW; LSM6DS3TR-C; remoção de Hall/PCNT/LIS3DH; novo mapeamento GPIO; conexão física dos periféricos; pull-ups; alimentação; DAC/BNC; integração mecânica |
