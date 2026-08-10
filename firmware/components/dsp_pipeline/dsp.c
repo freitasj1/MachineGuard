@@ -30,14 +30,34 @@
 #define M_PI 3.14159265358979323846f
 #endif
 
-#define ACCEL_SENSITIVITY_G_PER_LSB    (0.000061f)
 #define HANN_COHERENT_GAIN    (0.5f)
-#define LSM6DS3TRC_SENSITIVITY_2G    (0.061f / 1000.0f)
-#define ACCEL_SAMPLE_RATE_HZ    (3200.0f)
+#define LSM6DS3TRC_SENSITIVITY_2G   (0.000061f)
+
+/*
+ * ODR nominal configurado no LSM6DS3TR-C (ver accelerometer.c:
+ * LSM6DS3TR_C_ODR_XL_6K66_HZ). Valor de catálogo — sujeito à tolerância
+ * do oscilador interno do sensor (tipicamente poucos % de desvio).
+ *
+ * TODO(calibração): substituir por Fs medido empiricamente via timestamp
+ * de bloco (esp_timer_get_time() em publish_completed_buffer()) assim
+ * que o teste com o motor trifásico for agendado. Não validar RPM em
+ * produção com o valor nominal isolado.
+ */
+#define ACCEL_SAMPLE_RATE_HZ (6660.0f)
 
 #define RPM_SEARCH_MIN_HZ    (5.0f)
 #define RPM_SEARCH_MAX_HZ    (60.0f)
+
+/*
+ * Piso mínimo de amplitude espectral para considerar um pico como
+ * vibração real (não ruído de fundo). Calibrado empiricamente com
+ * o acelerômetro parado: ruído de fundo medido na faixa de
+ * 0.0001–0.001 g. Margem de ~5x acima do pior caso observado.
+ * Reavaliar após instrumentação de campo / novos testes de bancada.
+ */
 #define FFT_MIN_VALID_AMPLITUDE_G 0.005f
+
+static float s_bin_width_hz = 0.0f;
 
 static const char *TAG = "dsp";
 
@@ -120,15 +140,12 @@ static void calculate_kurtosis(const float *signal, dsp_time_stats_t *stats);
 
 static void calculate_basic_stats(const float *signal, dsp_time_stats_t *stats);
 
-static void calculate_crest_factor(dsp_time_stats_t *stats);
-
-static void calculate_kurtosis(const float *signal, dsp_time_stats_t *stats);
 
 static fft_peak_t analyze_fft(const float *hann_window,
-                              float *hann_signal,
-                              float *fft_buffer,
-                              float *magnitude,
-                              const float *frequency_axis);
+    float *hann_signal,
+    float *fft_buffer,
+    float *magnitude,
+    const float *frequency_axis);
 
 static void apply_hann_window(const float *window, float *signal);
 
@@ -190,8 +207,8 @@ void task_dsp(void *arg)
         
             convert_to_g(s_dsp.time_signal);
 
-            calculate_time_stats(s_dsp.time_signal,
-                     &s_dsp.time_stats);
+            // calculate_time_stats(s_dsp.time_signal,
+            //          &s_dsp.time_stats);
 
             analyze_time_signal( s_dsp.time_signal,
                 &s_dsp.time_stats);
@@ -270,6 +287,10 @@ static fft_peak_t analyze_fft(const float *hann_window,
     fft_peak_t peak = find_peak(
         magnitude, frequency_axis, RPM_SEARCH_MIN_HZ, RPM_SEARCH_MAX_HZ);
 
+    if (!peak.valid) {
+        return peak;
+    }
+    
     peak = interpolate_peak(
         magnitude, frequency_axis, (uint16_t)peak.bin);
 
@@ -308,13 +329,12 @@ static esp_err_t init_fft(void)
     return ESP_OK;
 }
 
+
 static void build_frequency_axis(float *frequency_axis)
 {
-    const float bin_width =
-        ACCEL_SAMPLE_RATE_HZ / (float)ACCEL_BLOCK_SIZE;
-
+    s_bin_width_hz = ACCEL_SAMPLE_RATE_HZ / (float)ACCEL_BLOCK_SIZE;
     for (uint16_t i = 0; i < (ACCEL_BLOCK_SIZE / 2U); i++) {
-        frequency_axis[i] = (float)i * bin_width;
+        frequency_axis[i] = (float)i * s_bin_width_hz;
     }
 }
 
@@ -417,16 +437,11 @@ static void normalize_fft(float *magnitude)
     const float scale =
         1.0f / ((float)ACCEL_BLOCK_SIZE * HANN_COHERENT_GAIN);
 
-    /* DC */
     magnitude[0] *= scale;
 
-    /* Positive frequencies */
-    for (uint16_t i = 1; i < (ACCEL_BLOCK_SIZE / 2U) - 1U; i++) {
+    for (uint16_t i = 1; i < (ACCEL_BLOCK_SIZE / 2U); i++) {
         magnitude[i] *= (2.0f * scale);
     }
-
-    /* Nyquist */
-    magnitude[(ACCEL_BLOCK_SIZE / 2U) - 1U] *= scale;
 }
 
 static fft_peak_t find_peak(const float *magnitude,
@@ -435,48 +450,43 @@ static fft_peak_t find_peak(const float *magnitude,
                             float max_frequency)
 {
     fft_peak_t peak = {0};
-
     float peak_amplitude = -FLT_MAX;
     uint16_t peak_bin = 0U;
+    bool found = false;
 
     for (uint16_t i = 0; i < (ACCEL_BLOCK_SIZE / 2U); i++) {
-
         const float frequency = frequency_axis[i];
-
-        if ((frequency < min_frequency) ||
-            (frequency > max_frequency)) {
+        if ((frequency < min_frequency) || (frequency > max_frequency)) {
             continue;
         }
-
         if (magnitude[i] > peak_amplitude) {
             peak_amplitude = magnitude[i];
             peak_bin = i;
+            found = true;
         }
     }
 
     peak.bin = (float)peak_bin;
-    peak.frequency_hz = frequency_axis[peak_bin];
-    peak.rpm = peak.frequency_hz *60.0f;
-    peak.amplitude_g = magnitude[peak_bin];
+    peak.frequency_hz = found ? frequency_axis[peak_bin] : 0.0f;
+    peak.rpm = peak.frequency_hz * 60.0f;
+    peak.amplitude_g = found ? magnitude[peak_bin] : 0.0f;
+    peak.valid = found; 
 
     return peak;
 }
+
 
 static fft_peak_t interpolate_peak(const float *magnitude,
                                    const float *frequency_axis,
                                    uint16_t peak_bin)
 {
-    fft_peak_t peak;
+    fft_peak_t peak = {0};
 
-    /* Não é possível interpolar nas extremidades */
-    if ((peak_bin == 0U) ||
-        (peak_bin >= (ACCEL_BLOCK_SIZE / 2U) - 1U)) {
-
+    if ((peak_bin == 0U) || (peak_bin >= (ACCEL_BLOCK_SIZE / 2U) - 1U)) {
         peak.bin = (float)peak_bin;
         peak.frequency_hz = frequency_axis[peak_bin];
-        peak.rpm = peak.frequency_hz *60.0f;
+        peak.rpm = peak.frequency_hz * 60.0f;
         peak.amplitude_g = magnitude[peak_bin];
-
         return peak;
     }
 
@@ -484,43 +494,19 @@ static fft_peak_t interpolate_peak(const float *magnitude,
     const float center = magnitude[peak_bin];
     const float right  = magnitude[peak_bin + 1U];
 
-    const float denominator =
-        (left - (2.0f * center) + right);
-
+    const float denominator = (left - (2.0f * center) + right);
     float delta = 0.0f;
 
-    if (fabsf(denominator) > 1e-12f) 
-    {
+    if (fabsf(denominator) > 1e-12f) {
         delta = 0.5f * (left - right) / denominator;
     }
-    if (delta > 0.5f) 
-    {
-        delta = 0.5f;
-    }
-
-    if (delta < -0.5f) 
-    {
-        delta = -0.5f;
-    }
+    delta = fmaxf(-0.5f, fminf(0.5f, delta));
 
     peak.bin = (float)peak_bin + delta;
+    peak.frequency_hz = peak.bin * s_bin_width_hz;
+    peak.rpm = peak.frequency_hz * 60.0f;
 
-    const float bin_width =
-        ACCEL_SAMPLE_RATE_HZ /
-        (float)ACCEL_BLOCK_SIZE;
-
-    peak.frequency_hz =
-        peak.bin * bin_width;
-    peak.rpm = peak.frequency_hz *60.0f;
-
-    /*
-     * Interpolação parabólica da amplitude.
-     */
-    peak.amplitude_g =
-        center -
-        0.25f *
-        (left - right) *
-        delta;
+    peak.amplitude_g = center;
 
     return peak;
 }
@@ -567,22 +553,13 @@ static void calculate_min_max(const float *signal,
     stats->peak_to_peak =
         stats->maximum - stats->minimum;
 }
-
-static void calculate_stddev(const float *signal,
-                             dsp_time_stats_t *stats)
+static void calculate_stddev(const float *signal, dsp_time_stats_t *stats)
 {
     float variance = 0.0f;
-
     for (uint16_t i = 0; i < ACCEL_BLOCK_SIZE; i++) {
-
-        const float error =
-            signal[i] - stats->mean;
-
-        variance += error * error;
+        variance += signal[i] * signal[i]; 
     }
-
     variance /= (float)ACCEL_BLOCK_SIZE;
-
     stats->stddev = sqrtf(variance);
 }
 
@@ -599,29 +576,13 @@ static void calculate_crest_factor(dsp_time_stats_t *stats)
         stats->crest_factor = 0.0f;
     }
 }
-
-static void calculate_kurtosis(const float *signal,
-                               dsp_time_stats_t *stats)
+static void calculate_kurtosis(const float *signal, dsp_time_stats_t *stats)
 {
-    if (stats->stddev < FLT_EPSILON) {
-        stats->kurtosis = 0.0f;
-        return;
-    }
-
+    if (stats->stddev < FLT_EPSILON) { stats->kurtosis = 0.0f; return; }
     float sum = 0.0f;
-
     for (uint16_t i = 0; i < ACCEL_BLOCK_SIZE; i++) {
-
-        const float normalized =
-            (signal[i] - stats->mean) /
-            stats->stddev;
-
-        sum += normalized *
-               normalized *
-               normalized *
-               normalized;
+        const float normalized = signal[i] / stats->stddev;   // idem — sem subtrair mean
+        sum += normalized * normalized * normalized * normalized;
     }
-
-    stats->kurtosis =
-        sum / (float)ACCEL_BLOCK_SIZE;
+    stats->kurtosis = sum / (float)ACCEL_BLOCK_SIZE;
 }

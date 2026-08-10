@@ -95,96 +95,109 @@ LSM6DS3TR-C
 Regra: **um dado tem um único dono/escritor**. Consumidores só leem.
 
 ---
-
 ## 6. Organização dos Componentes
 
 Componentes atuais: `main`, `app_context`, `accelerometer`, `dsp_pipeline`,
 `hmi`, `storage`, `sensors`, `dac`.
 
-> `rpm_counter` foi **removido** do projeto. RPM é estimado pelo bin 1xRPM
-> da FFT — não existe mais sensor Hall, PCNT ou medição de RPM em hardware.
+> `rpm_counter` foi **removido** do projeto. RPM é estimado a partir da
+> frequência do pico espectral associado ao componente 1×RPM da FFT — não
+> existe mais sensor Hall, PCNT ou medição de RPM em hardware.
 
 ### main
 
-| | |
-|---|---|
-| Status | implementado (esqueleto) |
-| Responsabilidade | init de infraestrutura, criação de tasks |
-| Dependências | todos os componentes |
-| Interfaces públicas | — (`app_main`) |
-| TODO | registrar `task_accel` via `xTaskCreatePinnedToCore` (falta hoje) |
+|                     |                                                          |
+| ------------------- | -------------------------------------------------------- |
+| Status              | implementado (esqueleto)                                 |
+| Responsabilidade    | init de infraestrutura, criação de tasks                 |
+| Dependências        | todos os componentes                                     |
+| Interfaces públicas | — (`app_main`)                                           |
+| TODO                | registrar `task_accel` via `xTaskCreatePinnedToCore`      |
 
 ### app_context
 
-| | |
-|---|---|
-| Status | header definido, `app_context_init()` é stub |
-| Responsabilidade | contexto único compartilhado entre tasks |
-| Dependências | nenhuma |
-| Interfaces públicas | `app_context_init(app_context_t *ctx)` |
-| Regra | um dado → um dono. Não guardar buffers privados de componente dentro do contexto (buffers privados vivem dentro do próprio componente) |
-| TODO | implementar criação real de queues/mutexes |
+|                     |                                                                                  |
+| ------------------- | -------------------------------------------------------------------------------- |
+| Status              | implementado                                                                     |
+| Responsabilidade    | contexto compartilhado entre tasks                                               |
+| Dependências        | nenhuma                                                                          |
+| Interfaces públicas | `app_context_init(app_context_t *ctx)`                                            |
+| Regra               | um dado → um dono. Buffers privados de componentes permanecem dentro do componente |
+| Recursos             | queues de comunicação e `mutex_spi2`                                              |
+
+Queues atualmente disponíveis:
+
+- `queue_accel_block_to_dsp`
+- `queue_dsp_to_hmi`
+- `queue_dsp_to_storage`
+- `queue_dsp_to_dac`
 
 ### accelerometer
 
-| | |
-|---|---|
-| Status | Concluído (`feat_accelerometer`) |
-| Responsabilidade | configurar LSM6DS3TR-C, SPI, DMA, FIFO, ping-pong, seleção de eixo, envio de bloco para o DSP |
-| NÃO faz | FFT, RMS, kurtosis, HMI, storage |
-| Dependências | SPI2 (criado pelo `main`), `mutex_spi2` |
-| Interfaces públicas | `accel_init(app_context_t *ctx)`, `task_accel(void *arg)` |
-| Fluxo | ver seção 5 |
-| Regra | driver **não inicializa barramento** — só usa a infra já criada pelo `main` |
-| TODO | driver real (hoje é stub); definir eixo processado; criar queue de saída para o DSP |
+|                     |                                                                                               |
+| ------------------- | --------------------------------------------------------------------------------------------- |
+| Status              | Concluído (`feat_accelerometer`)                                                              |
+| Responsabilidade    | configurar LSM6DS3TR-C, SPI, DMA, FIFO, ping-pong, seleção de eixo e envio de blocos para DSP |
+| NÃO faz             | FFT, RMS, kurtosis, HMI, storage                                                              |
+| Dependências        | SPI2 (criado pelo `main`), `mutex_spi2`                                                       |
+| Interfaces públicas | `accel_init(app_context_t *ctx)`, `task_accel(void *arg)`                                     |
+| Fluxo               | aquisição → seleção de eixo → bloco de 2048 amostras → `queue_accel_block_to_dsp`             |
+| Regra               | driver **não inicializa barramento** — utiliza a infraestrutura criada pelo `main`            |
 
 ### dsp_pipeline
 
-| | |
-|---|---|
-| Status |Em desenvolvimento (`feature_dsp`) |
-| Responsabilidade | pipeline de indicadores + decisão de estado (seção 7) |
-| Dependências | queue de blocos do `accelerometer` |
-| Interfaces públicas | `task_dsp(void *arg)` |
-| TODO | tudo (ver seção 7) |
+|                     |                                                                 |
+| ------------------- | --------------------------------------------------------------- |
+| Status              | Em desenvolvimento (`feature_dsp`)                              |
+| Responsabilidade    | processamento dos sinais no domínio do tempo e da frequência   |
+| Dependências        | `queue_accel_block_to_dsp`, ESP-DSP                              |
+| Interfaces públicas | `task_dsp(void *arg)`                                           |
+| Implementado        | RMS, StdDev, Min, Max, Peak-to-Peak, Crest Factor, Kurtosis e FFT |
+| Análise espectral   | janela de Hann, FFT, magnitude, normalização, eixo de frequência, busca de pico e interpolação parabólica |
+| RPM                 | estimado a partir da frequência do pico espectral                |
+| Validação           | estatísticas temporais/RMS validadas; frequência/RPM ainda não validados |
+| TODO                | consolidar `dsp_result_t`, EMA, Z-score, threshold, votação e validação do componente 1×RPM |
 
 ### hmi
 
-| | |
-|---|---|
-| Status | não implementado |
-| Responsabilidade | exibir RMS, kurtosis, crest factor, amplitude 1xRPM, estado atual; tela de FFT (faixa útil, ex. 0–300 Hz) |
-| NÃO faz | acessar acelerômetro ou SPI diretamente |
-| Dependências | `app_context` (somente leitura) |
-| TODO | tudo |
+|                  |                                                                                                           |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| Status           | não implementado                                                                                          |
+| Responsabilidade | exibir RMS, kurtosis, crest factor, amplitude 1×RPM, estado atual e espectro FFT                        |
+| FFT              | visualização de uma faixa configurável, por exemplo 0–300 Hz                                             |
+| NÃO faz          | acessar acelerômetro ou SPI diretamente                                                                   |
+| Dependências     | `queue_dsp_to_hmi`                                                                                       |
+| TODO             | tudo                                                                                                      |
 
 ### storage
 
-| | |
-|---|---|
-| Status | não implementado (exceto ownership do `mutex_spi2`) |
-| Responsabilidade | salvar indicadores (SD/NVS) |
-| Limitação atual | waveforms completas não são salvas ainda |
-| Dependências | `mutex_spi2` (compartilhado com `accelerometer`) |
-| TODO | tudo |
+|                  |                                                     |
+| ---------------- | --------------------------------------------------- |
+| Status           | não implementado                                    |
+| Responsabilidade | salvar indicadores (SD/NVS)                         |
+| Limitação atual  | waveforms completas não são salvas ainda            |
+| Dependências     | `queue_dsp_to_storage`, `mutex_spi2`               |
+| TODO             | tudo                                                |
 
 ### sensors
 
-| | |
-|---|---|
-| Status | não implementado |
+|                  |                                           |
+| ---------------- | ----------------------------------------- |
+| Status           | não implementado                          |
 | Responsabilidade | DS18B20 (temperatura), leitura de bateria |
-| TODO | tudo |
+| TODO             | tudo                                      |
 
 ### dac
 
-| | |
-|---|---|
-| Status | não implementado |
+|                  |                                             |
+| ---------------- | ------------------------------------------- |
+| Status           | não implementado                            |
 | Responsabilidade | saída analógica (MCP4725) para osciloscópio |
-| TODO | tudo |
+| Dependências     | `queue_dsp_to_dac`                          |
+| TODO             | tudo                                        |
 
 ---
+
 
 ## 7. Pipeline DSP
 
@@ -215,6 +228,7 @@ Amplitude do bin 1xRPM
    │
    ▼
 EMA ──▶ Z-score ──▶ Threshold ──▶ Votação ──▶ Estado da máquina
+
 ```
 
 RMS, Kurtosis e Crest Factor usam o sinal bruto. FFT é usada **apenas**

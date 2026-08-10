@@ -157,6 +157,7 @@ void task_accel(void *arg)
     while (true) {
         uint16_t fifo_words;
         bool fifo_overrun = false;
+        
         err = fifo_get_level(&fifo_words, &fifo_overrun);
         if (err != ESP_OK) {
             ESP_LOGE(TAG, "FIFO status read failed: %s", esp_err_to_name(err));
@@ -164,7 +165,14 @@ void task_accel(void *arg)
             continue;
         }
 
-        // ESP_LOGD(TAG, "fifo_words = %u", fifo_words);
+        if (fifo_overrun) {
+            ESP_LOGW(TAG, "FIFO overrun — descartando bloco em construção");
+            s_data.index = 0;
+            /* Não faz 'continue' aqui — o fluxo abaixo deve seguir e drenar
+            * o FIFO normalmente, senão o overrun nunca é resolvido e o
+            * sistema para de processar blocos indefinidamente. */
+        }
+
         if (fifo_words < ACCEL_FIFO_WATERMARK_WORDS) {
             vTaskDelay(pdMS_TO_TICKS(1));
             continue;
