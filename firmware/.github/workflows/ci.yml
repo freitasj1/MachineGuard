@@ -1,0 +1,29 @@
+name: MachineGuard CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build firmware
+    runs-on: ubuntu-latest
+
+    container:
+      image: espressif/idf:v6.0.2
+
+    defaults:
+      run:
+        working-directory: firmware
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build firmware
+        run: idf.py build
