@@ -20,6 +20,7 @@
 #include "sensors.h"
 #include "soc/gpio_num.h"
 #include "storage.h"
+#include "system.h"
 
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
@@ -80,9 +81,10 @@ void app_main(void)
     ESP_ERROR_CHECK(spi2_bus_init());
 
     // função da task, nome de debug, stack em bytes, parâmetro(ponteiro para o contexto), prioridade, handle (NULL), core
-    xTaskCreatePinnedToCore(task_accel,   "accel",   4096, &ctx, 24, NULL, 1);
     xTaskCreatePinnedToCore(task_dsp,     "dsp",     8192, &ctx, 23, NULL, 0);
+    xTaskCreatePinnedToCore(task_system,  "system",  8192, &ctx, 22, NULL, 0);
     
+    xTaskCreatePinnedToCore(task_accel,   "accel",   4096, &ctx, 24, NULL, 1);
     xTaskCreatePinnedToCore(task_sensors, "sensors", 4096, &ctx, 12, NULL, 1);
     xTaskCreatePinnedToCore(task_hmi,  "hmi",  4096, &ctx, 10, NULL, 1);
     xTaskCreatePinnedToCore(task_dac,  "dac",  4096, &ctx,  9, NULL, 1);

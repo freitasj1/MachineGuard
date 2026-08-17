@@ -110,6 +110,7 @@ typedef struct
 
 
 static dsp_context_t s_dsp;
+static dsp_result_t s_dsp_result;
  
 /* ============================================================================ 
 * Private function prototypes
@@ -179,74 +180,161 @@ static void validate_peak(fft_peak_t *peak);
 void task_dsp(void *arg)
 {
     app_context_t *ctx = (app_context_t *)arg;
-    if (ctx == NULL || 
+
+    if (ctx == NULL ||
         ctx->queue_accel_block_to_dsp == NULL ||
-        ctx->queue_dsp_to_dac == NULL ||
-        ctx->queue_dsp_to_hmi == NULL ||
-        ctx->queue_dsp_to_storage == NULL) {
+        ctx->queue_dsp_to_system == NULL) {
+
         ESP_LOGE(TAG, "invalid DSP context");
         vTaskDelete(NULL);
+        return;
     }
 
     init_hann_window(s_dsp.hann_window);
 
     if (init_fft() != ESP_OK) {
         vTaskDelete(NULL);
+        return;
     }
 
     build_frequency_axis(s_dsp.frequency_axis);
 
     ESP_LOGI(TAG, "task started");
+
     while (true) {
+
         accel_block_t block;
-        if (xQueueReceive(ctx->queue_accel_block_to_dsp, &block,
-             portMAX_DELAY) == pdTRUE) {
-            /* TODO: process block and overwrite queue_dsp_result. */
-            s_dsp.time_stats.mean = 
-                remove_dc_offset(&block, s_dsp.time_signal);
-        
-            convert_to_g(s_dsp.time_signal);
 
-            // calculate_time_stats(s_dsp.time_signal,
-            //          &s_dsp.time_stats);
+        if (xQueueReceive(ctx->queue_accel_block_to_dsp,
+                          &block,
+                          portMAX_DELAY) != pdTRUE) {
+            continue;
+        }
 
-            analyze_time_signal( s_dsp.time_signal,
-                &s_dsp.time_stats);
-            // ESP_LOGD(TAG, "Centered: [%.2f, %.2f, %.2f, %.2f",
-            //     s_dsp.time_signal[0],
-            //     s_dsp.time_signal[1],
-            //     s_dsp.time_signal[2],
-            //     s_dsp.time_signal[3]);
-            
+        /*
+         * --------------------------------------------------------------------
+         * Time-domain processing
+         * --------------------------------------------------------------------
+         */
 
-            ESP_LOGD(TAG,
-                "Mean: %.2f | RMS: %.6f | Min: %.6f | Max: %.6f | PkPk: %.6f",
-                s_dsp.time_stats.mean,
-                s_dsp.time_stats.rms,
-                s_dsp.time_stats.minimum,
-                s_dsp.time_stats.maximum,
-                s_dsp.time_stats.peak_to_peak);
+        s_dsp.time_stats.mean =
+            remove_dc_offset(&block, s_dsp.time_signal);
 
+        convert_to_g(s_dsp.time_signal);
 
-            memcpy(s_dsp.hann_signal, s_dsp.time_signal, sizeof(s_dsp.time_signal));
+        analyze_time_signal(
+            s_dsp.time_signal,
+            &s_dsp.time_stats
+        );
 
-            fft_peak_t peak = analyze_fft(
-                s_dsp.hann_window,
-                s_dsp.hann_signal,
-                s_dsp.fft_buffer,
-                s_dsp.magnitude,
-                s_dsp.frequency_axis);
+        ESP_LOGD(
+            TAG,
+            "Mean: %.2f | RMS: %.6f | Min: %.6f | Max: %.6f | PkPk: %.6f",
+            s_dsp.time_stats.mean,
+            s_dsp.time_stats.rms,
+            s_dsp.time_stats.minimum,
+            s_dsp.time_stats.maximum,
+            s_dsp.time_stats.peak_to_peak
+        );
 
-            if (peak.valid)
-            {
-                ESP_LOGI(TAG, "Peak: %.2f Hz | %.1f RPM | %.5f g",
-                    peak.frequency_hz, peak.rpm, peak.amplitude_g);
+        /*
+         * --------------------------------------------------------------------
+         * FFT processing
+         * --------------------------------------------------------------------
+         */
 
-            } else
-            {
-                ESP_LOGI(TAG, "No valid vibration detected");
-            }
+        memcpy(
+            s_dsp.hann_signal,
+            s_dsp.time_signal,
+            sizeof(s_dsp.time_signal)
+        );
 
+        fft_peak_t peak = analyze_fft(
+            s_dsp.hann_window,
+            s_dsp.hann_signal,
+            s_dsp.fft_buffer,
+            s_dsp.magnitude,
+            s_dsp.frequency_axis
+        );
+
+        /*
+         * --------------------------------------------------------------------
+         * Build DSP result
+         * --------------------------------------------------------------------
+         */
+
+        memset(&s_dsp_result, 0, sizeof(s_dsp_result));
+
+        /* Time-domain indicators. */
+        s_dsp_result.rms =
+            s_dsp.time_stats.rms;
+
+        s_dsp_result.kurtosis =
+            s_dsp.time_stats.kurtosis;
+
+        s_dsp_result.crest_factor =
+            s_dsp.time_stats.crest_factor;
+
+        /* FFT / 1xRPM result. */
+        if (peak.valid) {
+
+            s_dsp_result.bin_1xrpm_amplitude =
+                peak.amplitude_g;
+
+            s_dsp_result.frequency_hz =
+                peak.frequency_hz;
+
+            s_dsp_result.rpm =
+                peak.rpm;
+
+            ESP_LOGI(
+                TAG,
+                "Peak: %.2f Hz | %.1f RPM | %.5f g",
+                peak.frequency_hz,
+                peak.rpm,
+                peak.amplitude_g
+            );
+
+        } else {
+
+            ESP_LOGI(TAG, "No valid vibration detected");
+        }
+
+        /*
+         * FFT magnitude is required by the HMI.
+         */
+        memcpy(
+            s_dsp_result.magnitude,
+            s_dsp.magnitude,
+            sizeof(s_dsp_result.magnitude)
+        );
+
+        /*
+         * Time-domain waveform is required by the DAC.
+         *
+         * The signal is already converted to g and has its DC component
+         * removed.
+         */
+        memcpy(
+            s_dsp_result.waveform,
+            s_dsp.time_signal,
+            sizeof(s_dsp_result.waveform)
+        );
+
+        /*
+         * --------------------------------------------------------------------
+         * Publish result
+         * --------------------------------------------------------------------
+         *
+         * The queue copies the complete dsp_result_t.
+         * s_dsp_result remains private to the DSP task.
+         */
+
+        if (xQueueOverwrite(
+                ctx->queue_dsp_to_system,
+                &s_dsp_result) != pdPASS) {
+
+            ESP_LOGW(TAG, "DSP result queue overwrite failed");
         }
     }
 }
