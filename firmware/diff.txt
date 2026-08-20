@@ -1,0 +1,428 @@
+diff --git a/firmware/components/app_context/include/app_context.h b/firmware/components/app_context/include/app_context.h
+index 3e626b5..37dccbd 100644
+--- a/firmware/components/app_context/include/app_context.h
++++ b/firmware/components/app_context/include/app_context.h
+@@ -53,6 +53,7 @@ typedef struct
+     /* Time-domain signal for DAC output, expressed in g. */
+     float waveform[ACCEL_BLOCK_SIZE];
+ 
++    bool peak_valid;
+ } dsp_result_t;
+ 
+ /**
+diff --git a/firmware/components/dsp_pipeline/dsp.c b/firmware/components/dsp_pipeline/dsp.c
+index 04f6885..40df7b3 100644
+--- a/firmware/components/dsp_pipeline/dsp.c
++++ b/firmware/components/dsp_pipeline/dsp.c
+@@ -275,7 +275,9 @@ void task_dsp(void *arg)
+         s_dsp_result.crest_factor =
+             s_dsp.time_stats.crest_factor;
+ 
+-        /* FFT / 1xRPM result. */
++       /* FFT / 1xRPM result. */
++        s_dsp_result.peak_valid = peak.valid;
++
+         if (peak.valid) {
+ 
+             s_dsp_result.bin_1xrpm_amplitude =
+diff --git a/firmware/components/system/system.c b/firmware/components/system/system.c
+index 9b35a07..73fbaea 100644
+--- a/firmware/components/system/system.c
++++ b/firmware/components/system/system.c
+@@ -10,8 +10,10 @@
+ #include <stdbool.h>
+ #include <stdint.h>
+ 
++#include "app_context.h"
+ #include "esp_log.h"
+ #include "freertos/FreeRTOS.h"
++#include "freertos/projdefs.h"
+ #include "freertos/queue.h"
+ #include "freertos/task.h"
+ #include "portmacro.h"
+@@ -29,6 +31,15 @@ static const char *TAG = "system";
+  */
+ #define SYSTEM_MIN_STDDEV (1.0e-9f)
+ 
++/**
++ * @brief Minimum number of valid 1xRPM observations required
++ *        to accept the spectral baseline.
++ *
++ * This is an initial engineering criterion and must be evaluated
++ * with real motor data.
++ */
++#define SYSTEM_MIN_BIN_VALID_EVALUATIONS (100U)
++
+ /* ============================================================================
+  * Private types
+  * ========================================================================== */
+@@ -73,14 +84,12 @@ typedef struct
+ 
+ } system_baseline_t;
+ 
+-/**
+- * @brief Private context of the system task.
+- */
+ typedef struct
+ {
+     system_state_t state;
+ 
+     uint16_t warmup_count;
++    uint16_t bin_valid_count;
+ 
+     system_online_stats_t rms_stats;
+     system_online_stats_t kurtosis_stats;
+@@ -220,6 +229,7 @@ static void reset_context(void)
+     s_system.state = SYSTEM_STATE_INIT;
+ 
+     s_system.warmup_count = 0U;
++    s_system.bin_valid_count = 0U;
+ 
+     s_system.rms_stats = (system_online_stats_t){0};
+     s_system.kurtosis_stats = (system_online_stats_t){0};
+@@ -230,7 +240,6 @@ static void reset_context(void)
+     s_system.consecutive_abnormal = 0U;
+     s_system.consecutive_normal = 0U;
+ }
+-
+ static void process_warmup(const dsp_result_t *result)
+ {
+     if (result == NULL) {
+@@ -247,10 +256,15 @@ static void process_warmup(const dsp_result_t *result)
+         result->kurtosis
+     );
+ 
+-    update_online_stats(
+-        &s_system.bin_stats,
+-        result->bin_1xrpm_amplitude
+-    );
++    if (result->peak_valid) {
++
++        update_online_stats(
++            &s_system.bin_stats,
++            result->bin_1xrpm_amplitude
++        );
++
++        s_system.bin_valid_count++;
++    }
+ 
+     s_system.warmup_count++;
+ 
+@@ -259,9 +273,10 @@ static void process_warmup(const dsp_result_t *result)
+ 
+         ESP_LOGI(
+             TAG,
+-            "warm-up: %u/%u",
++            "warm-up: %u/%u | 1xRPM valid: %u",
+             s_system.warmup_count,
+-            SYSTEM_WARMUP_EVALUATIONS
++            SYSTEM_WARMUP_EVALUATIONS,
++            s_system.bin_valid_count
+         );
+     }
+ 
+@@ -269,23 +284,39 @@ static void process_warmup(const dsp_result_t *result)
+ 
+         finalize_baseline();
+ 
+-        s_system.state = SYSTEM_STATE_HEALTHY;
++        
++        if (s_system.baseline.valid) {
+ 
+-        s_system.consecutive_abnormal = 0U;
+-        s_system.consecutive_normal = 0U;
++            s_system.state = SYSTEM_STATE_HEALTHY;
+ 
+-        ESP_LOGI(TAG, "warm-up completed");
++            s_system.consecutive_abnormal = 0U;
++            s_system.consecutive_normal = 0U;
+ 
+-        log_baseline();
++            ESP_LOGI(TAG, "warm-up completed");
+ 
+-        ESP_LOGI(
+-            TAG,
+-            "state: %s",
+-            state_to_string(s_system.state)
+-        );
++            log_baseline();
++
++            ESP_LOGI(
++                TAG,
++                "state: %s",
++                state_to_string(s_system.state)
++            );
++
++        } else {
++
++            ESP_LOGE(
++                TAG,
++                "warm-up completed but baseline is invalid"
++            );
++
++            /*
++            * Keep the system out of HEALTHY until a valid baseline
++            * is available.
++            */
++            s_system.state = SYSTEM_STATE_WARMUP;
++        }
+     }
+ }
+-
+ static void finalize_baseline(void)
+ {
+     s_system.baseline.rms =
+@@ -297,10 +328,27 @@ static void finalize_baseline(void)
+     s_system.baseline.bin_1xrpm_amplitude =
+         build_baseline_feature(&s_system.bin_stats);
+ 
++    const bool bin_count_valid =
++        s_system.bin_valid_count >=
++        SYSTEM_MIN_BIN_VALID_EVALUATIONS;
++
+     s_system.baseline.valid =
+         s_system.baseline.rms.valid &&
+         s_system.baseline.kurtosis.valid &&
+-        s_system.baseline.bin_1xrpm_amplitude.valid;
++        s_system.baseline.bin_1xrpm_amplitude.valid &&
++        bin_count_valid;
++
++    ESP_LOGI(
++        TAG,
++        "baseline validity: RMS=%d | Kurtosis=%d | "
++        "1xRPM=%d (%u/%u) | overall=%d",
++        s_system.baseline.rms.valid,
++        s_system.baseline.kurtosis.valid,
++        s_system.baseline.bin_1xrpm_amplitude.valid,
++        s_system.bin_valid_count,
++        SYSTEM_MIN_BIN_VALID_EVALUATIONS,
++        s_system.baseline.valid
++    );
+ }
+ 
+ static void update_online_stats(system_online_stats_t *stats,
+@@ -433,62 +481,81 @@ static void process_monitoring(const dsp_result_t *result)
+     const bool abnormal =
+         evaluate_abnormality(result);
+ 
+-    if (abnormal) {
++    if (s_system.state == SYSTEM_STATE_HEALTHY) {
+ 
+-        s_system.consecutive_abnormal++;
+-        s_system.consecutive_normal = 0U;
++        if (abnormal) {
+ 
+-        ESP_LOGD(
+-            TAG,
+-            "abnormal evaluation: %u/%u",
+-            s_system.consecutive_abnormal,
+-            SYSTEM_ALARM_CONSECUTIVE_COUNT
+-        );
++            s_system.consecutive_abnormal++;
++            s_system.consecutive_normal = 0U;
+ 
+-        if (s_system.consecutive_abnormal >=
+-            SYSTEM_ALARM_CONSECUTIVE_COUNT) {
++            ESP_LOGD(
++                TAG,
++                "abnormal evaluation: %u/%u",
++                s_system.consecutive_abnormal,
++                SYSTEM_ALARM_CONSECUTIVE_COUNT
++            );
+ 
+-            if (s_system.state != SYSTEM_STATE_ALARM) {
++            if (s_system.consecutive_abnormal >=
++                SYSTEM_ALARM_CONSECUTIVE_COUNT) {
+ 
+                 s_system.state = SYSTEM_STATE_ALARM;
+ 
++                s_system.consecutive_abnormal = 0U;
++                s_system.consecutive_normal = 0U;
++
+                 ESP_LOGW(
+                     TAG,
+                     "state changed: %s",
+                     state_to_string(s_system.state)
+                 );
+             }
++        }
++        else {
+ 
++            /*
++             * A normal evaluation breaks the consecutive abnormal
++             * sequence. No counter is required while the system
++             * is already healthy.
++             */
+             s_system.consecutive_abnormal = 0U;
+         }
+ 
+-    } else {
++    }
++    else if (s_system.state == SYSTEM_STATE_ALARM) {
+ 
+-        s_system.consecutive_normal++;
+-        s_system.consecutive_abnormal = 0U;
++        if (abnormal) {
+ 
+-        ESP_LOGD(
+-            TAG,
+-            "normal evaluation: %u/%u",
+-            s_system.consecutive_normal,
+-            SYSTEM_HEALTHY_CONSECUTIVE_COUNT
+-        );
++            /*
++             * An abnormal evaluation breaks the consecutive normal
++             * sequence. The system remains in ALARM.
++             */
++            s_system.consecutive_normal = 0U;
++        }
++        else {
++
++            s_system.consecutive_normal++;
+ 
+-        if (s_system.consecutive_normal >=
+-            SYSTEM_HEALTHY_CONSECUTIVE_COUNT) {
++            ESP_LOGD(
++                TAG,
++                "normal evaluation: %u/%u",
++                s_system.consecutive_normal,
++                SYSTEM_HEALTHY_CONSECUTIVE_COUNT
++            );
+ 
+-            if (s_system.state != SYSTEM_STATE_HEALTHY) {
++            if (s_system.consecutive_normal >=
++                SYSTEM_HEALTHY_CONSECUTIVE_COUNT) {
+ 
+                 s_system.state = SYSTEM_STATE_HEALTHY;
+ 
++                s_system.consecutive_normal = 0U;
++                s_system.consecutive_abnormal = 0U;
++
+                 ESP_LOGI(
+                     TAG,
+                     "state changed: %s",
+                     state_to_string(s_system.state)
+                 );
+             }
+-
+-            s_system.consecutive_normal = 0U;
+         }
+     }
+ }
+diff --git a/firmware/main/main.c b/firmware/main/main.c
+index 2b885cb..8f57dca 100644
+--- a/firmware/main/main.c
++++ b/firmware/main/main.c
+@@ -9,6 +9,7 @@
+ #include "esp_err.h"
+ #include "esp_log.h"
+ #include "freertos/FreeRTOS.h"
++#include "freertos/projdefs.h"
+ #include "freertos/task.h"
+ #include "freertos/idf_additions.h"
+ #include "app_context.h"
+@@ -74,22 +75,92 @@ static app_context_t ctx;           /**< Contexto compartilhado do sistema */
+  */
+ void app_main(void)
+ {
+-    ESP_LOGI(TAG, "MachineGuard iniciando...");
++    ESP_LOGI(TAG, "MachineGuard starting...");
+ 
+     ESP_ERROR_CHECK(app_context_init(&ctx));
+-
+     ESP_ERROR_CHECK(spi2_bus_init());
+ 
+-    // função da task, nome de debug, stack em bytes, parâmetro(ponteiro para o contexto), prioridade, handle (NULL), core
+-    xTaskCreatePinnedToCore(task_dsp,     "dsp",     8192, &ctx, 23, NULL, 0);
+-    xTaskCreatePinnedToCore(task_system,  "system",  8192, &ctx, 22, NULL, 0);
+-    
+-    xTaskCreatePinnedToCore(task_accel,   "accel",   4096, &ctx, 24, NULL, 1);
+-    xTaskCreatePinnedToCore(task_sensors, "sensors", 4096, &ctx, 12, NULL, 1);
+-    xTaskCreatePinnedToCore(task_hmi,  "hmi",  4096, &ctx, 10, NULL, 1);
+-    xTaskCreatePinnedToCore(task_dac,  "dac",  4096, &ctx,  9, NULL, 1);
+-    xTaskCreatePinnedToCore(task_sd,   "sd",   4096, &ctx,  8, NULL, 1);
+-    
++    TaskHandle_t dsp_handle     = NULL;
++    TaskHandle_t system_handle  = NULL;
++    TaskHandle_t accel_handle   = NULL;
++    TaskHandle_t sensors_handle = NULL;
++    TaskHandle_t hmi_handle     = NULL;
++    TaskHandle_t dac_handle     = NULL;
++    TaskHandle_t sd_handle      = NULL;
++
++    BaseType_t ret;
++
++    // Create DSP task
++    ret = xTaskCreatePinnedToCore(
++        task_dsp, "dsp", 8192, &ctx, 23, &dsp_handle, 0
++    );
++    if (ret == pdPASS) {
++        ESP_LOGI(TAG, "Task 'dsp' created successfully (priority=23, core=0)");
++    } else {
++        ESP_LOGE(TAG, "Failed to create task 'dsp'");
++    }
++
++    // Create system task
++    ret = xTaskCreatePinnedToCore(
++        task_system, "system", 8192, &ctx, 22, &system_handle, 0
++    );
++    if (ret == pdPASS) {
++        ESP_LOGI(TAG, "Task 'system' created successfully (priority=22, core=0)");
++    } else {
++        ESP_LOGE(TAG, "Failed to create task 'system'");
++    }
++
++    // Create accelerometer task
++    ret = xTaskCreatePinnedToCore(
++        task_accel, "accel", 4096, &ctx, 24, &accel_handle, 1
++    );
++    if (ret == pdPASS) {
++        ESP_LOGI(TAG, "Task 'accel' created successfully (priority=24, core=1)");
++    } else {
++        ESP_LOGE(TAG, "Failed to create task 'accel'");
++    }
++
++    // Create sensors task
++    ret = xTaskCreatePinnedToCore(
++        task_sensors, "sensors", 4096, &ctx, 12, &sensors_handle, 1
++    );
++    if (ret == pdPASS) {
++        ESP_LOGI(TAG, "Task 'sensors' created successfully (priority=12, core=1)");
++    } else {
++        ESP_LOGE(TAG, "Failed to create task 'sensors'");
++    }
++
++    // Create HMI task
++    ret = xTaskCreatePinnedToCore(
++        task_hmi, "hmi", 4096, &ctx, 10, &hmi_handle, 1
++    );
++    if (ret == pdPASS) {
++        ESP_LOGI(TAG, "Task 'hmi' created successfully (priority=10, core=1)");
++    } else {
++        ESP_LOGE(TAG, "Failed to create task 'hmi'");
++    }
++
++    // Create DAC task
++    ret = xTaskCreatePinnedToCore(
++        task_dac, "dac", 4096, &ctx, 9, &dac_handle, 1
++    );
++    if (ret == pdPASS) {
++        ESP_LOGI(TAG, "Task 'dac' created successfully (priority=9, core=1)");
++    } else {
++        ESP_LOGE(TAG, "Failed to create task 'dac'");
++    }
++
++    // Create SD task
++    ret = xTaskCreatePinnedToCore(
++        task_sd, "sd", 4096, &ctx, 8, &sd_handle, 1
++    );
++    if (ret == pdPASS) {
++        ESP_LOGI(TAG, "Task 'sd' created successfully (priority=8, core=1)");
++    } else {
++        ESP_LOGE(TAG, "Failed to create task 'sd'");
++    }
++
++    ESP_LOGI(TAG, "Task initialization completed");
+ }
+  
+ /* ============================================================================

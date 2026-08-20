@@ -10,8 +10,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "app_context.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
+#include "freertos/projdefs.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"
 #include "portmacro.h"
@@ -28,6 +30,15 @@ static const char *TAG = "system";
  * This prevents division by a value that is effectively zero.
  */
 #define SYSTEM_MIN_STDDEV (1.0e-9f)
+
+/**
+ * @brief Minimum number of valid 1xRPM observations required
+ *        to accept the spectral baseline.
+ *
+ * This is an initial engineering criterion and must be evaluated
+ * with real motor data.
+ */
+#define SYSTEM_MIN_BIN_VALID_EVALUATIONS (100U)
 
 /* ============================================================================
  * Private types
@@ -73,14 +84,12 @@ typedef struct
 
 } system_baseline_t;
 
-/**
- * @brief Private context of the system task.
- */
 typedef struct
 {
     system_state_t state;
 
     uint16_t warmup_count;
+    uint16_t bin_valid_count;
 
     system_online_stats_t rms_stats;
     system_online_stats_t kurtosis_stats;
@@ -220,6 +229,7 @@ static void reset_context(void)
     s_system.state = SYSTEM_STATE_INIT;
 
     s_system.warmup_count = 0U;
+    s_system.bin_valid_count = 0U;
 
     s_system.rms_stats = (system_online_stats_t){0};
     s_system.kurtosis_stats = (system_online_stats_t){0};
@@ -230,7 +240,6 @@ static void reset_context(void)
     s_system.consecutive_abnormal = 0U;
     s_system.consecutive_normal = 0U;
 }
-
 static void process_warmup(const dsp_result_t *result)
 {
     if (result == NULL) {
@@ -247,10 +256,15 @@ static void process_warmup(const dsp_result_t *result)
         result->kurtosis
     );
 
-    update_online_stats(
-        &s_system.bin_stats,
-        result->bin_1xrpm_amplitude
-    );
+    if (result->peak_valid) {
+
+        update_online_stats(
+            &s_system.bin_stats,
+            result->bin_1xrpm_amplitude
+        );
+
+        s_system.bin_valid_count++;
+    }
 
     s_system.warmup_count++;
 
@@ -259,9 +273,10 @@ static void process_warmup(const dsp_result_t *result)
 
         ESP_LOGI(
             TAG,
-            "warm-up: %u/%u",
+            "warm-up: %u/%u | 1xRPM valid: %u",
             s_system.warmup_count,
-            SYSTEM_WARMUP_EVALUATIONS
+            SYSTEM_WARMUP_EVALUATIONS,
+            s_system.bin_valid_count
         );
     }
 
@@ -269,23 +284,39 @@ static void process_warmup(const dsp_result_t *result)
 
         finalize_baseline();
 
-        s_system.state = SYSTEM_STATE_HEALTHY;
+        
+        if (s_system.baseline.valid) {
 
-        s_system.consecutive_abnormal = 0U;
-        s_system.consecutive_normal = 0U;
+            s_system.state = SYSTEM_STATE_HEALTHY;
 
-        ESP_LOGI(TAG, "warm-up completed");
+            s_system.consecutive_abnormal = 0U;
+            s_system.consecutive_normal = 0U;
 
-        log_baseline();
+            ESP_LOGI(TAG, "warm-up completed");
 
-        ESP_LOGI(
-            TAG,
-            "state: %s",
-            state_to_string(s_system.state)
-        );
+            log_baseline();
+
+            ESP_LOGI(
+                TAG,
+                "state: %s",
+                state_to_string(s_system.state)
+            );
+
+        } else {
+
+            ESP_LOGE(
+                TAG,
+                "warm-up completed but baseline is invalid"
+            );
+
+            /*
+            * Keep the system out of HEALTHY until a valid baseline
+            * is available.
+            */
+            s_system.state = SYSTEM_STATE_WARMUP;
+        }
     }
 }
-
 static void finalize_baseline(void)
 {
     s_system.baseline.rms =
@@ -297,10 +328,27 @@ static void finalize_baseline(void)
     s_system.baseline.bin_1xrpm_amplitude =
         build_baseline_feature(&s_system.bin_stats);
 
+    const bool bin_count_valid =
+        s_system.bin_valid_count >=
+        SYSTEM_MIN_BIN_VALID_EVALUATIONS;
+
     s_system.baseline.valid =
         s_system.baseline.rms.valid &&
         s_system.baseline.kurtosis.valid &&
-        s_system.baseline.bin_1xrpm_amplitude.valid;
+        s_system.baseline.bin_1xrpm_amplitude.valid &&
+        bin_count_valid;
+
+    ESP_LOGI(
+        TAG,
+        "baseline validity: RMS=%d | Kurtosis=%d | "
+        "1xRPM=%d (%u/%u) | overall=%d",
+        s_system.baseline.rms.valid,
+        s_system.baseline.kurtosis.valid,
+        s_system.baseline.bin_1xrpm_amplitude.valid,
+        s_system.bin_valid_count,
+        SYSTEM_MIN_BIN_VALID_EVALUATIONS,
+        s_system.baseline.valid
+    );
 }
 
 static void update_online_stats(system_online_stats_t *stats,
@@ -433,24 +481,27 @@ static void process_monitoring(const dsp_result_t *result)
     const bool abnormal =
         evaluate_abnormality(result);
 
-    if (abnormal) {
+    if (s_system.state == SYSTEM_STATE_HEALTHY) {
 
-        s_system.consecutive_abnormal++;
-        s_system.consecutive_normal = 0U;
+        if (abnormal) {
 
-        ESP_LOGD(
-            TAG,
-            "abnormal evaluation: %u/%u",
-            s_system.consecutive_abnormal,
-            SYSTEM_ALARM_CONSECUTIVE_COUNT
-        );
+            s_system.consecutive_abnormal++;
+            s_system.consecutive_normal = 0U;
 
-        if (s_system.consecutive_abnormal >=
-            SYSTEM_ALARM_CONSECUTIVE_COUNT) {
+            ESP_LOGD(
+                TAG,
+                "abnormal evaluation: %u/%u",
+                s_system.consecutive_abnormal,
+                SYSTEM_ALARM_CONSECUTIVE_COUNT
+            );
 
-            if (s_system.state != SYSTEM_STATE_ALARM) {
+            if (s_system.consecutive_abnormal >=
+                SYSTEM_ALARM_CONSECUTIVE_COUNT) {
 
                 s_system.state = SYSTEM_STATE_ALARM;
+
+                s_system.consecutive_abnormal = 0U;
+                s_system.consecutive_normal = 0U;
 
                 ESP_LOGW(
                     TAG,
@@ -458,28 +509,46 @@ static void process_monitoring(const dsp_result_t *result)
                     state_to_string(s_system.state)
                 );
             }
+        }
+        else {
 
+            /*
+             * A normal evaluation breaks the consecutive abnormal
+             * sequence. No counter is required while the system
+             * is already healthy.
+             */
             s_system.consecutive_abnormal = 0U;
         }
 
-    } else {
+    }
+    else if (s_system.state == SYSTEM_STATE_ALARM) {
 
-        s_system.consecutive_normal++;
-        s_system.consecutive_abnormal = 0U;
+        if (abnormal) {
 
-        ESP_LOGD(
-            TAG,
-            "normal evaluation: %u/%u",
-            s_system.consecutive_normal,
-            SYSTEM_HEALTHY_CONSECUTIVE_COUNT
-        );
+            /*
+             * An abnormal evaluation breaks the consecutive normal
+             * sequence. The system remains in ALARM.
+             */
+            s_system.consecutive_normal = 0U;
+        }
+        else {
 
-        if (s_system.consecutive_normal >=
-            SYSTEM_HEALTHY_CONSECUTIVE_COUNT) {
+            s_system.consecutive_normal++;
 
-            if (s_system.state != SYSTEM_STATE_HEALTHY) {
+            ESP_LOGD(
+                TAG,
+                "normal evaluation: %u/%u",
+                s_system.consecutive_normal,
+                SYSTEM_HEALTHY_CONSECUTIVE_COUNT
+            );
+
+            if (s_system.consecutive_normal >=
+                SYSTEM_HEALTHY_CONSECUTIVE_COUNT) {
 
                 s_system.state = SYSTEM_STATE_HEALTHY;
+
+                s_system.consecutive_normal = 0U;
+                s_system.consecutive_abnormal = 0U;
 
                 ESP_LOGI(
                     TAG,
@@ -487,8 +556,6 @@ static void process_monitoring(const dsp_result_t *result)
                     state_to_string(s_system.state)
                 );
             }
-
-            s_system.consecutive_normal = 0U;
         }
     }
 }

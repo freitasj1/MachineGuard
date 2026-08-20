@@ -275,7 +275,9 @@ void task_dsp(void *arg)
         s_dsp_result.crest_factor =
             s_dsp.time_stats.crest_factor;
 
-        /* FFT / 1xRPM result. */
+       /* FFT / 1xRPM result. */
+        s_dsp_result.peak_valid = peak.valid;
+
         if (peak.valid) {
 
             s_dsp_result.bin_1xrpm_amplitude =

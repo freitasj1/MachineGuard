@@ -53,6 +53,7 @@ typedef struct
     /* Time-domain signal for DAC output, expressed in g. */
     float waveform[ACCEL_BLOCK_SIZE];
 
+    bool peak_valid;
 } dsp_result_t;
 
 /**
