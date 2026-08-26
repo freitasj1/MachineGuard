@@ -15,7 +15,7 @@ void task_sensors(void *arg)
     (void)arg;
     ESP_LOGI(TAG, "task_sensors started");
     while (true) {
-        /* TODO: read DS18B20 and battery. */
+        /* TODO: read DS18B20. */
         vTaskDelay(pdMS_TO_TICKS(100));
     }
 }

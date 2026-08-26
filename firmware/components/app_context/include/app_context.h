@@ -56,6 +56,12 @@ typedef struct
     bool peak_valid;
 } dsp_result_t;
 
+typedef struct
+{
+    float temperature_c;
+    bool temperature_valid;
+} sensor_result_t;
+
 /**
  * @brief One selected-axis accelerometer sample.
  */
@@ -90,6 +96,7 @@ typedef struct
     /** SPI2 mutex shared by accelerometer and storage. */
     SemaphoreHandle_t mutex_spi2;
 
+    QueueHandle_t queue_sensors_to_system;
 } app_context_t;
 
 /* ============================================================================

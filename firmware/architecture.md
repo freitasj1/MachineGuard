@@ -609,18 +609,7 @@ A HMI não acessa diretamente os buffers privados do DSP.
 |                  |                                                       |
 | ---------------- | ----------------------------------------------------- |
 | Status           | não implementado                                      |
-| Responsabilidade | DS18B20, leitura de bateria e outros sensores futuros |
-| Dependências     | definidas conforme hardware                           |
-| TODO             | implementação                                         |
-
-Os resultados dos sensores são enviados para o `task_system`, que decide como
-esses dados serão utilizados e distribuídos.
-
----
-|                  |                                                       |
-| ---------------- | ----------------------------------------------------- |
-| Status           | não implementado                                      |
-| Responsabilidade | DS18B20, leitura de bateria e outros sensores futuros |
+| Responsabilidade | DS18B20 |
 | Dependências     | definidas conforme hardware                           |
 | TODO             | implementação                                         |
 
