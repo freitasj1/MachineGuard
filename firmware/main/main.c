@@ -9,6 +9,7 @@
 #include "esp_err.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
+#include "freertos/projdefs.h"
 #include "freertos/task.h"
 #include "freertos/idf_additions.h"
 #include "app_context.h"
@@ -20,6 +21,7 @@
 #include "sensors.h"
 #include "soc/gpio_num.h"
 #include "storage.h"
+#include "system.h"
 
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
@@ -73,21 +75,92 @@ static app_context_t ctx;           /**< Contexto compartilhado do sistema */
  */
 void app_main(void)
 {
-    ESP_LOGI(TAG, "MachineGuard iniciando...");
+    ESP_LOGI(TAG, "MachineGuard starting...");
 
     ESP_ERROR_CHECK(app_context_init(&ctx));
-
     ESP_ERROR_CHECK(spi2_bus_init());
 
-    // função da task, nome de debug, stack em bytes, parâmetro(ponteiro para o contexto), prioridade, handle (NULL), core
-    xTaskCreatePinnedToCore(task_accel,   "accel",   4096, &ctx, 24, NULL, 1);
-    xTaskCreatePinnedToCore(task_dsp,     "dsp",     8192, &ctx, 23, NULL, 0);
-    
-    xTaskCreatePinnedToCore(task_sensors, "sensors", 4096, &ctx, 12, NULL, 1);
-    xTaskCreatePinnedToCore(task_hmi,  "hmi",  4096, &ctx, 10, NULL, 1);
-    xTaskCreatePinnedToCore(task_dac,  "dac",  4096, &ctx,  9, NULL, 1);
-    xTaskCreatePinnedToCore(task_sd,   "sd",   4096, &ctx,  8, NULL, 1);
-    
+    TaskHandle_t dsp_handle     = NULL;
+    TaskHandle_t system_handle  = NULL;
+    TaskHandle_t accel_handle   = NULL;
+    TaskHandle_t sensors_handle = NULL;
+    TaskHandle_t hmi_handle     = NULL;
+    TaskHandle_t dac_handle     = NULL;
+    TaskHandle_t sd_handle      = NULL;
+
+    BaseType_t ret;
+
+    // Create DSP task
+    ret = xTaskCreatePinnedToCore(
+        task_dsp, "dsp", 8192, &ctx, 23, &dsp_handle, 0
+    );
+    if (ret == pdPASS) {
+        ESP_LOGI(TAG, "Task 'dsp' created successfully (priority=23, core=0)");
+    } else {
+        ESP_LOGE(TAG, "Failed to create task 'dsp'");
+    }
+
+    // Create system task
+    ret = xTaskCreatePinnedToCore(
+        task_system, "system", 8192, &ctx, 22, &system_handle, 0
+    );
+    if (ret == pdPASS) {
+        ESP_LOGI(TAG, "Task 'system' created successfully (priority=22, core=0)");
+    } else {
+        ESP_LOGE(TAG, "Failed to create task 'system'");
+    }
+
+    // Create accelerometer task
+    ret = xTaskCreatePinnedToCore(
+        task_accel, "accel", 4096, &ctx, 24, &accel_handle, 1
+    );
+    if (ret == pdPASS) {
+        ESP_LOGI(TAG, "Task 'accel' created successfully (priority=24, core=1)");
+    } else {
+        ESP_LOGE(TAG, "Failed to create task 'accel'");
+    }
+
+    // Create sensors task
+    ret = xTaskCreatePinnedToCore(
+        task_sensors, "sensors", 4096, &ctx, 12, &sensors_handle, 1
+    );
+    if (ret == pdPASS) {
+        ESP_LOGI(TAG, "Task 'sensors' created successfully (priority=12, core=1)");
+    } else {
+        ESP_LOGE(TAG, "Failed to create task 'sensors'");
+    }
+
+    // Create HMI task
+    ret = xTaskCreatePinnedToCore(
+        task_hmi, "hmi", 4096, &ctx, 10, &hmi_handle, 1
+    );
+    if (ret == pdPASS) {
+        ESP_LOGI(TAG, "Task 'hmi' created successfully (priority=10, core=1)");
+    } else {
+        ESP_LOGE(TAG, "Failed to create task 'hmi'");
+    }
+
+    // Create DAC task
+    ret = xTaskCreatePinnedToCore(
+        task_dac, "dac", 4096, &ctx, 9, &dac_handle, 1
+    );
+    if (ret == pdPASS) {
+        ESP_LOGI(TAG, "Task 'dac' created successfully (priority=9, core=1)");
+    } else {
+        ESP_LOGE(TAG, "Failed to create task 'dac'");
+    }
+
+    // Create SD task
+    ret = xTaskCreatePinnedToCore(
+        task_sd, "sd", 4096, &ctx, 8, &sd_handle, 1
+    );
+    if (ret == pdPASS) {
+        ESP_LOGI(TAG, "Task 'sd' created successfully (priority=8, core=1)");
+    } else {
+        ESP_LOGE(TAG, "Failed to create task 'sd'");
+    }
+
+    ESP_LOGI(TAG, "Task initialization completed");
 }
  
 /* ============================================================================
