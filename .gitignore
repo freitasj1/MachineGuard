@@ -143,3 +143,4 @@ firmware/sdkconfig.old
 firmware/.vscode/
 firmware/.devcontainer/
 firmware/managed_components/
+docs/Pitch/

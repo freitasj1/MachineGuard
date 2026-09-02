@@ -2,166 +2,144 @@
 
 ## 1. Objetivo
 
-Documentar **como o MachineGuard está organizado**: estrutura do firmware,
-Documentar **como o MachineGuard está organizado**: estrutura do firmware,
-comunicação entre componentes, regras de implementação e decisões
-arquiteturais que não podem ser quebradas.
+Documentar como o MachineGuard está organizado: estrutura do firmware,
+comunicação entre componentes, responsabilidades dos módulos e decisões
+arquiteturais que não devem ser quebradas.
 
 ---
 
 ## 2. Visão Geral do Projeto
 
-|               |                                                                     |
-| ------------- | ------------------------------------------------------------------- |
-| Projeto       | MachineGuard                                                        |
-| Objetivo      | Manutenção preditiva para motores rotativos via análise de vibração |
-| MCU           | ESP32-S3 N16R8 (dual-core LX7, 16 MB flash, 8 MB PSRAM OPI)         |
-| Processamento | 100% local (edge), sem nuvem/gateway                                |
-| Framework     | ESP-IDF                                                             |
-| Prazo         | FETIN — 25/09/2026                                                  |
-|               |                                                                     |
-| ------------- | ------------------------------------------------------------------- |
-| Projeto       | MachineGuard                                                        |
-| Objetivo      | Manutenção preditiva para motores rotativos via análise de vibração |
-| MCU           | ESP32-S3 N16R8 (dual-core LX7, 16 MB flash, 8 MB PSRAM OPI)         |
-| Processamento | 100% local (edge), sem nuvem/gateway                                |
-| Framework     | ESP-IDF                                                             |
-| Prazo         | FETIN — 25/09/2026                                                  |
+| | |
+|---|---|
+| Projeto | MachineGuard |
+| Objetivo | Manutenção preditiva para motores rotativos via análise de vibração |
+| MCU | ESP32-S3 N16R8 (dual-core LX7, 16 MB flash, 8 MB PSRAM OPI) |
+| Processamento | Edge/local; telemetria opcional via Wi-Fi/MQTT |
+| Framework | ESP-IDF |
+| Prazo | FETIN — 25/09/2026 |
 
 ---
 
 ## 3. Filosofia do Projeto
 
-* Arquitetura limpa e modular
-* Baixo acoplamento entre componentes
-* Determinismo (Core 0 nunca faz I/O)
-* Simplicidade sobre generalidade
-* ESP-IDF puro (sem Arduino framework)
-* Cada componente possui uma responsabilidade clara
-* `task_system` é o mestre do estado e das decisões do sistema
-* O DSP processa sinais, mas não decide o estado da máquina
-* Consumidores não acessam diretamente buffers privados de outros componentes
-* Arquitetura limpa e modular
-* Baixo acoplamento entre componentes
-* Determinismo (Core 0 nunca faz I/O)
-* Simplicidade sobre generalidade
-* ESP-IDF puro (sem Arduino framework)
-* Cada componente possui uma responsabilidade clara
-* `task_system` é o mestre do estado e das decisões do sistema
-* O DSP processa sinais, mas não decide o estado da máquina
-* Consumidores não acessam diretamente buffers privados de outros componentes
+- Arquitetura limpa e modular.
+- Baixo acoplamento entre componentes.
+- Determinismo no fluxo de aquisição, DSP e decisão.
+- Simplicidade sobre generalidade.
+- ESP-IDF puro, sem Arduino framework.
+- Cada componente possui uma responsabilidade clara.
+- `task_system` é o mestre do estado, baseline e decisões do sistema.
+- O DSP processa sinais, mas não decide o estado da máquina.
+- Consumidores não acessam diretamente buffers privados de outros componentes.
+- Hardware e I/O ficam fora do fluxo determinístico de decisão sempre que possível.
+- Falhas de telemetria não podem impedir a operação local do MachineGuard.
 
 ---
 
 ## 4. Arquitetura Geral
 
-`main.c` é responsável **apenas** por:
+`main.c` é responsável apenas por:
 
-1. Inicializar infraestrutura global (barramentos, `app_context`)
-2. Criar tasks
+1. Inicializar a infraestrutura global necessária.
+2. Inicializar o `app_context`.
+3. Criar e configurar as tasks.
 
-Depois disso, `main` não executa mais lógica nenhuma.
+Depois disso, `main` não executa lógica de aplicação.
 
-**Infraestrutura compartilhada, inicializada no `main`:**
-
-| Recurso                           | Status                               |
-| --------------------------------- | ------------------------------------ |
-| SPI2                              | implementado                         |
-| SPI3                              | futuro                               |
-| I2C                               | futuro                               |
-| Recurso                           | Status                               |
-| --------------------------------- | ------------------------------------ |
-| SPI2                              | implementado                         |
-| SPI3                              | futuro                               |
-| I2C                               | futuro                               |
-| mutexes / queues do `app_context` | pendente (`app_context_init` é stub) |
-
-Cada componente inicializa apenas **seu próprio dispositivo** sobre a
-infraestrutura já criada — nunca o barramento em si.
+### Arquitetura de alto nível
 
 ```text
-```text
-main            → inicializa SPI2
-accelerometer   → adiciona LSM6DS3TR-C ao barramento SPI2
-storage         → adiciona SD Card ao barramento SPI2
+                         ┌─────────────────────┐
+                         │         HMI         │
+                         │   LCD TFT + Button  │
+                         └──────────▲───┬──────┘
+                                    │   │
+                              dados │   │ comando
+                                    │   │
+Accelerometer → DSP → SYSTEM ───────┤   │
+                    │       │        │   │
+                    │       ├────────┘   │
+                    │       │            │
+                    │       ├────────→ DAC → Oscilloscope
+                    │       │
+                    │       └────────→ TELEMETRY
+                    │                         │
+                    │                         ↓
+                    │                       MQTT
+                    │                         │
+                    │                         ↓
+                    │                    ThingsBoard
+                    │
+                    └──── Sensors → SYSTEM
 ```
+
+O processamento principal permanece local no ESP32-S3. ThingsBoard não participa
+das decisões de detecção: sua função é visualização e telemetria.
 
 ### Core ownership
 
-| Core   | Responsabilidade                                          |
-| ------ | --------------------------------------------------------- |
+| Core | Responsabilidade |
+|---|---|
 | Core 0 | Aquisição + DSP + processamento de decisão determinístico |
-| Core 1 | HMI, storage, sensors, DAC                                |
+| Core 1 | HMI, Telemetry, Sensors, DAC e demais I/O |
 
-O `task_system` pertence ao fluxo de processamento determinístico e não deve
-executar operações de I/O diretamente. Sua responsabilidade é processar os
-resultados recebidos, controlar o estado da máquina e distribuir os resultados
-para as tasks consumidoras.
-| Core   | Responsabilidade                                          |
-| ------ | --------------------------------------------------------- |
-| Core 0 | Aquisição + DSP + processamento de decisão determinístico |
-| Core 1 | HMI, storage, sensors, DAC                                |
+O `task_system` pertence ao fluxo de processamento de decisão. Ele não deve
+executar acesso direto a hardware, MQTT ou renderização do LCD. Sua função é
+processar resultados, controlar o estado da máquina e distribuir os dados
+necessários aos consumidores.
 
-O `task_system` pertence ao fluxo de processamento determinístico e não deve
-executar operações de I/O diretamente. Sua responsabilidade é processar os
-resultados recebidos, controlar o estado da máquina e distribuir os resultados
-para as tasks consumidoras.
+### Infraestrutura compartilhada
+
+| Recurso | Status |
+|---|---|
+| SPI2 | Implementado |
+| SPI3 | Futuro / HMI, se necessário |
+| I2C | Futuro / MCP4725 e sensores |
+| Wi-Fi | Testado com sucesso no Wi-Fi do INATEL |
+| MQTT/TLS | Testado com sucesso com ThingsBoard Cloud |
 
 ---
 
 ## 5. Fluxo de Dados
 
-Fluxo principal de aquisição e processamento:
-
-```text
-Fluxo principal de aquisição e processamento:
+### Fluxo principal
 
 ```text
 LSM6DS3TR-C
-   │  SPI + DMA
-   ▼
- FIFO (sensor)
    │
+   │ SPI + DMA
    ▼
- DMA
+FIFO
    │
    ▼
- Ping-Pong Buffer (accelerometer)
+DMA
    │
-   │ Queue
-   │ 1 eixo selecionado
-   │ bloco de 2048 amostras
- Ping-Pong Buffer (accelerometer)
+   ▼
+Ping-Pong Buffer
    │
-   │ Queue
-   │ 1 eixo selecionado
    │ bloco de 2048 amostras
    ▼
- task_dsp
+task_dsp
    │
    │ dsp_result_t
    ▼
- queue_dsp_to_system
-   │
- task_dsp
-   │
-   │ dsp_result_t
-   ▼
- queue_dsp_to_system
+queue_dsp_to_system
    │
    ▼
- task_system
- task_system
+task_system
    │
-   ├──▶ queue_system_to_hmi
-   ├──▶ queue_system_to_storage
-   └──▶ queue_system_to_dac
+   ├────────→ HMI
+   │
+   ├────────→ DAC
+   │
+   └────────→ Telemetry → MQTT → ThingsBoard
 ```
 
-Fluxo dos sensores:
+### Fluxo dos sensores
 
 ```text
-task_sensor
+task_sensors
    │
    │ sensor_result
    ▼
@@ -170,641 +148,367 @@ queue_sensor_to_system
    ▼
 task_system
    │
-   ├──▶ HMI
-   ├──▶ storage
-   └──▶ DAC
+   ├────────→ HMI
+   └────────→ Telemetry
 ```
 
-### Regra de ownership
-
-**Um dado tem um único dono/escritor. Consumidores somente leem os dados
-recebidos por suas respectivas filas.**
-
-O `task_dsp` é responsável pelos resultados do processamento do sinal.
-
-O `task_system` é responsável pelo estado, baseline e decisões do sistema.
-
-HMI, storage e DAC não acessam diretamente acelerômetro, buffers do DSP ou
-estado interno do `task_system`.
-   ├──▶ queue_system_to_hmi
-   ├──▶ queue_system_to_storage
-   └──▶ queue_system_to_dac
-```
-
-Fluxo dos sensores:
+### Comando da HMI para o System
 
 ```text
-task_sensor
+Button
    │
-   │ sensor_result
    ▼
-queue_sensor_to_system
+task_hmi
+   │
+   │ comando de reset do warm-up
+   ▼
+queue_hmi_to_system
    │
    ▼
 task_system
-   │
-   ├──▶ HMI
-   ├──▶ storage
-   └──▶ DAC
 ```
 
-### Regra de ownership
-
-**Um dado tem um único dono/escritor. Consumidores somente leem os dados
-recebidos por suas respectivas filas.**
-
-O `task_dsp` é responsável pelos resultados do processamento do sinal.
-
-O `task_system` é responsável pelo estado, baseline e decisões do sistema.
-
-HMI, storage e DAC não acessam diretamente acelerômetro, buffers do DSP ou
-estado interno do `task_system`.
+O clique curto do botão é tratado localmente pela HMI e altera somente a tela
+atual. O clique longo gera um comando para o `task_system`, solicitando um novo
+warm-up/baseline.
 
 ---
 
 ## 6. Organização dos Componentes
 
-Componentes atuais:
+Componentes previstos:
 
-* `main`
-* `app_context`
-* `accelerometer`
-* `dsp_pipeline`
-* `system`
-* `hmi`
-* `storage`
-* `sensors`
-* `dac`
-Componentes atuais:
+- `main`
+- `app_context`
+- `accelerometer`
+- `dsp_pipeline`
+- `system`
+- `hmi`
+- `telemetry`
+- `sensors`
+- `dac`
 
-* `main`
-* `app_context`
-* `accelerometer`
-* `dsp_pipeline`
-* `system`
-* `hmi`
-* `storage`
-* `sensors`
-* `dac`
+O componente `storage`/SD foi substituído arquiteturalmente por `telemetry`.
+O armazenamento em cartão SD não faz parte da arquitetura atual.
 
 > `rpm_counter` foi removido do projeto. RPM é estimado a partir da frequência
 > do pico espectral associado ao componente 1×RPM da FFT. A validação do RPM
-> estimado poderá ser realizada externamente com um tacômetro digital durante
-> a apresentação, sem necessidade de implementar um componente de medição de
-> RPM no firmware.
-
----
-> `rpm_counter` foi removido do projeto. RPM é estimado a partir da frequência
-> do pico espectral associado ao componente 1×RPM da FFT. A validação do RPM
-> estimado poderá ser realizada externamente com um tacômetro digital durante
-> a apresentação, sem necessidade de implementar um componente de medição de
-> RPM no firmware.
-
----
+> estimado será realizada externamente com um tacômetro digital.
 
 ### main
 
-|                     |                                                                    |
-| ------------------- | ------------------------------------------------------------------ |
-| Status              | implementado (esqueleto)                                           |
-| Responsabilidade    | init de infraestrutura e criação de tasks                          |
-| Dependências        | todos os componentes                                               |
-| Interfaces públicas | `app_main`                                                         |
-| TODO                | registrar tasks via `xTaskCreatePinnedToCore` conforme arquitetura |
+| | |
+|---|---|
+| Responsabilidade | Inicialização de infraestrutura e criação de tasks |
+| Dependências | Todos os componentes |
+| Interface | `app_main` |
 
 `main` não contém lógica de processamento ou decisão do sistema.
-
----
-|                     |                                                                    |
-| ------------------- | ------------------------------------------------------------------ |
-| Status              | implementado (esqueleto)                                           |
-| Responsabilidade    | init de infraestrutura e criação de tasks                          |
-| Dependências        | todos os componentes                                               |
-| Interfaces públicas | `app_main`                                                         |
-| TODO                | registrar tasks via `xTaskCreatePinnedToCore` conforme arquitetura |
-
-`main` não contém lógica de processamento ou decisão do sistema.
-
----
 
 ### app_context
 
-|                     |                                                                     |
-| ------------------- | ------------------------------------------------------------------- |
-| Status              | implementado                                                        |
-| Responsabilidade    | contexto compartilhado entre tasks                                  |
-| Dependências        | nenhuma                                                             |
-| Interfaces públicas | `app_context_init(app_context_t *ctx)`                              |
-| Regra               | um dado → um dono; buffers privados permanecem dentro do componente |
-| Recursos            | queues de comunicação e `mutex_spi2`                                |
+| | |
+|---|---|
+| Responsabilidade | Contexto compartilhado entre tasks |
+| Dependências | Nenhuma |
+| Interface | `app_context_init(app_context_t *ctx)` |
+| Regra | Um dado → um dono; buffers privados permanecem dentro do componente |
+| Recursos | Queues e mutexes compartilhados |
 
 Queues previstas:
 
-* `queue_accel_block_to_dsp`
-* `queue_dsp_to_system`
-* `queue_sensor_to_system`
-* `queue_system_to_hmi`
-* `queue_system_to_storage`
-* `queue_system_to_dac`
+- `queue_accel_block_to_dsp`
+- `queue_dsp_to_system`
+- `queue_sensor_to_system`
+- `queue_system_to_hmi`
+- `queue_hmi_to_system`
+- `queue_system_to_dac`
+- `queue_system_to_telemetry`
 
-As queues de saída do `task_system` representam o **estado/resultado mais
-recente** e podem utilizar tamanho 1 com `xQueueOverwrite()`.
+As queues de saída do `task_system` representam o estado/resultado mais recente
+e podem utilizar tamanho 1 com `xQueueOverwrite()` quando apropriado.
 
-A comunicação entre `task_dsp` e `task_system` deve preservar a sequência dos
-resultados necessários para o warm-up e para a análise temporal.
-
----
-|                     |                                                                     |
-| ------------------- | ------------------------------------------------------------------- |
-| Status              | implementado                                                        |
-| Responsabilidade    | contexto compartilhado entre tasks                                  |
-| Dependências        | nenhuma                                                             |
-| Interfaces públicas | `app_context_init(app_context_t *ctx)`                              |
-| Regra               | um dado → um dono; buffers privados permanecem dentro do componente |
-| Recursos            | queues de comunicação e `mutex_spi2`                                |
-
-Queues previstas:
-
-* `queue_accel_block_to_dsp`
-* `queue_dsp_to_system`
-* `queue_sensor_to_system`
-* `queue_system_to_hmi`
-* `queue_system_to_storage`
-* `queue_system_to_dac`
-
-As queues de saída do `task_system` representam o **estado/resultado mais
-recente** e podem utilizar tamanho 1 com `xQueueOverwrite()`.
-
-A comunicação entre `task_dsp` e `task_system` deve preservar a sequência dos
-resultados necessários para o warm-up e para a análise temporal.
-
----
+A comunicação entre DSP e System deve preservar a sequência necessária para o
+warm-up e para a análise de decisão.
 
 ### accelerometer
 
-|                     |                                                                                               |
-| ------------------- | --------------------------------------------------------------------------------------------- |
-| Status              | Concluído (`feat_accelerometer`)                                                              |
-| Responsabilidade    | configurar LSM6DS3TR-C, SPI, DMA, FIFO, ping-pong, seleção de eixo e envio de blocos para DSP |
-| NÃO faz             | FFT, RMS, kurtosis, decisões de estado, HMI, storage                                          |
-| Dependências        | SPI2, `mutex_spi2`                                                                            |
-| Interfaces públicas | `accel_init(app_context_t *ctx)`, `task_accel(void *arg)`                                     |
-| Fluxo               | aquisição → seleção de eixo → bloco de 2048 amostras → `queue_accel_block_to_dsp`             |
-| Regra               | driver não inicializa barramento — utiliza a infraestrutura criada pelo `main`                |
+| | |
+|---|---|
+| Responsabilidade | LSM6DS3TR-C, SPI, DMA, FIFO, ping-pong, seleção de eixo e envio de blocos |
+| Não faz | FFT, estatísticas, decisões, HMI, Telemetry ou DAC |
+| Dependências | SPI2, `mutex_spi2` |
+| Fluxo | Aquisição → seleção de eixo → 2048 amostras → `queue_accel_block_to_dsp` |
 
 O acelerômetro continua adquirindo os três eixos, mas somente um eixo é
 selecionado para o pipeline DSP.
-
----
-|                     |                                                                                               |
-| ------------------- | --------------------------------------------------------------------------------------------- |
-| Status              | Concluído (`feat_accelerometer`)                                                              |
-| Responsabilidade    | configurar LSM6DS3TR-C, SPI, DMA, FIFO, ping-pong, seleção de eixo e envio de blocos para DSP |
-| NÃO faz             | FFT, RMS, kurtosis, decisões de estado, HMI, storage                                          |
-| Dependências        | SPI2, `mutex_spi2`                                                                            |
-| Interfaces públicas | `accel_init(app_context_t *ctx)`, `task_accel(void *arg)`                                     |
-| Fluxo               | aquisição → seleção de eixo → bloco de 2048 amostras → `queue_accel_block_to_dsp`             |
-| Regra               | driver não inicializa barramento — utiliza a infraestrutura criada pelo `main`                |
-
-O acelerômetro continua adquirindo os três eixos, mas somente um eixo é
-selecionado para o pipeline DSP.
-
----
 
 ### dsp_pipeline
 
-|                     |                                                                                                           |
-| ------------------- | --------------------------------------------------------------------------------------------------------- |
-| Status              | Em desenvolvimento (`feature_dsp`)                                                                        |
-| Responsabilidade    | processamento do sinal no domínio do tempo e da frequência                                                |
-| Dependências        | `queue_accel_block_to_dsp`, ESP-DSP                                                                       |
-| Interfaces públicas | `task_dsp(void *arg)`                                                                                     |
-| Implementado        | RMS, StdDev, Min, Max, Peak-to-Peak, Crest Factor, Kurtosis e FFT                                         |
-| Análise espectral   | janela de Hann, FFT, magnitude, normalização, eixo de frequência, busca de pico e interpolação parabólica |
-| RPM                 | estimado a partir da frequência do pico espectral                                                         |
-| Validação           | estatísticas temporais/RMS validadas; frequência/RPM ainda em validação experimental                      |
-| TODO                | consolidar `dsp_result_t`, integração com `task_system` e validação do componente 1×RPM                   |
+| | |
+|---|---|
+| Responsabilidade | Processamento do sinal no domínio do tempo e frequência |
+| Dependências | `queue_accel_block_to_dsp`, ESP-DSP |
+| Interface | `task_dsp(void *arg)` |
+| Saída | `dsp_result_t` |
 
-O `task_dsp` **não possui responsabilidade sobre o estado da máquina**.
+O DSP implementa:
 
-Ele recebe um bloco de aquisição, processa o sinal e retorna um `dsp_result_t`
-contendo as features calculadas.
+- RMS
+- StdDev
+- Min
+- Max
+- Peak-to-Peak
+- Crest Factor
+- Kurtosis
+- FFT
+- busca e interpolação do pico espectral
+- estimativa de RPM
 
-O DSP não sabe se o sistema está em:
+O `task_dsp` não possui responsabilidade sobre:
 
-* `WARMUP`
-* `HEALTHY`
-* `ALARM`
-
-Também não calcula:
-
-* Z-score
-* threshold de anomalia
-* persistência temporal
-* votação
-* estado da máquina
-
----
+- estado da máquina;
+- Z-score;
+- threshold;
+- votação 2/3;
+- persistência temporal;
+- geração de `HEALTHY`/`ALARM`.
 
 ### system
 
-|                     |                                                                                               |
-| ------------------- | --------------------------------------------------------------------------------------------- |
-| Status              | A implementar                                                                                 |
-| Responsabilidade    | mestre do estado e das decisões do sistema                                                    |
-| Dependências        | `queue_dsp_to_system`, `queue_sensor_to_system`                                               |
-| Interfaces públicas | `task_system(void *arg)`                                                                      |
-| Responsabilidades   | warm-up, baseline, Z-score, threshold, evidência multivariada, persistência temporal e estado |
-| NÃO faz             | aquisição, FFT, acesso direto a hardware, renderização HMI, storage ou DAC                    |
+| | |
+|---|---|
+| Responsabilidade | Mestre do estado, baseline e decisão |
+| Dependências | `queue_dsp_to_system`, `queue_sensor_to_system`, `queue_hmi_to_system` |
+| Interface | `task_system(void *arg)` |
 
-O `task_system` é o **orquestrador central do comportamento do MachineGuard**.
+Responsabilidades:
 
-Ele recebe os resultados produzidos pelo DSP e pelos sensores e determina o
-estado atual da máquina.
+1. Controlar o estado da máquina.
+2. Controlar o warm-up.
+3. Construir o baseline.
+4. Calcular Z-scores.
+5. Aplicar threshold.
+6. Avaliar a evidência 2/3.
+7. Controlar persistência temporal.
+8. Determinar `HEALTHY` ou `ALARM`.
+9. Distribuir os resultados aos consumidores.
 
-### Responsabilidades do `task_system`
-
-1. Controlar o estado da máquina
-2. Controlar o warm-up
-3. Contabilizar as 600 avaliações do baseline
-4. Construir o baseline estatístico
-5. Manter o baseline fixo após o warm-up
-6. Calcular Z-scores
-7. Aplicar o threshold de anomalia
-8. Determinar a evidência de anomalia de cada avaliação
-9. Avaliar a persistência temporal através de uma janela
-10. Determinar `HEALTHY` ou `ALARM`
-11. Distribuir os resultados para HMI, storage e DAC
-
-O `task_system` não atualiza o baseline durante o monitoramento normal.
-
-Para iniciar um novo warm-up, o sistema poderá ser reinicializado. A
-persistência do baseline em flash/NVS não faz parte da implementação atual.
-
----
-|                     |                                                                                                           |
-| ------------------- | --------------------------------------------------------------------------------------------------------- |
-| Status              | Em desenvolvimento (`feature_dsp`)                                                                        |
-| Responsabilidade    | processamento do sinal no domínio do tempo e da frequência                                                |
-| Dependências        | `queue_accel_block_to_dsp`, ESP-DSP                                                                       |
-| Interfaces públicas | `task_dsp(void *arg)`                                                                                     |
-| Implementado        | RMS, StdDev, Min, Max, Peak-to-Peak, Crest Factor, Kurtosis e FFT                                         |
-| Análise espectral   | janela de Hann, FFT, magnitude, normalização, eixo de frequência, busca de pico e interpolação parabólica |
-| RPM                 | estimado a partir da frequência do pico espectral                                                         |
-| Validação           | estatísticas temporais/RMS validadas; frequência/RPM ainda em validação experimental                      |
-| TODO                | consolidar `dsp_result_t`, integração com `task_system` e validação do componente 1×RPM                   |
-
-O `task_dsp` **não possui responsabilidade sobre o estado da máquina**.
-
-Ele recebe um bloco de aquisição, processa o sinal e retorna um `dsp_result_t`
-contendo as features calculadas.
-
-O DSP não sabe se o sistema está em:
-
-* `WARMUP`
-* `HEALTHY`
-* `ALARM`
-
-Também não calcula:
-
-* Z-score
-* threshold de anomalia
-* persistência temporal
-* votação
-* estado da máquina
-
----
-
-### system
-
-|                     |                                                                                               |
-| ------------------- | --------------------------------------------------------------------------------------------- |
-| Status              | A implementar                                                                                 |
-| Responsabilidade    | mestre do estado e das decisões do sistema                                                    |
-| Dependências        | `queue_dsp_to_system`, `queue_sensor_to_system`                                               |
-| Interfaces públicas | `task_system(void *arg)`                                                                      |
-| Responsabilidades   | warm-up, baseline, Z-score, threshold, evidência multivariada, persistência temporal e estado |
-| NÃO faz             | aquisição, FFT, acesso direto a hardware, renderização HMI, storage ou DAC                    |
-
-O `task_system` é o **orquestrador central do comportamento do MachineGuard**.
-
-Ele recebe os resultados produzidos pelo DSP e pelos sensores e determina o
-estado atual da máquina.
-
-### Responsabilidades do `task_system`
-
-1. Controlar o estado da máquina
-2. Controlar o warm-up
-3. Contabilizar as 600 avaliações do baseline
-4. Construir o baseline estatístico
-5. Manter o baseline fixo após o warm-up
-6. Calcular Z-scores
-7. Aplicar o threshold de anomalia
-8. Determinar a evidência de anomalia de cada avaliação
-9. Avaliar a persistência temporal através de uma janela
-10. Determinar `HEALTHY` ou `ALARM`
-11. Distribuir os resultados para HMI, storage e DAC
-
-O `task_system` não atualiza o baseline durante o monitoramento normal.
-
-Para iniciar um novo warm-up, o sistema poderá ser reinicializado. A
-persistência do baseline em flash/NVS não faz parte da implementação atual.
-
----
+O baseline é construído durante 600 avaliações saudáveis e permanece fixo após
+o warm-up, até que um novo warm-up seja solicitado.
 
 ### hmi
 
-|                  |                                       |
-| ---------------- | ------------------------------------- |
-| Status           | não implementado                      |
-| Responsabilidade | exibir estado, indicadores e espectro |
-| Dependências     | `queue_system_to_hmi`                 |
-| TODO             | implementação da interface LCD        |
+| | |
+|---|---|
+| Responsabilidade | Interface local com LCD TFT e botão |
+| Dependências | `queue_system_to_hmi`, `queue_hmi_to_system` |
+| Hardware | LCD TFT 3.5" SPI + botão |
 
-A HMI deverá exibir, entre outros:
+A HMI deverá apresentar, no mínimo:
 
-* estado da máquina
-* progresso do warm-up
-* RMS
-* kurtosis
-* crest factor
-* amplitude 1×RPM
-* RPM estimado
-* Z-scores
-* estado da detecção
-* espectro FFT
+- temperatura;
+- RPM;
+- status (`HEALTHY`/`ALARM`, além de `WARMUP` quando aplicável);
+- gráfico FFT, preferencialmente em tela própria.
 
-### Espectro
+Indicadores adicionais em avaliação:
 
-A HMI deverá permitir visualizar uma faixa configurável do espectro, por
-exemplo:
+- RMS;
+- Kurtosis;
+- amplitude 1×RPM/frequência;
+- Crest Factor.
 
-```text
-0–400 Hz
-```
+O botão terá:
 
-O `task_dsp` disponibiliza a magnitude FFT necessária para essa visualização.
+- clique curto: troca para a próxima tela;
+- clique longo: solicita novo warm-up.
 
-A HMI não acessa diretamente os buffers privados do DSP.
+O tratamento físico do botão deve ser isolado da lógica de tela. A implementação
+pode utilizar ISR para detectar o evento e uma comunicação ISR → `task_hmi`;
+debounce e tempo de clique longo permanecem parte do contrato de implementação
+da HMI.
 
----
-|                  |                                       |
-| ---------------- | ------------------------------------- |
-| Status           | não implementado                      |
-| Responsabilidade | exibir estado, indicadores e espectro |
-| Dependências     | `queue_system_to_hmi`                 |
-| TODO             | implementação da interface LCD        |
+### telemetry
 
-A HMI deverá exibir, entre outros:
+| | |
+|---|---|
+| Responsabilidade | Publicar telemetria via MQTT |
+| Dependências | Wi-Fi, MQTT/TLS, `queue_system_to_telemetry` |
+| Backend | ThingsBoard Cloud |
 
-* estado da máquina
-* progresso do warm-up
-* RMS
-* kurtosis
-* crest factor
-* amplitude 1×RPM
-* RPM estimado
-* Z-scores
-* estado da detecção
-* espectro FFT
+Dados candidatos à telemetria:
 
-### Espectro
+- estado da máquina;
+- temperatura;
+- RMS;
+- Kurtosis;
+- Crest Factor;
+- amplitude 1×RPM;
+- RPM;
+- frequência;
+- Z-scores;
+- progresso do warm-up.
 
-A HMI deverá permitir visualizar uma faixa configurável do espectro, por
-exemplo:
+A telemetria é uma saída secundária. Uma falha de Wi-Fi ou MQTT não deve
+interromper aquisição, DSP ou decisão local.
 
-```text
-0–400 Hz
-```
-
-O `task_dsp` disponibiliza a magnitude FFT necessária para essa visualização.
-
-A HMI não acessa diretamente os buffers privados do DSP.
-
----
-
-### storage
-
-|                  |                                         |
-| ---------------- | --------------------------------------- |
-| Status           | não implementado                        |
-| Responsabilidade | salvar resultados e indicadores         |
-| Dependências     | `queue_system_to_storage`, `mutex_spi2` |
-| Limitação atual  | waveforms completas não são armazenadas |
-| TODO             | implementação                           |
-
----
-|                  |                                         |
-| ---------------- | --------------------------------------- |
-| Status           | não implementado                        |
-| Responsabilidade | salvar resultados e indicadores         |
-| Dependências     | `queue_system_to_storage`, `mutex_spi2` |
-| Limitação atual  | waveforms completas não são armazenadas |
-| TODO             | implementação                           |
-
----
+O acesso ao broker `mqtt.thingsboard.cloud:8883` com TLS já foi validado no
+ESP32-S3 utilizando o Wi-Fi do INATEL.
 
 ### sensors
 
-|                  |                                                       |
-| ---------------- | ----------------------------------------------------- |
-| Status           | não implementado                                      |
-| Responsabilidade | DS18B20 |
-| Dependências     | definidas conforme hardware                           |
-| TODO             | implementação                                         |
+| | |
+|---|---|
+| Responsabilidade | Aquisição de sensores adicionais |
+| Dependências | Hardware dos sensores |
+| Interface | `task_sensors(void *arg)` |
 
-Os resultados dos sensores são enviados para o `task_system`, que decide como
-esses dados serão utilizados e distribuídos.
+O DS18B20 fornece a temperatura utilizada pela HMI e pela Telemetry.
 
----
+Os resultados dos sensores são enviados ao `task_system`, que decide como eles
+serão distribuídos.
 
 ### dac
 
-|                  |                                   |
-| ---------------- | --------------------------------- |
-| Status           | não implementado                  |
-| Responsabilidade | saída analógica para osciloscópio |
-| Dependências     | `queue_system_to_dac`             |
-| TODO             | implementação                     |
+| | |
+|---|---|
+| Responsabilidade | Saída analógica para osciloscópio |
+| Hardware | MCP4725 |
+| Dependências | `queue_system_to_dac` |
 
-O DAC deverá receber um sinal temporal apropriado para visualização no
-osciloscópio.
+O DAC deverá reproduzir um sinal temporal representativo da vibração adquirida,
+com todas as medidas temporais necessárias para a demonstração.
 
-A intenção atual é representar a vibração periódica detectada pelo
-acelerômetro. Em uma condição de desbalanceamento, espera-se observar aumento
-da amplitude do sinal.
-
-O tratamento necessário para gerar esse sinal é responsabilidade do pipeline
-DSP, enquanto o acesso físico ao DAC permanece responsabilidade da task do
-DAC.
-|                  |                                   |
-| ---------------- | --------------------------------- |
-| Status           | não implementado                  |
-| Responsabilidade | saída analógica para osciloscópio |
-| Dependências     | `queue_system_to_dac`             |
-| TODO             | implementação                     |
-
-O DAC deverá receber um sinal temporal apropriado para visualização no
-osciloscópio.
-
-A intenção atual é representar a vibração periódica detectada pelo
-acelerômetro. Em uma condição de desbalanceamento, espera-se observar aumento
-da amplitude do sinal.
-
-O tratamento necessário para gerar esse sinal é responsabilidade do pipeline
-DSP, enquanto o acesso físico ao DAC permanece responsabilidade da task do
-DAC.
+A task do DAC é responsável pelo acesso físico ao MCP4725. O contrato de dados,
+taxa de atualização, quantidade de amostras, escalonamento e ownership do buffer
+devem ser definidos antes da implementação final.
 
 ---
 
 ## 7. Pipeline DSP
 
-### 7.1 Processamento do sinal
+### 7.1 Processamento
 
 ```text
-### 7.1 Processamento do sinal
-
-```text
-Seleciona eixo
-   │
-   ▼
-2048 amostras
-   │
-   ├───────────────┐
-   │               │
-   ▼               ▼
-Time-domain       Hann
-features           │
-   │               ▼
-   │              FFT Real
-   │               │
-   │               ▼
-   │          Magnitude Linear
-   │               │
-   │               ▼
-   │          Busca de pico
-   │               │
-   │               ▼
-   │          Frequência do pico
-   │               │
-   │               ▼
-   │          RPM estimado
-   │
-   └───────────────┬───────────────┘
-                   ▼
-              dsp_result_t
-                   │
-                   ▼
-             task_system
+Bloco de 2048 amostras
+        │
+        ├───────────────┐
+        │               │
+        ▼               ▼
+Time-domain          Hann
+features               │
+        │               ▼
+        │              FFT
+        │               │
+        │               ▼
+        │          Magnitude
+        │               │
+        │               ▼
+        │          Normalização
+        │               │
+        │               ▼
+        │          Busca de pico
+        │               │
+        │               ▼
+        │       Interpolação parabólica
+        │               │
+        │               ▼
+        │          RPM estimado
+        │
+        └───────────────┬───────────────┘
+                        ▼
+                   dsp_result_t
+                        │
+                        ▼
+                   task_system
 ```
 
-### 7.2 Features no domínio do tempo
+### 7.2 Features temporais
 
 O DSP calcula:
 
-* RMS
-* StdDev
-* Min
-* Max
-* Peak-to-Peak
-* Crest Factor
-* Kurtosis
-
-Essas métricas são calculadas sobre o sinal de vibração processado.
+- RMS
+- StdDev
+- Min
+- Max
+- Peak-to-Peak
+- Crest Factor
+- Kurtosis
 
 ### 7.3 Análise espectral
 
 O pipeline utiliza:
 
-1. Janela de Hann
-2. FFT Real via ESP-DSP
-3. Magnitude linear
-4. Normalização
-5. Eixo de frequência
-6. Busca do pico na faixa de operação configurada
-7. Interpolação parabólica
-8. Conversão da frequência estimada para RPM
+1. Janela de Hann.
+2. FFT via ESP-DSP.
+3. Magnitude.
+4. Normalização.
+5. Eixo de frequência.
+6. Busca do pico na faixa configurada.
+7. Interpolação parabólica.
+8. Conversão de frequência para RPM.
 
-A estimativa é:
+```text
+RPM = f_peak × 60
+```
 
-[
-RPM = f_{peak} \times 60
-]
-
-onde `f_peak` é a frequência do componente espectral associado ao 1×RPM.
-
-A validação do RPM estimado será realizada experimentalmente, podendo utilizar
-um tacômetro digital externo durante a feira.
+onde `f_peak` representa a frequência do componente associado ao 1×RPM.
 
 ### 7.4 Dados espectrais
 
-O `dsp_result_t` poderá transportar a magnitude FFT para permitir:
+O `dsp_result_t` pode conter a magnitude FFT necessária para a HMI. O eixo de
+frequência pode ser reconstruído a partir de `bin_width_hz` enquanto a taxa de
+amostragem e o tamanho da FFT permanecerem fixos.
 
-* visualização do espectro pela HMI;
-* processamento posterior;
-* outras saídas que necessitem da informação espectral.
-
-O eixo de frequência pode ser reconstruído a partir de `bin_width_hz` enquanto
-a frequência de amostragem e o tamanho da FFT permanecerem fixos.
+A necessidade de transportar a FFT completa para cada consumidor deve ser
+reavaliada antes da integração final, devido ao impacto de RAM e cópias.
 
 ---
 
 ## 8. Pipeline de Detecção
 
-O processo de decisão ocorre exclusivamente no `task_system`.
+A decisão ocorre exclusivamente no `task_system`.
 
 ```text
 dsp_result_t
-      │
-      ▼
-   WARMUP?
-   /     \
- sim      não
-  │         │
-  ▼         ▼
-baseline   Z-score
-  │         │
-  │         ▼
-  │      threshold
-  │         │
-  │         ▼
-  │    feature evidence
-  │         │
-  │         ▼
-  │   temporal window
-  │         │
-  │         ▼
-  └──────► machine state
+     │
+     ▼
+  WARMUP?
+  /     \
+sim      não
+ │         │
+ ▼         ▼
+baseline  Z-score
+ │         │
+ │         ▼
+ │      threshold
+ │         │
+ │         ▼
+ │     evidência 2/3
+ │         │
+ │         ▼
+ │    persistência
+ │         │
+ └────────► estado
 ```
-
----
 
 ### 8.1 Warm-up
 
-O warm-up possui exatamente:
+O warm-up possui:
 
 ```text
 600 avaliações
 ```
 
-Cada avaliação corresponde a um resultado produzido pelo `task_dsp` para um
-bloco de 2048 amostras.
-
-A HMI poderá apresentar, por exemplo:
-
-```text
-WARM-UP
-
-Coletando dados
-438 / 600
-```
+Cada avaliação corresponde a um resultado produzido pelo DSP para um bloco de
+2048 amostras.
 
 Durante o warm-up:
 
-* o sistema considera que o motor está saudável;
-* os resultados do DSP são utilizados para construir o baseline;
-* nenhuma decisão de `ALARM` é tomada;
-* o baseline ainda não é utilizado para detecção.
+- os dados são utilizados para construir o baseline;
+- nenhuma condição de `ALARM` é declarada;
+- a HMI pode apresentar o progresso.
 
 Após a avaliação 600:
 
@@ -816,101 +520,62 @@ baseline finalizado
 HEALTHY
 ```
 
-O baseline permanece fixo durante aquela execução do sistema.
-
-Para iniciar um novo baseline, a implementação atual poderá reiniciar o
-dispositivo e executar novamente o warm-up.
-
----
+Um novo warm-up pode ser solicitado pelo clique longo do botão.
 
 ### 8.2 Baseline
 
-O baseline é calculado separadamente para cada indicador utilizado na
-detecção:
+O baseline atual utiliza:
+
+- RMS;
+- Kurtosis;
+- amplitude 1×RPM.
+
+Para cada feature:
 
 ```text
-RMS
-Kurtosis
-Amplitude 1×RPM
+μ = média
+σ = desvio padrão
 ```
 
-Para cada indicador são determinados:
+As estatísticas podem ser calculadas incrementalmente, sem armazenar as 600
+avaliações completas.
 
-```text
-μ = média durante o warm-up
-σ = desvio padrão durante o warm-up
-```
-
-O baseline é calculado a partir das 600 avaliações consideradas saudáveis e
-estáveis.
-
-O armazenamento das 600 avaliações completas não é necessário. As estatísticas
-podem ser calculadas incrementalmente durante o warm-up.
-
-O baseline é congelado após o warm-up.
-
-Não existe atualização adaptativa do baseline durante o monitoramento na
-implementação atual.
-
----
+O baseline permanece fixo após o warm-up.
 
 ### 8.3 Z-score
 
-Para cada nova avaliação após o warm-up:
-
-[
-Z = \frac{x-\mu}{\sigma}
-]
-
-onde:
-
-* `x` = valor atual produzido pelo DSP;
-* `μ` = média do indicador durante o warm-up;
-* `σ` = desvio padrão do indicador durante o warm-up.
-
-São calculados três Z-scores:
+Para cada avaliação:
 
 ```text
-zscore_rms
-zscore_kurtosis
-zscore_bin
+Z = (x - μ) / σ
 ```
 
-O Z-score representa quantos desvios padrão o valor atual está acima ou abaixo
-do comportamento considerado normal durante o warm-up.
+São calculados:
 
-Se o desvio padrão de uma feature for insuficiente para produzir um Z-score
-confiável, a feature não deve gerar uma decisão de anomalia baseada em um
-valor estatisticamente indefinido.
+- `zscore_rms`
+- `zscore_kurtosis`
+- `zscore_1x_rpm`
 
----
+Se o desvio padrão for insuficiente, a feature não deve gerar uma decisão
+estatística indefinida.
 
 ### 8.4 Threshold
 
-Cada Z-score é comparado com um threshold configurável.
-
-O threshold inicial ainda será determinado experimentalmente.
+O threshold inicial é configurável e deve ser validado com dados reais.
 
 Conceitualmente:
 
 ```text
-Z <= threshold
-    → normal
-
-Z > threshold
-    → anormal
+|Z| <= threshold → normal
+|Z| >  threshold → anormal
 ```
 
-O objetivo do threshold é identificar uma alteração estatisticamente
-significativa em relação ao baseline saudável.
+O comportamento definitivo e o valor do threshold devem ser confirmados
+experimentalmente.
 
-O valor definitivo não deve ser considerado fixo antes da validação experimental.
+### 8.5 Evidência 2/3
 
----
-
-### 8.5 Evidência por avaliação
-
-Cada avaliação produz três indicadores de evidência:
+As três features de decisão são:
 
 ```text
 RMS
@@ -918,348 +583,26 @@ Kurtosis
 Amplitude 1×RPM
 ```
 
-Cada indicador pode ser classificado como:
+Cada uma é classificada como `NORMAL` ou `ANORMAL`.
 
-```text
-NORMAL
-ANORMAL
-```
+A avaliação é considerada anormal quando pelo menos 2 das 3 features são
+anormais.
 
-A avaliação pode então ser representada por uma quantidade de indicadores
-anormais:
-
-```text
-0 → nenhum indicador anormal
-1 → um indicador anormal
-2 → dois indicadores anormais
-3 → três indicadores anormais
-```
-
-A condição de evidência multivariada utilizada inicialmente é:
-
-```text
-2 de 3 indicadores anormais
-```
-
-O `Crest Factor`, StdDev, Min, Max e Peak-to-Peak permanecem disponíveis como
-features do DSP, mas não participam da decisão inicial de estado.
-
----
+Crest Factor permanece disponível como feature do DSP e como possível indicador
+da HMI/Telemetry, mas não participa da decisão inicial.
 
 ### 8.6 Persistência temporal
 
-Uma única avaliação anormal não deve ser suficiente para declarar uma falha.
+Uma única avaliação anormal não é suficiente para declarar `ALARM`.
 
-Após o threshold, a evidência de cada avaliação é armazenada em uma janela
-temporal.
+A implementação atual utiliza:
 
-Conceitualmente:
-   ├───────────────┐
-   │               │
-   ▼               ▼
-Time-domain       Hann
-features           │
-   │               ▼
-   │              FFT Real
-   │               │
-   │               ▼
-   │          Magnitude Linear
-   │               │
-   │               ▼
-   │          Busca de pico
-   │               │
-   │               ▼
-   │          Frequência do pico
-   │               │
-   │               ▼
-   │          RPM estimado
-   │
-   └───────────────┬───────────────┘
-                   ▼
-              dsp_result_t
-                   │
-                   ▼
-             task_system
-```
+- 5 avaliações anormais consecutivas para `HEALTHY → ALARM`;
+- qualquer avaliação normal interrompe a sequência de entrada em `ALARM`;
+- 5 avaliações normais consecutivas para `ALARM → HEALTHY`;
+- qualquer avaliação anormal interrompe a sequência de recuperação.
 
-### 7.2 Features no domínio do tempo
-
-O DSP calcula:
-
-* RMS
-* StdDev
-* Min
-* Max
-* Peak-to-Peak
-* Crest Factor
-* Kurtosis
-
-Essas métricas são calculadas sobre o sinal de vibração processado.
-
-### 7.3 Análise espectral
-
-O pipeline utiliza:
-
-1. Janela de Hann
-2. FFT Real via ESP-DSP
-3. Magnitude linear
-4. Normalização
-5. Eixo de frequência
-6. Busca do pico na faixa de operação configurada
-7. Interpolação parabólica
-8. Conversão da frequência estimada para RPM
-
-A estimativa é:
-
-[
-RPM = f_{peak} \times 60
-]
-
-onde `f_peak` é a frequência do componente espectral associado ao 1×RPM.
-
-A validação do RPM estimado será realizada experimentalmente, podendo utilizar
-um tacômetro digital externo durante a feira.
-
-### 7.4 Dados espectrais
-
-O `dsp_result_t` poderá transportar a magnitude FFT para permitir:
-
-* visualização do espectro pela HMI;
-* processamento posterior;
-* outras saídas que necessitem da informação espectral.
-
-O eixo de frequência pode ser reconstruído a partir de `bin_width_hz` enquanto
-a frequência de amostragem e o tamanho da FFT permanecerem fixos.
-
----
-
-## 8. Pipeline de Detecção
-
-O processo de decisão ocorre exclusivamente no `task_system`.
-
-```text
-dsp_result_t
-      │
-      ▼
-   WARMUP?
-   /     \
- sim      não
-  │         │
-  ▼         ▼
-baseline   Z-score
-  │         │
-  │         ▼
-  │      threshold
-  │         │
-  │         ▼
-  │    feature evidence
-  │         │
-  │         ▼
-  │   temporal window
-  │         │
-  │         ▼
-  └──────► machine state
-```
-
----
-
-### 8.1 Warm-up
-
-O warm-up possui exatamente:
-
-```text
-600 avaliações
-```
-
-Cada avaliação corresponde a um resultado produzido pelo `task_dsp` para um
-bloco de 2048 amostras.
-
-A HMI poderá apresentar, por exemplo:
-
-```text
-WARM-UP
-
-Coletando dados
-438 / 600
-```
-
-Durante o warm-up:
-
-* o sistema considera que o motor está saudável;
-* os resultados do DSP são utilizados para construir o baseline;
-* nenhuma decisão de `ALARM` é tomada;
-* o baseline ainda não é utilizado para detecção.
-
-Após a avaliação 600:
-
-```text
-WARMUP
-   ↓
-baseline finalizado
-   ↓
-HEALTHY
-```
-
-O baseline permanece fixo durante aquela execução do sistema.
-
-Para iniciar um novo baseline, a implementação atual poderá reiniciar o
-dispositivo e executar novamente o warm-up.
-
----
-
-### 8.2 Baseline
-
-O baseline é calculado separadamente para cada indicador utilizado na
-detecção:
-
-```text
-RMS
-Kurtosis
-Amplitude 1×RPM
-```
-
-Para cada indicador são determinados:
-
-```text
-μ = média durante o warm-up
-σ = desvio padrão durante o warm-up
-```
-
-O baseline é calculado a partir das 600 avaliações consideradas saudáveis e
-estáveis.
-
-O armazenamento das 600 avaliações completas não é necessário. As estatísticas
-podem ser calculadas incrementalmente durante o warm-up.
-
-O baseline é congelado após o warm-up.
-
-Não existe atualização adaptativa do baseline durante o monitoramento na
-implementação atual.
-
----
-
-### 8.3 Z-score
-
-Para cada nova avaliação após o warm-up:
-
-[
-Z = \frac{x-\mu}{\sigma}
-]
-
-onde:
-
-* `x` = valor atual produzido pelo DSP;
-* `μ` = média do indicador durante o warm-up;
-* `σ` = desvio padrão do indicador durante o warm-up.
-
-São calculados três Z-scores:
-
-```text
-zscore_rms
-zscore_kurtosis
-zscore_bin
-```
-
-O Z-score representa quantos desvios padrão o valor atual está acima ou abaixo
-do comportamento considerado normal durante o warm-up.
-
-Se o desvio padrão de uma feature for insuficiente para produzir um Z-score
-confiável, a feature não deve gerar uma decisão de anomalia baseada em um
-valor estatisticamente indefinido.
-
----
-
-### 8.4 Threshold
-
-Cada Z-score é comparado com um threshold configurável.
-
-O threshold inicial ainda será determinado experimentalmente.
-
-Conceitualmente:
-
-```text
-Z <= threshold
-    → normal
-
-Z > threshold
-    → anormal
-```
-
-O objetivo do threshold é identificar uma alteração estatisticamente
-significativa em relação ao baseline saudável.
-
-O valor definitivo não deve ser considerado fixo antes da validação experimental.
-
----
-
-### 8.5 Evidência por avaliação
-
-Cada avaliação produz três indicadores de evidência:
-
-```text
-RMS
-Kurtosis
-Amplitude 1×RPM
-```
-
-Cada indicador pode ser classificado como:
-
-```text
-NORMAL
-ANORMAL
-```
-
-A avaliação pode então ser representada por uma quantidade de indicadores
-anormais:
-
-```text
-0 → nenhum indicador anormal
-1 → um indicador anormal
-2 → dois indicadores anormais
-3 → três indicadores anormais
-```
-
-A condição de evidência multivariada utilizada inicialmente é:
-
-```text
-2 de 3 indicadores anormais
-```
-
-O `Crest Factor`, StdDev, Min, Max e Peak-to-Peak permanecem disponíveis como
-features do DSP, mas não participam da decisão inicial de estado.
-
----
-
-### 8.6 Persistência temporal
-
-Uma única avaliação anormal não deve ser suficiente para declarar uma falha.
-
-Após o threshold, a evidência de cada avaliação é armazenada em uma janela
-temporal.
-
-Conceitualmente:
-
-```text
-Avaliação 1 → 2/3
-Avaliação 2 → 2/3
-Avaliação 3 → 0/3
-Avaliação 4 → 2/3
-Avaliação 5 → 2/3
-```
-
-O `task_system` analisa a quantidade de avaliações anormais dentro da janela.
-
-A decisão final depende da persistência da condição anormal ao longo da janela,
-e não de uma única leitura.
-
-Os seguintes parâmetros ainda serão calibrados experimentalmente:
-
-* tamanho da janela;
-* quantidade mínima de avaliações anormais;
-* threshold de Z-score.
-
-A implementação inicial utilizará uma janela temporal explícita, evitando
-EMA ou outros mecanismos adaptativos.
+Os parâmetros continuam sujeitos à validação com dados reais.
 
 ---
 
@@ -1267,51 +610,7 @@ EMA ou outros mecanismos adaptativos.
 
 O `task_system` é o único proprietário do estado da máquina.
 
-Estados atuais:
-
 ```text
-BOOT
-  ↓
-INIT
-  ↓
-WARMUP
-  ↓
-HEALTHY
-  ↓
-ALARM
-```text
-Avaliação 1 → 2/3
-Avaliação 2 → 2/3
-Avaliação 3 → 0/3
-Avaliação 4 → 2/3
-Avaliação 5 → 2/3
-```
-
-O `task_system` analisa a quantidade de avaliações anormais dentro da janela.
-
-A decisão final depende da persistência da condição anormal ao longo da janela,
-e não de uma única leitura.
-
-Os seguintes parâmetros ainda serão calibrados experimentalmente:
-
-* tamanho da janela;
-* quantidade mínima de avaliações anormais;
-* threshold de Z-score.
-
-A implementação inicial utilizará uma janela temporal explícita, evitando
-EMA ou outros mecanismos adaptativos.
-
----
-
-## 9. Estados do Sistema
-
-O `task_system` é o único proprietário do estado da máquina.
-
-Estados atuais:
-
-```text
-BOOT
-  ↓
 INIT
   ↓
 WARMUP
@@ -1321,19 +620,13 @@ HEALTHY
 ALARM
 ```
 
-### BOOT
-
-Estado inicial após inicialização do dispositivo.
-
 ### INIT
 
-Inicialização e validação dos recursos necessários para operação.
+Inicialização da lógica do sistema.
 
 ### WARMUP
 
-Coleta das 600 avaliações utilizadas para construir o baseline.
-
-Nenhum alarme é gerado durante o warm-up.
+Construção do baseline com 600 avaliações.
 
 ### HEALTHY
 
@@ -1341,180 +634,99 @@ Baseline disponível e nenhuma condição anormal persistente detectada.
 
 ### ALARM
 
-A análise estatística e temporal indica uma alteração persistente na condição
-da máquina.
+Condição anormal persistente detectada.
 
-O `task_system` publica o estado e os dados relevantes para os consumidores.
-### BOOT
+### Transições
 
-Estado inicial após inicialização do dispositivo.
+```text
+WARMUP ───────────────→ HEALTHY
+          600 avaliações
 
-### INIT
+HEALTHY ── 5 anormais ─→ ALARM
 
-Inicialização e validação dos recursos necessários para operação.
-
-### WARMUP
-
-Coleta das 600 avaliações utilizadas para construir o baseline.
-
-Nenhum alarme é gerado durante o warm-up.
-
-### HEALTHY
-
-Baseline disponível e nenhuma condição anormal persistente detectada.
-
-### ALARM
-
-A análise estatística e temporal indica uma alteração persistente na condição
-da máquina.
-
-O `task_system` publica o estado e os dados relevantes para os consumidores.
+ALARM ───── 5 normais ─→ HEALTHY
+```
 
 ---
 
 ## 10. Comunicação entre Componentes
-## 10. Comunicação entre Componentes
 
-| Mecanismo                  | Uso                                        |
-| -------------------------- | ------------------------------------------ |
-| `queue_accel_block_to_dsp` | bloco de 2048 amostras do eixo selecionado |
-| `queue_dsp_to_system`      | resultados produzidos pelo DSP             |
-| `queue_sensor_to_system`   | resultados dos sensores                    |
-| `queue_system_to_hmi`      | estado e dados para HMI                    |
-| `queue_system_to_storage`  | dados para armazenamento                   |
-| `queue_system_to_dac`      | dados para saída analógica                 |
+| Mecanismo | Uso |
+|---|---|
+| `queue_accel_block_to_dsp` | Bloco de 2048 amostras |
+| `queue_dsp_to_system` | Resultados do DSP |
+| `queue_sensor_to_system` | Resultados dos sensores |
+| `queue_system_to_hmi` | Estado e dados para HMI |
+| `queue_hmi_to_system` | Comandos da HMI para System |
+| `queue_system_to_dac` | Dados para saída analógica |
+| `queue_system_to_telemetry` | Dados para MQTT |
 
-### Fluxo principal
+### Regra de ownership
 
-```text
-accelerometer
-      │
-      ▼
-queue_accel_block_to_dsp
-      │
-      ▼
-task_dsp
-      │
-      ▼
-queue_dsp_to_system
-      │
-      ▼
-task_system
-      │
-      ├──────► queue_system_to_hmi
-      │
-      ├──────► queue_system_to_storage
-      │
-      └──────► queue_system_to_dac
-```
+**Um dado tem um único dono/escritor. Consumidores somente leem os dados
+recebidos por suas interfaces.**
 
-### Regra das queues
+O `task_dsp` é responsável pelos resultados do processamento do sinal.
 
-A queue entre `accelerometer` e `dsp_pipeline` transporta blocos de aquisição.
+O `task_system` é responsável pelo estado, baseline e decisões.
 
-A queue entre `dsp_pipeline` e `task_system` transporta resultados que precisam
-ser processados pelo sistema em sequência, principalmente durante o warm-up.
-
-As queues de saída do `task_system` representam o resultado mais recente e podem
-ser implementadas com tamanho 1 e `xQueueOverwrite()` quando apropriado.
-| Mecanismo                  | Uso                                        |
-| -------------------------- | ------------------------------------------ |
-| `queue_accel_block_to_dsp` | bloco de 2048 amostras do eixo selecionado |
-| `queue_dsp_to_system`      | resultados produzidos pelo DSP             |
-| `queue_sensor_to_system`   | resultados dos sensores                    |
-| `queue_system_to_hmi`      | estado e dados para HMI                    |
-| `queue_system_to_storage`  | dados para armazenamento                   |
-| `queue_system_to_dac`      | dados para saída analógica                 |
-
-### Fluxo principal
-
-```text
-accelerometer
-      │
-      ▼
-queue_accel_block_to_dsp
-      │
-      ▼
-task_dsp
-      │
-      ▼
-queue_dsp_to_system
-      │
-      ▼
-task_system
-      │
-      ├──────► queue_system_to_hmi
-      │
-      ├──────► queue_system_to_storage
-      │
-      └──────► queue_system_to_dac
-```
-
-### Regra das queues
-
-A queue entre `accelerometer` e `dsp_pipeline` transporta blocos de aquisição.
-
-A queue entre `dsp_pipeline` e `task_system` transporta resultados que precisam
-ser processados pelo sistema em sequência, principalmente durante o warm-up.
-
-As queues de saída do `task_system` representam o resultado mais recente e podem
-ser implementadas com tamanho 1 e `xQueueOverwrite()` quando apropriado.
+HMI, DAC e Telemetry não acessam diretamente acelerômetro, buffers privados do
+DSP ou estado interno do System.
 
 ---
 
 ## 11. Recursos Compartilhados
-## 11. Recursos Compartilhados
 
-| Recurso                   | Dono            | Consumidores               | Sincronização           |
-| ------------------------- | --------------- | -------------------------- | ----------------------- |
-| SPI2                      | `main` (init)   | `accelerometer`, `storage` | `mutex_spi2`            |
-| SPI3                      | `main` (futuro) | `hmi`                      | isolado                 |
-| I2C                       | `main` (futuro) | `dac`                      | sem acesso do Core 0    |
-| `queue_dsp_to_system`     | `dsp_pipeline`  | `system`                   | sequência de resultados |
-| `queue_system_to_hmi`     | `system`        | `hmi`                      | queue de resultado      |
-| `queue_system_to_storage` | `system`        | `storage`                  | queue de resultado      |
-| `queue_system_to_dac`     | `system`        | `dac`                      | queue de resultado      |
+| Recurso | Dono | Consumidores | Sincronização |
+|---|---|---|---|
+| SPI2 | `main` (init) | Accelerometer | `mutex_spi2` |
+| SPI3 | `main` (futuro) | HMI | Isolado |
+| I2C | `main` (futuro) | DAC / sensores | Conforme implementação |
+| `queue_dsp_to_system` | DSP | System | Queue |
+| `queue_system_to_hmi` | System | HMI | Queue |
+| `queue_hmi_to_system` | HMI | System | Queue |
+| `queue_system_to_dac` | System | DAC | Queue |
+| `queue_system_to_telemetry` | System | Telemetry | Queue |
 
-Nenhuma task consumidora acessa diretamente os buffers privados de outro
-componente.
-| Recurso                   | Dono            | Consumidores               | Sincronização           |
-| ------------------------- | --------------- | -------------------------- | ----------------------- |
-| SPI2                      | `main` (init)   | `accelerometer`, `storage` | `mutex_spi2`            |
-| SPI3                      | `main` (futuro) | `hmi`                      | isolado                 |
-| I2C                       | `main` (futuro) | `dac`                      | sem acesso do Core 0    |
-| `queue_dsp_to_system`     | `dsp_pipeline`  | `system`                   | sequência de resultados |
-| `queue_system_to_hmi`     | `system`        | `hmi`                      | queue de resultado      |
-| `queue_system_to_storage` | `system`        | `storage`                  | queue de resultado      |
-| `queue_system_to_dac`     | `system`        | `dac`                      | queue de resultado      |
-
-Nenhuma task consumidora acessa diretamente os buffers privados de outro
-componente.
+Nenhuma task consumidora acessa diretamente buffers privados de outro componente.
 
 ---
 
-## 12. Convenções de Código
-## 12. Convenções de Código
+## 12. Memória e Transporte de Dados
 
-|           |                                                               |
-| --------- | ------------------------------------------------------------- |
-| Linguagem | C                                                             |
-| Framework | ESP-IDF                                                       |
-| Estilo    | camelCase; `typedef` para structs; `static` para tudo privado |
-| Colunas   | 100                                                           |
-| Branch    | `feat_<feature>` / `bugfix_<algo>`                            |
-| Commits   | conventional commits                                          |
-|           |                                                               |
-| --------- | ------------------------------------------------------------- |
-| Linguagem | C                                                             |
-| Framework | ESP-IDF                                                       |
-| Estilo    | camelCase; `typedef` para structs; `static` para tudo privado |
-| Colunas   | 100                                                           |
-| Branch    | `feat_<feature>` / `bugfix_<algo>`                            |
-| Commits   | conventional commits                                          |
+O `dsp_result_t` atualmente pode ser grande devido principalmente a:
 
-Organização obrigatória de cada `.c`:
+- `magnitude[1024]`;
+- `waveform[2048]`.
 
-```text
+Antes da integração final, deve ser definido quais dados cada consumidor
+realmente necessita.
+
+Objetivos:
+
+- evitar múltiplas cópias de aproximadamente 12 KB;
+- evitar transportar dados desnecessários;
+- definir ownership dos buffers;
+- evitar condições de corrida;
+- manter o fluxo DSP → System determinístico.
+
+As interfaces de HMI, DAC e Telemetry podem utilizar estruturas de saída
+menores que o resultado interno completo do DSP.
+
+---
+
+## 13. Convenções de Código
+
+| | |
+|---|---|
+| Linguagem | C |
+| Framework | ESP-IDF |
+| Branch | `feat_<feature>` / `bugfix_<algo>` |
+| Commits | Conventional Commits |
+| Colunas | 100 |
+
+Organização preferencial de cada `.c`:
+
 ```text
 Includes
 Private constants
@@ -1526,168 +738,131 @@ Public implementations
 Private implementations
 ```
 
-> Código legado (`app_context`, `accelerometer` atuais) usa snake_case.
-> Migrar gradualmente para camelCase nos novos módulos; não é necessário
-> reescrever o que já existe apenas por causa da convenção.
-> Código legado (`app_context`, `accelerometer` atuais) usa snake_case.
-> Migrar gradualmente para camelCase nos novos módulos; não é necessário
-> reescrever o que já existe apenas por causa da convenção.
+Código legado pode utilizar `snake_case`; não é necessário reescrever módulos
+existentes apenas por causa da convenção.
 
 ---
 
-## 13. Limitações Conhecidas
-## 13. Limitações Conhecidas
+## 14. Limitações Conhecidas
 
-* Apenas um eixo é processado no DSP; os três eixos continuam sendo adquiridos
-* FFT real
-* RPM é estimado a partir do pico espectral, sem sensor de RPM integrado
-* Validação do RPM será realizada experimentalmente com referência externa
-* Baseline não é persistido em flash/NVS
-* Baseline é fixo após o warm-up
-* O sistema inicialmente detecta mudança de condição, mas não classifica o tipo
-  de falha
-* O tamanho da janela temporal ainda precisa ser calibrado
-* O threshold de Z-score ainda precisa ser calibrado
-* O número mínimo de avaliações anormais dentro da janela ainda precisa ser
-  calibrado
-* Waveforms completas ainda não são armazenadas
-
-* Apenas um eixo é processado no DSP; os três eixos continuam sendo adquiridos
-* FFT real
-* RPM é estimado a partir do pico espectral, sem sensor de RPM integrado
-* Validação do RPM será realizada experimentalmente com referência externa
-* Baseline não é persistido em flash/NVS
-* Baseline é fixo após o warm-up
-* O sistema inicialmente detecta mudança de condição, mas não classifica o tipo
-  de falha
-* O tamanho da janela temporal ainda precisa ser calibrado
-* O threshold de Z-score ainda precisa ser calibrado
-* O número mínimo de avaliações anormais dentro da janela ainda precisa ser
-  calibrado
-* Waveforms completas ainda não são armazenadas
+- Apenas um eixo é processado no DSP; os três eixos continuam sendo adquiridos.
+- FFT real.
+- RPM é estimado pelo pico espectral, sem sensor de RPM integrado.
+- Validação do RPM será realizada com referência externa.
+- Baseline não é persistido em flash/NVS.
+- Baseline permanece fixo após o warm-up.
+- O sistema detecta mudança de condição, mas não classifica o tipo de falha.
+- Threshold de Z-score ainda precisa de validação experimental.
+- Parâmetros de persistência ainda precisam de validação com dados reais.
+- A magnitude FFT completa pode ser grande demais para ser copiada
+  indiscriminadamente entre tasks.
+- A taxa efetiva do MCP4725 para reprodução da waveform ainda precisa ser
+  validada.
+- Telemetry depende de Wi-Fi e MQTT, mas sua indisponibilidade não deve afetar
+  a decisão local.
+- Dashboard ThingsBoard é uma interface de supervisão, não parte do loop de
+  controle/detecção.
+- O novo baseline solicitado pela HMI ainda precisa ter seu mecanismo de
+  comunicação e reset implementado.
 
 ---
 
-## 14. Pendências Arquiteturais (TODO)
-## 14. Pendências Arquiteturais (TODO)
+## 15. Pendências Arquiteturais
 
 ### Infraestrutura
 
-* Registrar todas as tasks em `main.c`
-* Implementar `app_context_init()`
-* Criar as queues definitivas no `app_context`
-* Definir prioridades e afinidade de Core das tasks
-
-### DSP
-
-* Consolidar `dsp_result_t`
-* Definir transporte da magnitude FFT
-* Definir saída temporal destinada ao DAC
-* Validar frequência/RPM com sinal conhecido
-* Validar frequência/RPM com motor real
-* Validar amplitude do componente 1×RPM
-* Fixar versão do ESP-DSP
+- [ ] Registrar todas as tasks em `main.c`.
+- [ ] Implementar/validar `app_context_init()`.
+- [ ] Criar as queues definitivas.
+- [ ] Definir prioridades e afinidade de Core.
+- [ ] Definir tamanhos das queues.
+- [ ] Definir ownership dos buffers.
 
 ### System
 
-* Criar `system.h`
-* Criar `system.c`
-* Implementar `task_system`
-* Implementar máquina de estados
-* Implementar warm-up de 600 avaliações
-* Implementar cálculo incremental do baseline
-* Implementar média e desvio padrão por feature
-* Implementar Z-score
-* Implementar threshold
-* Implementar evidência 2 de 3
-* Implementar janela temporal
-* Calibrar tamanho da janela
-* Calibrar quantidade mínima de avaliações anormais
-* Calibrar threshold
+- [ ] Consolidar contratos de saída.
+- [ ] Implementar comando HMI → System para novo warm-up.
+- [ ] Validar comportamento de reset do baseline.
+- [ ] Avaliar parâmetros estatísticos com dados reais.
+- [ ] Avaliar `SYSTEM_ZSCORE_THRESHOLD`.
+- [ ] Validar decisão 2/3.
+- [ ] Validar 5 avaliações consecutivas.
+- [ ] Verificar representatividade do desvio padrão.
+- [ ] Verificar comportamento com pouca e alta variabilidade.
 
-### Outputs
+### HMI
 
-* Implementar HMI
-* Implementar storage
-* Implementar DAC
-* Definir formato de dados distribuído pelo `task_system`
+- [ ] Definir telas finais.
+- [ ] Definir dados obrigatórios/opcionais.
+- [ ] Definir frequência de atualização.
+- [ ] Definir tratamento do botão.
+- [ ] Definir ISR/debounce/clique longo.
+- [ ] Implementar LCD TFT.
+- [ ] Implementar navegação.
+- [ ] Implementar comando de novo warm-up.
 
-### Documentação
+### DAC
 
-* Atualizar `docs/integration.md`
-* Atualizar diagramas em `docs/diagrams/*`
-* Remover referências antigas a `rpm_counter`, PCNT e Hall
-* Documentar fluxo `accelerometer → dsp_pipeline → system → outputs`
-### Infraestrutura
+- [ ] Definir waveform.
+- [ ] Definir taxa de atualização.
+- [ ] Definir quantidade de amostras.
+- [ ] Definir escalonamento.
+- [ ] Definir formato e ownership do buffer.
+- [ ] Implementar MCP4725.
+- [ ] Validar sinal no osciloscópio.
 
-* Registrar todas as tasks em `main.c`
-* Implementar `app_context_init()`
-* Criar as queues definitivas no `app_context`
-* Definir prioridades e afinidade de Core das tasks
+### Telemetry
 
-### DSP
+- [ ] Definir payload MQTT.
+- [ ] Definir tópico.
+- [ ] Definir frequência de publicação.
+- [ ] Definir autenticação/token.
+- [ ] Implementar task Telemetry.
+- [ ] Implementar tratamento de desconexão.
+- [ ] Integrar ThingsBoard.
+- [ ] Criar dashboard.
 
-* Consolidar `dsp_result_t`
-* Definir transporte da magnitude FFT
-* Definir saída temporal destinada ao DAC
-* Validar frequência/RPM com sinal conhecido
-* Validar frequência/RPM com motor real
-* Validar amplitude do componente 1×RPM
-* Fixar versão do ESP-DSP
+### Sensores
 
-### System
+- [ ] Implementar DS18B20.
+- [ ] Integrar temperatura ao System.
+- [ ] Integrar temperatura à HMI.
+- [ ] Integrar temperatura à Telemetry.
 
-* Criar `system.h`
-* Criar `system.c`
-* Implementar `task_system`
-* Implementar máquina de estados
-* Implementar warm-up de 600 avaliações
-* Implementar cálculo incremental do baseline
-* Implementar média e desvio padrão por feature
-* Implementar Z-score
-* Implementar threshold
-* Implementar evidência 2 de 3
-* Implementar janela temporal
-* Calibrar tamanho da janela
-* Calibrar quantidade mínima de avaliações anormais
-* Calibrar threshold
+### Testes
 
-### Outputs
-
-* Implementar HMI
-* Implementar storage
-* Implementar DAC
-* Definir formato de dados distribuído pelo `task_system`
-
-### Documentação
-
-* Atualizar `docs/integration.md`
-* Atualizar diagramas em `docs/diagrams/*`
-* Remover referências antigas a `rpm_counter`, PCNT e Hall
-* Documentar fluxo `accelerometer → dsp_pipeline → system → outputs`
+- [ ] Testes sistemáticos do System sem motor.
+- [ ] Testar 1/3 features anormais.
+- [ ] Testar 2/3 features anormais.
+- [ ] Testar 3/3 features anormais.
+- [ ] Testar HEALTHY → ALARM → HEALTHY.
+- [ ] Testar interrupção da sequência.
+- [ ] Testar warm-up novamente via comando HMI.
+- [ ] Testar fluxo completo ACCEL → DSP → SYSTEM → OUTPUTS.
+- [ ] Testar motor saudável.
+- [ ] Testar condição anormal controlada.
+- [ ] Validar RPM com tacômetro Minipa.
 
 ---
 
-## 15. Regras para IA
-## 15. Regras para IA
+## 16. Regras para IA
 
-* Nunca alterar a arquitetura sem perguntar.
-* Nunca criar componentes novos sem autorização.
-* Nunca adicionar bibliotecas por conta própria.
-* Nunca alterar a responsabilidade de um módulo sem discutir previamente.
-* Sempre justificar decisões arquiteturais propostas.
-* Sempre perguntar antes de mudanças estruturais.
-* O `architecture.md` é a fonte de verdade do firmware e deve ser seguido
-  estritamente.
-* `task_dsp` processa sinais e retorna features; não toma decisões sobre o
-  estado da máquina.
-* `task_system` é o mestre do estado, baseline e decisão do sistema.
-* HMI, storage e DAC não acessam diretamente hardware ou buffers privados de
-  outros componentes.
-* O baseline atual é construído durante 600 avaliações saudáveis e permanece
-  fixo durante a execução.
-* Não implementar EMA adaptativo sem decisão arquitetural explícita.
-* Não substituir a análise estatística por algoritmos mais complexos sem
-  evidência experimental que justifique a mudança.
-* Parâmetros de threshold e persistência devem ser calibrados experimentalmente,
-  não escolhidos arbitrariamente como valores definitivos.
+- Nunca alterar a arquitetura sem discutir previamente.
+- Nunca criar componentes novos sem autorização.
+- Nunca adicionar bibliotecas por conta própria.
+- Nunca alterar a responsabilidade de um módulo sem discutir previamente.
+- Sempre justificar decisões arquiteturais propostas.
+- `architecture.md` é a fonte de verdade da arquitetura do firmware.
+- `task_dsp` processa sinais e retorna features; não decide o estado da máquina.
+- `task_system` é o mestre do estado, baseline e decisão.
+- HMI, DAC e Telemetry não acessam diretamente buffers privados de outros
+  componentes.
+- O processamento e a decisão permanecem locais no ESP32-S3.
+- MQTT/ThingsBoard é telemetria e visualização, não parte da lógica de detecção.
+- Falhas de telemetria não devem bloquear o processamento local.
+- O baseline atual é construído durante 600 avaliações e permanece fixo até
+  um novo warm-up.
+- Não implementar EMA adaptativo sem decisão arquitetural explícita.
+- Não substituir a análise estatística por algoritmos mais complexos sem
+  evidência experimental.
+- Threshold e persistência devem ser calibrados experimentalmente.
