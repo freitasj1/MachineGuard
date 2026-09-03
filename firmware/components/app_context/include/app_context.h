@@ -23,7 +23,12 @@ extern "C" {
 
 enum {
     ACCEL_BLOCK_SIZE = 2048,
-    DSP_FFT_MAGNITUDE_SIZE = ACCEL_BLOCK_SIZE / 2
+    DSP_FFT_MAGNITUDE_SIZE = ACCEL_BLOCK_SIZE / 2,
+
+    /** Native FFT bins transported to the HMI (5 Hz to 250 Hz range). */
+    HMI_FFT_FIRST_BIN = 2,
+    HMI_FFT_LAST_BIN = 76,
+    HMI_FFT_POINT_COUNT = HMI_FFT_LAST_BIN - HMI_FFT_FIRST_BIN + 1
 };
 
 /* ============================================================================
@@ -214,6 +219,9 @@ typedef struct
     system_features_t features;
     system_diagnostics_t diagnostics;
     system_warmup_t warmup;
+
+    /** Magnitudes of native FFT bins 2 through 76, inclusive. */
+    float fft_magnitude[HMI_FFT_POINT_COUNT];
 
 } hmi_data_t;
 
