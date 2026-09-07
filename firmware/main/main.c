@@ -18,6 +18,7 @@
 #include "dsp.h"
 #include "hal/spi_types.h"
 #include "hmi.h"
+#include "portmacro.h"
 #include "sensors.h"
 #include "soc/gpio_num.h"
 #include "storage.h"
@@ -35,13 +36,20 @@ static const char *TAG = "main";  /**< Tag para logs ESP-IDF */
 
 #define SPI2_HOST_USED      SPI2_HOST
 
-#define SPI2_PIN_MOSI    GPIO_NUM_11
-#define SPI2_PIN_MISO    GPIO_NUM_13
-#define SPI2_PIN_SCLK    GPIO_NUM_12   
+#define SPI2_PIN_MOSI       GPIO_NUM_11
+#define SPI2_PIN_MISO       GPIO_NUM_13
+#define SPI2_PIN_SCLK       GPIO_NUM_12
+
+#define SPI3_HOST_USED      SPI3_HOST
+
+#define SPI3_PIN_MOSI       GPIO_NUM_39
+#define SPI3_PIN_MISO       GPIO_NUM_40
+#define SPI3_PIN_SCLK       GPIO_NUM_38
 
 #define SPI_DMA_CHAN        SPI_DMA_CH_AUTO
 
-static app_context_t ctx;           /**< Contexto compartilhado do sistema */
+static app_context_t ctx;
+
 /* ============================================================================
  * Public types
  * ========================================================================== */
@@ -64,7 +72,8 @@ static app_context_t ctx;           /**< Contexto compartilhado do sistema */
  * Private function prototypes
  * ========================================================================== */
 
- static esp_err_t spi2_bus_init(void);
+static esp_err_t spi2_bus_init(void);
+static esp_err_t spi3_bus_init(void);
 
 /* ============================================================================
  * Public function implementations
@@ -79,6 +88,7 @@ void app_main(void)
 
     ESP_ERROR_CHECK(app_context_init(&ctx));
     ESP_ERROR_CHECK(spi2_bus_init());
+    ESP_ERROR_CHECK(spi3_bus_init());
 
     TaskHandle_t dsp_handle     = NULL;
     TaskHandle_t system_handle  = NULL;
@@ -188,6 +198,33 @@ static esp_err_t spi2_bus_init(void)
     if (err != ESP_OK) {
         ESP_LOGE(TAG,
                  "Failed to initialize SPI2 bus: %s",
+                 esp_err_to_name(err));
+    }
+
+    return err;
+}
+
+static esp_err_t spi3_bus_init(void)
+{
+    spi_bus_config_t bus_cfg = {
+        .mosi_io_num = SPI3_PIN_MOSI,
+        .miso_io_num = SPI3_PIN_MISO,
+        .sclk_io_num = SPI3_PIN_SCLK,
+
+        .quadwp_io_num = -1,
+        .quadhd_io_num = -1,
+
+        .max_transfer_sz = 4096,
+    };
+
+    esp_err_t err = spi_bus_initialize(
+        SPI3_HOST_USED,
+        &bus_cfg,
+        SPI_DMA_CHAN);
+
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG,
+                 "Failed to initialize SPI3 bus: %s",
                  esp_err_to_name(err));
     }
 

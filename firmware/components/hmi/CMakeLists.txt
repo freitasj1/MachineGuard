@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "hmi.c"
+    SRCS "status.c" "hmi.c"
     INCLUDE_DIRS "include"
-    PRIV_REQUIRES app_context esp_driver_gpio
+    PRIV_REQUIRES app_context esp_driver_gpio esp_driver_spi
 )
