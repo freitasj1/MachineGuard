@@ -40,6 +40,8 @@ static const char *TAG = "hmi";
 
 #define HMI_BYTES_PER_PIXEL 3U
 
+#define HMI_REFRESH_PERIOD_MS 5000U
+
 /* ========================================================================== */
 /* ILI9488 commands                                                           */
 /* ========================================================================== */
@@ -228,27 +230,46 @@ void task_hmi(void *arg)
         return;
     }
 
-    hmi_data_t data = {0};
+    hmi_data_t last_data = {0};
+    bool have_data = false;
+    bool drawn_once = false;
+    bool render_pending = false;
+    TickType_t next_render = 0;
 
     while (true) {
+        hmi_data_t rx = {0};
 
         if (xQueueReceive(
                 ctx->queue_system_to_hmi,
-                &data,
-                pdMS_TO_TICKS(250)) != pdTRUE) {
+                &rx,
+                pdMS_TO_TICKS(200)) == pdTRUE) {
 
-            continue;
+            last_data = rx;
+            have_data = true;
+            render_pending = true;
         }
 
-        err = hmi_update_screen(&data);
+        if (have_data && render_pending) {
+            TickType_t now = xTaskGetTickCount();
 
-        if (err != ESP_OK) {
+            if (!drawn_once ||
+                (int32_t)(now - next_render) >= 0) {
 
-            ESP_LOGE(
-                TAG,
-                "HMI update failed: %s",
-                esp_err_to_name(err)
-            );
+                err = hmi_update_screen(&last_data);
+
+                if (err != ESP_OK) {
+                    ESP_LOGE(
+                        TAG,
+                        "HMI update failed: %s",
+                        esp_err_to_name(err)
+                    );
+                } else {
+                    drawn_once = true;
+                    render_pending = false;
+                    next_render = xTaskGetTickCount() +
+                                  pdMS_TO_TICKS(HMI_REFRESH_PERIOD_MS);
+                }
+            }
         }
     }
 }

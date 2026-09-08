@@ -42,6 +42,7 @@ static const char *TAG = "status";
 
 typedef struct {
     bool initialized;
+    bool cache_valid;
 
     int kurtosis_x100;
     int rms_x10;
@@ -967,12 +968,11 @@ esp_err_t status_init(void)
     }
 
     s_cache.initialized = true;
+    s_cache.cache_valid = false;
 
     /*
-     * Force first dynamic update.
-     *
-     * The cache starts at zero, so most values will naturally update.
-     * State is initialized explicitly to INIT.
+     * Keep the initial state visible in the cache as an empty/uninitialized
+     * dynamic snapshot so the next update forces a complete redraw.
      */
     s_cache.state = SYSTEM_STATE_INIT;
 
@@ -995,6 +995,8 @@ esp_err_t status_update(
     if (!s_cache.initialized) {
         return ESP_ERR_INVALID_STATE;
     }
+
+    const bool force_redraw = !s_cache.cache_valid;
 
     const int rpm =
         (int)(data->features.rpm + 0.5f);
@@ -1039,7 +1041,7 @@ esp_err_t status_update(
     /*
      * Header RPM + right RPM.
      */
-    if (rpm != s_cache.rpm) {
+    if (force_redraw || rpm != s_cache.rpm) {
 
         err = draw_header_rpm(rpm);
 
@@ -1059,7 +1061,8 @@ esp_err_t status_update(
     /*
      * Temperature.
      */
-    if (temperature_x10 != s_cache.temperature_x10 ||
+    if (force_redraw ||
+        temperature_x10 != s_cache.temperature_x10 ||
         data->features.temperature_valid !=
             s_cache.temperature_valid) {
 
@@ -1091,7 +1094,8 @@ esp_err_t status_update(
     /*
      * Kurtosis.
      */
-    if (kurtosis_x100 != s_cache.kurtosis_x100 ||
+    if (force_redraw ||
+        kurtosis_x100 != s_cache.kurtosis_x100 ||
         kurtosis_z_x10 != s_cache.kurtosis_z_x10 ||
         data->diagnostics.kurtosis_abnormal !=
             s_cache.kurtosis_abnormal) {
@@ -1119,7 +1123,8 @@ esp_err_t status_update(
     /*
      * RMS.
      */
-    if (rms_x10 != s_cache.rms_x10 ||
+    if (force_redraw ||
+        rms_x10 != s_cache.rms_x10 ||
         rms_z_x10 != s_cache.rms_z_x10 ||
         data->diagnostics.rms_abnormal !=
             s_cache.rms_abnormal) {
@@ -1147,7 +1152,8 @@ esp_err_t status_update(
     /*
      * 1x RPM.
      */
-    if (rpm_amplitude_x10 !=
+    if (force_redraw ||
+        rpm_amplitude_x10 !=
             s_cache.rpm_amplitude_x10 ||
         rpm_z_x10 != s_cache.rpm_z_x10 ||
         data->diagnostics.bin_1xrpm_abnormal !=
@@ -1176,7 +1182,7 @@ esp_err_t status_update(
     /*
      * Machine state.
      */
-    if (data->state.state != s_cache.state) {
+    if (force_redraw || data->state.state != s_cache.state) {
 
         err = draw_state(
             data->state.state
@@ -1189,6 +1195,8 @@ esp_err_t status_update(
         s_cache.state =
             data->state.state;
     }
+
+    s_cache.cache_valid = true;
 
     return ESP_OK;
 }
