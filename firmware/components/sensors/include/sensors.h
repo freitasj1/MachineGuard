@@ -1,6 +1,6 @@
 /**
  * @file sensors.h
- * @brief Interface da task de sensores
+ * @brief Interface da task de sensores.
  */
 
 #pragma once
@@ -12,8 +12,9 @@ extern "C" {
 #endif
 
 /**
- * @brief Task de coleta de sensores
- * @param arg Ponteiro para app_context_t
+ * @brief Task de coleta dos sensores.
+ *
+ * @param arg Ponteiro para app_context_t.
  */
 void task_sensors(void *arg);
 
