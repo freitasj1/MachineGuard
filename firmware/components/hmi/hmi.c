@@ -3,8 +3,15 @@
  * @brief Interface gráfica e gerenciamento da HMI.
  */
 
+#include "app_context.h"
+#include "hal/gpio_types.h"
+#include "hal/spi_types.h"
+#include "portmacro.h"
+#include "status.h"
+
 #include "hmi.h"
 #include "status.h"
+#include "fft.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -119,7 +126,7 @@ const hmi_color_t HMI_COLOR_YELLOW = {
 
 static spi_device_handle_t hmi_spi = NULL;
 
-static hmi_screen_t current_screen = HMI_SCREEN_STATUS;
+static hmi_screen_t current_screen = HMI_SCREEN_FFT;
 
 /*
  * One complete RGB666 row.
@@ -214,8 +221,9 @@ void task_hmi(void *arg)
         return;
     }
 
-    current_screen = HMI_SCREEN_STATUS;
-
+    /*
+     * Initialize both screen modules.
+     */
     err = status_init();
 
     if (err != ESP_OK) {
@@ -230,13 +238,35 @@ void task_hmi(void *arg)
         return;
     }
 
+    err = fft_init();
+
+    if (err != ESP_OK) {
+
+        ESP_LOGE(
+            TAG,
+            "FFT initialization failed: %s",
+            esp_err_to_name(err)
+        );
+
+        vTaskDelete(NULL);
+        return;
+    }
+
+    /*
+     * Temporary screen selection for testing.
+     */
+    current_screen = HMI_SCREEN_FFT;
+
     hmi_data_t last_data = {0};
+
     bool have_data = false;
     bool drawn_once = false;
     bool render_pending = false;
+
     TickType_t next_render = 0;
 
     while (true) {
+
         hmi_data_t rx = {0};
 
         if (xQueueReceive(
@@ -245,34 +275,47 @@ void task_hmi(void *arg)
                 pdMS_TO_TICKS(200)) == pdTRUE) {
 
             last_data = rx;
+
             have_data = true;
             render_pending = true;
         }
 
         if (have_data && render_pending) {
-            TickType_t now = xTaskGetTickCount();
+
+            TickType_t now =
+                xTaskGetTickCount();
 
             if (!drawn_once ||
                 (int32_t)(now - next_render) >= 0) {
 
-                err = hmi_update_screen(&last_data);
+                err = hmi_update_screen(
+                    &last_data
+                );
 
                 if (err != ESP_OK) {
+
                     ESP_LOGE(
                         TAG,
                         "HMI update failed: %s",
                         esp_err_to_name(err)
                     );
+
                 } else {
+
                     drawn_once = true;
                     render_pending = false;
-                    next_render = xTaskGetTickCount() +
-                                  pdMS_TO_TICKS(HMI_REFRESH_PERIOD_MS);
+
+                    next_render =
+                        xTaskGetTickCount() +
+                        pdMS_TO_TICKS(
+                            HMI_REFRESH_PERIOD_MS
+                        );
                 }
             }
         }
     }
 }
+
 
 /* ========================================================================== */
 /* Screen management                                                          */
@@ -292,11 +335,7 @@ static esp_err_t hmi_update_screen(
             return status_update(data);
 
         case HMI_SCREEN_FFT:
-
-            /*
-             * FFT screen will be connected here later.
-             */
-            return ESP_OK;
+            return fft_update(data);
 
         default:
 

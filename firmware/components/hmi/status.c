@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "app_context.h"
+#include "esp_err.h"
 #include "hmi.h"
 #include "esp_log.h"
 
@@ -435,9 +437,7 @@ static esp_err_t draw_static_layout(void)
 /* Dynamic regions                                                            */
 /* ========================================================================== */
 
-static esp_err_t draw_header_rpm(
-    int rpm
-)
+static esp_err_t draw_header_rpm(int rpm)
 {
     char text[16];
 
