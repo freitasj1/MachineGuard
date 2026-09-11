@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "app_context.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,21 +35,21 @@ extern "C" {
  */
 #define SYSTEM_ZSCORE_THRESHOLD         (3.0f)
 
+/**
+ * @brief Fixed margin above the healthy baseline mean.
+ *
+ * A feature is considered abnormal only when its value exceeds
+ * the baseline mean by this margin and also exceeds the Z-score
+ * threshold.
+ *
+ * This value is provisional and must be calibrated experimentally.
+ */
+#define SYSTEM_BASELINE_MARGIN           (0.10f)
+
 /* ============================================================================
  * Public types
  * ========================================================================== */
 
-/**
- * @brief Machine operating state controlled by task_system.
- */
-typedef enum
-{
-    SYSTEM_STATE_INIT = 0,
-    SYSTEM_STATE_WARMUP,
-    SYSTEM_STATE_HEALTHY,
-    SYSTEM_STATE_ALARM
-
-} system_state_t;
 
 /* ============================================================================
  * Public function prototypes

@@ -48,6 +48,41 @@ esp_err_t app_context_init(app_context_t *ctx)
         goto allocation_failed;
     }
 
+    ctx->queue_system_to_hmi =
+        xQueueCreate(1, sizeof(hmi_data_t));
+
+    if (ctx->queue_system_to_hmi == NULL) {
+        goto allocation_failed;
+    }
+
+    ctx->queue_hmi_to_system =
+        xQueueCreate(1, sizeof(system_command_t));
+
+    if (ctx->queue_hmi_to_system == NULL) {
+        goto allocation_failed;
+    }
+
+    ctx->queue_system_to_dac =
+        xQueueCreate(1, sizeof(dac_waveform_t));
+
+    if (ctx->queue_system_to_dac == NULL) {
+        goto allocation_failed;
+    }
+
+    ctx->queue_system_to_telemetry =
+        xQueueCreate(1, sizeof(telemetry_data_t));
+
+    if (ctx->queue_system_to_telemetry == NULL) {
+        goto allocation_failed;
+    }
+
+    ctx->queue_sensors_to_system =
+        xQueueCreate(1, sizeof(sensor_result_t));
+
+    if (ctx->queue_sensors_to_system == NULL) {
+        goto allocation_failed;
+    }
+
     ctx->mutex_spi2 = xSemaphoreCreateMutex();
 
     if (ctx->mutex_spi2 == NULL) {
@@ -81,6 +116,31 @@ static void delete_resources(app_context_t *ctx)
     if (ctx->queue_dsp_to_system != NULL) {
         vQueueDelete(ctx->queue_dsp_to_system);
         ctx->queue_dsp_to_system = NULL;
+    }
+
+    if (ctx->queue_system_to_hmi != NULL) {
+        vQueueDelete(ctx->queue_system_to_hmi);
+        ctx->queue_system_to_hmi = NULL;
+    }
+
+    if (ctx->queue_hmi_to_system != NULL) {
+        vQueueDelete(ctx->queue_hmi_to_system);
+        ctx->queue_hmi_to_system = NULL;
+    }
+
+    if (ctx->queue_system_to_dac != NULL) {
+        vQueueDelete(ctx->queue_system_to_dac);
+        ctx->queue_system_to_dac = NULL;
+    }
+
+    if (ctx->queue_system_to_telemetry != NULL) {
+        vQueueDelete(ctx->queue_system_to_telemetry);
+        ctx->queue_system_to_telemetry = NULL;
+    }
+
+    if (ctx->queue_sensors_to_system != NULL) {
+        vQueueDelete(ctx->queue_sensors_to_system);
+        ctx->queue_sensors_to_system = NULL;
     }
 
     if (ctx->mutex_spi2 != NULL) {

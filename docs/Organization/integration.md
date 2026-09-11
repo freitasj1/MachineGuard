@@ -267,6 +267,7 @@ aquisição do acelerômetro.
 | CS      | GPIO41         |
 | DC      | GPIO42         |
 | RST     | GPIO21         |
+| LED     | 3.3V           | 
 
 ## 8.2 MISO
 

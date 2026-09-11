@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "app_context.h"
 #include "esp_log.h"
@@ -97,6 +98,9 @@ typedef struct
 
     system_baseline_t baseline;
 
+    sensor_result_t latest_sensor;
+    system_diagnostics_t diagnostics;
+
     uint8_t consecutive_abnormal;
     uint8_t consecutive_normal;
 
@@ -134,6 +138,13 @@ static bool evaluate_abnormality(const dsp_result_t *result);
 
 static void process_monitoring(const dsp_result_t *result);
 
+static void process_pending_commands(app_context_t *ctx);
+
+static void process_pending_sensor_results(app_context_t *ctx);
+
+static void publish_hmi_data(app_context_t *ctx,
+                             const dsp_result_t *result);
+
 static void log_baseline(void);
 
 static const char *state_to_string(system_state_t state);
@@ -147,7 +158,10 @@ void task_system(void *arg)
     app_context_t *ctx = (app_context_t *)arg;
 
     if (ctx == NULL ||
-        ctx->queue_dsp_to_system == NULL) {
+        ctx->queue_dsp_to_system == NULL ||
+        ctx->queue_sensors_to_system == NULL ||
+        ctx->queue_hmi_to_system == NULL ||
+        ctx->queue_system_to_hmi == NULL) {
 
         ESP_LOGE(TAG, "invalid system context");
         vTaskDelete(NULL);
@@ -174,6 +188,9 @@ void task_system(void *arg)
 
             continue;
         }
+
+        process_pending_commands(ctx);
+        process_pending_sensor_results(ctx);
 
         switch (s_system.state) {
 
@@ -217,6 +234,8 @@ void task_system(void *arg)
 
                 break;
         }
+
+        publish_hmi_data(ctx, &result);
     }
 }
 
@@ -236,6 +255,7 @@ static void reset_context(void)
     s_system.bin_stats = (system_online_stats_t){0};
 
     s_system.baseline = (system_baseline_t){0};
+    s_system.diagnostics = (system_diagnostics_t){0};
 
     s_system.consecutive_abnormal = 0U;
     s_system.consecutive_normal = 0U;
@@ -417,7 +437,6 @@ static float calculate_zscore(
     return (value - baseline->mean) /
            baseline->stddev;
 }
-
 static bool evaluate_feature(
     float value,
     const system_baseline_feature_t *baseline)
@@ -430,37 +449,68 @@ static bool evaluate_feature(
         calculate_zscore(value, baseline);
 
     /*
-     * The current detector is one-sided:
-     * values above the healthy baseline are considered abnormal.
+     * A feature is considered abnormal only when both conditions
+     * are satisfied:
+     *
+     * 1. The value exceeds the healthy baseline mean by the
+     *    configured fixed margin.
+     *
+     * 2. The value exceeds the configured Z-score threshold.
+     *
+     * This prevents small statistical deviations from being
+     * considered abnormal merely because they exceed the fixed
+     * percentage margin.
      */
-    return zscore > SYSTEM_ZSCORE_THRESHOLD;
+    const float baseline_threshold =
+        baseline->mean *
+        (1.0f + SYSTEM_BASELINE_MARGIN);
+
+    const bool exceeds_baseline_margin =
+        value > baseline_threshold;
+
+    const bool exceeds_zscore_threshold =
+        zscore > SYSTEM_ZSCORE_THRESHOLD;
+
+    return exceeds_baseline_margin &&
+           exceeds_zscore_threshold;
 }
+
 
 static bool evaluate_abnormality(const dsp_result_t *result)
 {
+    s_system.diagnostics = (system_diagnostics_t){0};
+
     if (result == NULL || !s_system.baseline.valid) {
         return false;
     }
 
     uint8_t abnormal_features = 0U;
 
-    if (evaluate_feature(
-            result->rms,
-            &s_system.baseline.rms)) {
+    s_system.diagnostics.rms_zscore =
+        calculate_zscore(result->rms, &s_system.baseline.rms);
+    s_system.diagnostics.rms_abnormal =
+        evaluate_feature(result->rms, &s_system.baseline.rms);
+    if (s_system.diagnostics.rms_abnormal) {
 
         abnormal_features++;
     }
 
-    if (evaluate_feature(
-            result->kurtosis,
-            &s_system.baseline.kurtosis)) {
+    s_system.diagnostics.kurtosis_zscore =
+        calculate_zscore(result->kurtosis, &s_system.baseline.kurtosis);
+    s_system.diagnostics.kurtosis_abnormal =
+        evaluate_feature(result->kurtosis, &s_system.baseline.kurtosis);
+    if (s_system.diagnostics.kurtosis_abnormal) {
 
         abnormal_features++;
     }
 
-    if (evaluate_feature(
-            result->bin_1xrpm_amplitude,
-            &s_system.baseline.bin_1xrpm_amplitude)) {
+    s_system.diagnostics.bin_1xrpm_zscore =
+        calculate_zscore(result->bin_1xrpm_amplitude,
+                         &s_system.baseline.bin_1xrpm_amplitude);
+    s_system.diagnostics.bin_1xrpm_abnormal =
+        evaluate_feature(result->bin_1xrpm_amplitude,
+                         &s_system.baseline.bin_1xrpm_amplitude);
+    if (s_system.diagnostics.bin_1xrpm_abnormal) {
 
         abnormal_features++;
     }
@@ -557,6 +607,63 @@ static void process_monitoring(const dsp_result_t *result)
                 );
             }
         }
+    }
+}
+
+static void process_pending_commands(app_context_t *ctx)
+{
+    system_command_t command;
+
+    while (xQueueReceive(ctx->queue_hmi_to_system, &command, 0) == pdTRUE) {
+        if (command == SYSTEM_COMMAND_RESET_WARMUP) {
+            reset_context();
+            ESP_LOGI(TAG, "warm-up reset requested by HMI");
+        } else {
+            ESP_LOGW(TAG, "unknown system command: %d", command);
+        }
+    }
+}
+
+static void process_pending_sensor_results(app_context_t *ctx)
+{
+    sensor_result_t result;
+
+    while (xQueueReceive(ctx->queue_sensors_to_system, &result, 0) == pdTRUE) {
+        s_system.latest_sensor = result;
+    }
+}
+
+static void publish_hmi_data(app_context_t *ctx,
+                             const dsp_result_t *result)
+{
+    hmi_data_t data = {0};
+
+    if (ctx == NULL || result == NULL) {
+        return;
+    }
+
+    data.state.state = s_system.state;
+
+    data.features.rms = result->rms;
+    data.features.kurtosis = result->kurtosis;
+    data.features.crest_factor = result->crest_factor;
+    data.features.bin_1xrpm_amplitude = result->bin_1xrpm_amplitude;
+    data.features.frequency_hz = result->frequency_hz;
+    data.features.rpm = result->rpm;
+    data.features.temperature_c = s_system.latest_sensor.temperature_c;
+    data.features.temperature_valid = s_system.latest_sensor.temperature_valid;
+
+    data.diagnostics = s_system.diagnostics;
+    data.warmup.evaluations = s_system.warmup_count;
+    data.warmup.required = SYSTEM_WARMUP_EVALUATIONS;
+    data.warmup.bin_1xrpm_valid = s_system.bin_valid_count;
+
+    memcpy(data.fft_magnitude,
+           &result->magnitude[HMI_FFT_FIRST_BIN],
+           sizeof(data.fft_magnitude));
+
+    if (xQueueOverwrite(ctx->queue_system_to_hmi, &data) != pdPASS) {
+        ESP_LOGW(TAG, "HMI data queue overwrite failed");
     }
 }
 
