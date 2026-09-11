@@ -35,6 +35,17 @@ extern "C" {
  */
 #define SYSTEM_ZSCORE_THRESHOLD         (3.0f)
 
+/**
+ * @brief Fixed margin above the healthy baseline mean.
+ *
+ * A feature is considered abnormal only when its value exceeds
+ * the baseline mean by this margin and also exceeds the Z-score
+ * threshold.
+ *
+ * This value is provisional and must be calibrated experimentally.
+ */
+#define SYSTEM_BASELINE_MARGIN           (0.10f)
+
 /* ============================================================================
  * Public types
  * ========================================================================== */

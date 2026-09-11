@@ -437,7 +437,6 @@ static float calculate_zscore(
     return (value - baseline->mean) /
            baseline->stddev;
 }
-
 static bool evaluate_feature(
     float value,
     const system_baseline_feature_t *baseline)
@@ -450,11 +449,32 @@ static bool evaluate_feature(
         calculate_zscore(value, baseline);
 
     /*
-     * The current detector is one-sided:
-     * values above the healthy baseline are considered abnormal.
+     * A feature is considered abnormal only when both conditions
+     * are satisfied:
+     *
+     * 1. The value exceeds the healthy baseline mean by the
+     *    configured fixed margin.
+     *
+     * 2. The value exceeds the configured Z-score threshold.
+     *
+     * This prevents small statistical deviations from being
+     * considered abnormal merely because they exceed the fixed
+     * percentage margin.
      */
-    return zscore > SYSTEM_ZSCORE_THRESHOLD;
+    const float baseline_threshold =
+        baseline->mean *
+        (1.0f + SYSTEM_BASELINE_MARGIN);
+
+    const bool exceeds_baseline_margin =
+        value > baseline_threshold;
+
+    const bool exceeds_zscore_threshold =
+        zscore > SYSTEM_ZSCORE_THRESHOLD;
+
+    return exceeds_baseline_margin &&
+           exceeds_zscore_threshold;
 }
+
 
 static bool evaluate_abnormality(const dsp_result_t *result)
 {
