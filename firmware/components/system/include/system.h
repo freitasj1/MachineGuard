@@ -16,7 +16,7 @@ extern "C" {
 /**
  * @brief Number of DSP evaluations used to build the healthy baseline.
  */
-#define SYSTEM_WARMUP_EVALUATIONS       (600U)
+#define SYSTEM_WARMUP_EVALUATIONS       (500U)
 
 /**
  * @brief Number of consecutive abnormal evaluations required to enter ALARM.

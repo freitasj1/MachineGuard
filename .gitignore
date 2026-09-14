@@ -14,7 +14,7 @@
 *.tmp
 
 # Log files
-*.log
+# *.log
 
 # Build artifacts and directories
 **/build/

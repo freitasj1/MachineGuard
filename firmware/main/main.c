@@ -8,21 +8,27 @@
 #include "driver/spi_common.h"
 #include "esp_err.h"
 #include "esp_log.h"
+#include "esp_log_level.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/projdefs.h"
 #include "freertos/task.h"
 #include "freertos/idf_additions.h"
+
 #include "app_context.h"
 #include "accelerometer.h"
 #include "dac.h"
 #include "dsp.h"
-#include "hal/spi_types.h"
-#include "hmi.h"
-#include "portmacro.h"
-#include "sensors.h"
-#include "soc/gpio_num.h"
+#include "nvs.h"
 #include "storage.h"
 #include "system.h"
+#include "hmi.h"
+#include "sensors.h"
+#include "telemetry.h"
+
+#include "hal/spi_types.h"
+#include "portmacro.h"
+#include "soc/gpio_num.h"
+#include "nvs_flash.h"
 
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
@@ -74,6 +80,7 @@ static app_context_t ctx;
 
 static esp_err_t spi2_bus_init(void);
 static esp_err_t spi3_bus_init(void);
+static void configure_log_levels(void);
 
 /* ============================================================================
  * Public function implementations
@@ -84,7 +91,22 @@ static esp_err_t spi3_bus_init(void);
  */
 void app_main(void)
 {
+    configure_log_levels();
+
     ESP_LOGI(TAG, "MachineGuard starting...");
+
+
+    BaseType_t ret;
+    ret = nvs_flash_init();
+
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
+        ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+
+    ESP_ERROR_CHECK(ret);
 
     ESP_ERROR_CHECK(app_context_init(&ctx));
     ESP_ERROR_CHECK(spi2_bus_init());
@@ -97,8 +119,8 @@ void app_main(void)
     TaskHandle_t hmi_handle     = NULL;
     TaskHandle_t dac_handle     = NULL;
     TaskHandle_t sd_handle      = NULL;
+    TaskHandle_t telemetry_handle = NULL;
 
-    BaseType_t ret;
 
     // Create DSP task
     ret = xTaskCreatePinnedToCore(
@@ -150,25 +172,51 @@ void app_main(void)
         ESP_LOGE(TAG, "Failed to create task 'hmi'");
     }
 
-    // Create DAC task
-    ret = xTaskCreatePinnedToCore(
-        task_dac, "dac", 4096, &ctx, 9, &dac_handle, 1
-    );
-    if (ret == pdPASS) {
-        ESP_LOGI(TAG, "Task 'dac' created successfully (priority=9, core=1)");
-    } else {
-        ESP_LOGE(TAG, "Failed to create task 'dac'");
-    }
+    // // Create DAC task
+    // ret = xTaskCreatePinnedToCore(
+    //     task_dac, "dac", 4096, &ctx, 9, &dac_handle, 1
+    // );
+    // if (ret == pdPASS) {
+    //     ESP_LOGI(TAG, "Task 'dac' created successfully (priority=9, core=1)");
+    // } else {
+    //     ESP_LOGE(TAG, "Failed to create task 'dac'");
+    // }
 
-    // Create SD task
+    // // Create SD task
+    // ret = xTaskCreatePinnedToCore(
+    //     task_sd, "sd", 4096, &ctx, 8, &sd_handle, 1
+    // );
+    // if (ret == pdPASS) {
+    //     ESP_LOGI(TAG, "Task 'sd' created successfully (priority=8, core=1)");
+    // } else {
+    //     ESP_LOGE(TAG, "Failed to create task 'sd'");
+    // }
+
     ret = xTaskCreatePinnedToCore(
-        task_sd, "sd", 4096, &ctx, 8, &sd_handle, 1
+    task_telemetry,
+    "telemetry",
+    6144,
+    &ctx,
+    8,
+    &telemetry_handle,
+    1
+);
+
+if (ret == pdPASS) {
+
+    ESP_LOGI(
+        TAG,
+        "Task 'telemetry' created successfully "
+        "(priority=8, core=1)"
     );
-    if (ret == pdPASS) {
-        ESP_LOGI(TAG, "Task 'sd' created successfully (priority=8, core=1)");
-    } else {
-        ESP_LOGE(TAG, "Failed to create task 'sd'");
-    }
+
+} else {
+
+    ESP_LOGE(
+        TAG,
+        "Failed to create task 'telemetry'"
+    );
+}
 
     ESP_LOGI(TAG, "Task initialization completed");
 }
@@ -229,4 +277,18 @@ static esp_err_t spi3_bus_init(void)
     }
 
     return err;
+}
+
+static void configure_log_levels(void)
+{
+    esp_log_level_set("*", ESP_LOG_WARN);
+    
+    esp_log_level_set("main", ESP_LOG_DEBUG);
+    esp_log_level_set("dsp", ESP_LOG_DEBUG);
+    esp_log_level_set("system", ESP_LOG_DEBUG);
+    esp_log_level_set("hmi", ESP_LOG_DEBUG);
+    esp_log_level_set("sensors", ESP_LOG_DEBUG);
+    esp_log_level_set("telemetry", ESP_LOG_DEBUG);
+    esp_log_level_set("accelerometer", ESP_LOG_DEBUG);
+    esp_log_level_set("app_context", ESP_LOG_DEBUG);
 }

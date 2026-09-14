@@ -63,8 +63,12 @@ typedef struct {
     bool kurtosis_abnormal;
     bool rpm_abnormal;
 
+    bool wifi_connected;
+    bool mqtt_connected;
+    bool last_publish_ok;
+
     system_state_t state;
-} status_cache_t;
+} status_cache_t;   
 
 static status_cache_t s_cache;
 
@@ -116,11 +120,15 @@ static const char *state_text(
         case SYSTEM_STATE_ALARM:
             return "ALARM";
 
+        case SYSTEM_STATE_NO_MOTOR:
+            return "NO MOTOR";
+
         case SYSTEM_STATE_INIT:
         default:
             return "INIT";
     }
 }
+
 
 static hmi_color_t state_color(
     system_state_t state
@@ -136,6 +144,9 @@ static hmi_color_t state_color(
 
         case SYSTEM_STATE_ALARM:
             return HMI_COLOR_RED;
+
+        case SYSTEM_STATE_NO_MOTOR:
+            return HMI_COLOR_YELLOW;
 
         case SYSTEM_STATE_INIT:
         default:
@@ -415,7 +426,7 @@ static esp_err_t draw_static_layout(void)
     err = hmi_display_draw_text(
         8,
         302,
-        "[A] PROX TELA",
+        "[TAP] PROX TELA",
         HMI_FONT_SMALL,
         HMI_COLOR_WHITE
     );
@@ -427,15 +438,116 @@ static esp_err_t draw_static_layout(void)
     return hmi_display_draw_text(
         385,
         302,
-        "[B] PAUSE",
+        "[HOLD] WARMUP",
         HMI_FONT_SMALL,
-        HMI_COLOR_BLUE
+        HMI_COLOR_YELLOW
     );
 }
 
 /* ========================================================================== */
 /* Dynamic regions                                                            */
 /* ========================================================================== */
+
+static esp_err_t draw_telemetry_status(
+    bool wifi_connected,
+    bool mqtt_connected,
+    bool last_publish_ok
+)
+{
+    esp_err_t err;
+
+    /*
+     * Clear only the telemetry region.
+     */
+    err = hmi_display_fill_rect(
+        125,
+        STATUS_LCD_HEIGHT - STATUS_FOOTER_HEIGHT,
+        250,
+        STATUS_FOOTER_HEIGHT,
+        HMI_COLOR_PANEL
+    );
+
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    /*
+     * Wi-Fi.
+     */
+    err = hmi_display_draw_text(
+        130,
+        302,
+        "WIFI",
+        HMI_FONT_SMALL,
+        HMI_COLOR_GRAY
+    );
+
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    err = hmi_display_draw_text(
+        160,
+        302,
+        wifi_connected ? "OK" : "--",
+        HMI_FONT_SMALL,
+        feature_color(!wifi_connected)
+    );
+
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    /*
+     * MQTT.
+     */
+    err = hmi_display_draw_text(
+        195,
+        302,
+        "MQTT",
+        HMI_FONT_SMALL,
+        HMI_COLOR_GRAY
+    );
+
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    err = hmi_display_draw_text(
+        235,
+        302,
+        mqtt_connected ? "OK" : "--",
+        HMI_FONT_SMALL,
+        feature_color(!mqtt_connected)
+    );
+
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    /*
+     * Last publish.
+     */
+    err = hmi_display_draw_text(
+        270,
+        302,
+        "PUB",
+        HMI_FONT_SMALL,
+        HMI_COLOR_GRAY
+    );
+
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    return hmi_display_draw_text(
+        298,
+        302,
+        last_publish_ok ? "OK" : "--",
+        HMI_FONT_SMALL,
+        feature_color(!last_publish_ok)
+    );
+}
 
 static esp_err_t draw_header_rpm(int rpm)
 {
@@ -983,7 +1095,6 @@ esp_err_t status_init(void)
 
     return ESP_OK;
 }
-
 esp_err_t status_update(
     const hmi_data_t *data
 )
@@ -1194,6 +1305,37 @@ esp_err_t status_update(
 
         s_cache.state =
             data->state.state;
+    }
+
+    /*
+     * Telemetry status.
+     */
+    if (force_redraw ||
+        data->telemetry.wifi_connected !=
+            s_cache.wifi_connected ||
+        data->telemetry.mqtt_connected !=
+            s_cache.mqtt_connected ||
+        data->telemetry.last_publish_ok !=
+            s_cache.last_publish_ok) {
+
+        err = draw_telemetry_status(
+            data->telemetry.wifi_connected,
+            data->telemetry.mqtt_connected,
+            data->telemetry.last_publish_ok
+        );
+
+        if (err != ESP_OK) {
+            return err;
+        }
+
+        s_cache.wifi_connected =
+            data->telemetry.wifi_connected;
+
+        s_cache.mqtt_connected =
+            data->telemetry.mqtt_connected;
+
+        s_cache.last_publish_ok =
+            data->telemetry.last_publish_ok;
     }
 
     s_cache.cache_valid = true;

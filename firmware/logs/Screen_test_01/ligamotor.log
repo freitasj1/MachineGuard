@@ -1,0 +1,488 @@
+Executing action: monitor
+Serial port /dev/ttyACM0:
+Connecting....
+Detecting chip type...[0;33m--- esp-idf-monitor 1.9.0 on /dev/ttyACM0 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+ ESP32-S3
+Running idf_monitor in directory /home/freitasj1/Documentos/Embedded/MachineGuard/firmware
+Executing "/home/freitasj1/.espressif/tools/python/v6.0.2/venv/bin/python /home/freitasj1/.espressif/v6.0.2/esp-idf/tools/idf_monitor.py -p /dev/ttyACM0 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /home/freitasj1/Documentos/Embedded/MachineGuard/firmware/build/MachineGuard.elf /home/freitasj1/Documentos/Embedded/MachineGuard/firmware/build/bootloader/bootloader.elf -m '/home/freitasj1/.espressif/tools/python/v6.0.2/venv/bin/python' '/home/freitasj1/.espressif/v6.0.2/esp-idf/tools/idf.py'"...
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40048df6
+[0m--- 0x40048df6: [0;33muart_rx_readbuff[0m[0m in [0;32mROM[0m
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xda0
+[0m--- 0x403c8700: [0;33m_stext[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+load:0x403cb700,len:0x2f54
+entry 0x403c8908
+[0m--- 0x403c8908: [0;33mcall_start_cpu0[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m27[0m
+[0;32mI (24) boot: ESP-IDF v6.0.2 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Aug  4 2026 17:50:14[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (27) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (50) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3c030020 size=150a0h ( 86176) map[0m
+[0;32mI (102) esp_image: segment 1: paddr=000250c8 vaddr=3fc94400 size=03990h ( 14736) load[0m
+[0;32mI (105) esp_image: segment 2: paddr=00028a60 vaddr=40374000 size=075b8h ( 30136) load[0m
+[0;32mI (113) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=21f84h (139140) map[0m
+[0;32mI (139) esp_image: segment 4: paddr=00051fac vaddr=4037b5b8 size=08e2ch ( 36396) load[0m
+[0;32mI (147) esp_image: segment 5: paddr=0005ade0 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (155) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (155) boot: Disabling RNG early entropy source...[0m
+[0;32mI (166) cpu_start: Multicore app[0m
+D (166) cpu_start: Pro cpu up[0m
+D (166) cpu_start: Starting app cpu, entry point is 0x403756a0[0m
+[0m--- 0x403756a0: [0;33mcall_start_cpu1[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/port/cpu_start.c[0m[0m:[1;31m222[0m
+D (0) cpu_start: App cpu up[0m
+D (175) clk: RTC_SLOW_CLK calibration value: 3239936[0m
+[0;32mI (186) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+D (187) cpu_start: calling init function: 0x420025d8 on core: 0[0m
+[0m--- 0x420025d8: [0;33m__esp_system_init_fn_init_efuse_check[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/efuse/src/esp_efuse_startup.c[0m[0m:[1;31m37[0m
+D (188) cpu_start: calling init function: 0x42002da8 on core: 0[0m
+[0m--- 0x42002da8: [0;33m__esp_system_init_fn_init_show_cpu_freq[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/startup_funcs.c[0m[0m:[1;31m53[0m
+[0;32mI (194) cpu_start: Pro cpu start user code[0m
+[0;32mI (199) cpu_start: cpu freq: 160000000 Hz[0m
+D (204) cpu_start: calling init function: 0x42002508 on core: 0[0m
+[0m--- 0x42002508: [0;33m__esp_system_init_fn_init_show_app_info[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_app_format/esp_app_desc.c[0m[0m:[1;31m123[0m
+[0;32mI (210) app_init: Application information:[0m
+[0;32mI (214) app_init: Project name:     MachineGuard[0m
+[0;32mI (220) app_init: App version:      system-test-001-9-gba96bf5-dirt[0m
+[0;32mI (227) app_init: Compile time:     Sep  7 2026 23:38:45[0m
+[0;32mI (233) app_init: ELF file SHA256:  4db09630e...[0m
+[0;32mI (238) app_init: ESP-IDF:          v6.0.2[0m
+D (243) cpu_start: calling init function: 0x420025ec on core: 0[0m
+[0m--- 0x420025ec: [0;33m__esp_system_init_fn_init_efuse_show_app_info[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/efuse/src/esp_efuse_startup.c[0m[0m:[1;31m47[0m
+[0;32mI (249) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (253) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (258) efuse_init: Chip rev:         v0.2[0m
+D (263) cpu_start: calling init function: 0x42004568 on core: 0[0m
+[0m--- 0x42004568: [0;33m__esp_system_init_fn_init_heap[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/heap/heap_caps_init.c[0m[0m:[1;31m26[0m
+D (269) memory_layout: Checking 6 reserved memory ranges:[0m
+D (275) memory_layout: Reserved memory range 0x3fc84000 - 0x3fc94400[0m
+D (281) memory_layout: Reserved memory range 0x3fc94400 - 0x3fcad800[0m
+D (287) memory_layout: Reserved memory range 0x3fceee34 - 0x3fcf0000[0m
+D (294) memory_layout: Reserved memory range 0x40374000 - 0x40384400[0m
+[0m--- 0x40374000: [0;33m_WindowOverflow4[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m2051[0m
+D (300) memory_layout: Reserved memory range 0x600fe000 - 0x600fe000[0m
+D (307) memory_layout: Reserved memory range 0x600fffe8 - 0x60100000[0m
+D (313) memory_layout: Building list of available memory regions:[0m
+D (319) memory_layout: Available memory region 0x3fcad800 - 0x3fcb0000[0m
+D (326) memory_layout: Available memory region 0x3fcb0000 - 0x3fcc0000[0m
+D (332) memory_layout: Available memory region 0x3fcc0000 - 0x3fcd0000[0m
+D (339) memory_layout: Available memory region 0x3fcd0000 - 0x3fce0000[0m
+D (346) memory_layout: Available memory region 0x3fce0000 - 0x3fce9710[0m
+D (352) memory_layout: Available memory region 0x3fce9710 - 0x3fceee34[0m
+D (359) memory_layout: Available memory region 0x3fcf0000 - 0x3fcf8000[0m
+D (365) memory_layout: Available memory region 0x600fe000 - 0x600fffe8[0m
+[0;32mI (372) heap_init: Initializing. RAM available for dynamic allocation:[0m
+D (379) heap_init: New heap initialised at 0x3fcad800[0m
+[0;32mI (384) heap_init: At 3FCAD800 len 0003BF10 (239 KiB): RAM[0m
+[0;32mI (390) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+D (397) heap_init: New heap initialised at 0x3fcf0000[0m
+[0;32mI (402) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+D (408) heap_init: New heap initialised at 0x600fe000[0m
+[0;32mI (413) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+D (419) cpu_start: calling init function: 0x42008304 on core: 0[0m
+[0m--- 0x42008304: [0;33m__esp_system_init_fn_esp_timer_init_nonos[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_timer/src/esp_timer_init.c[0m[0m:[1;31m28[0m
+D (425) cpu_start: calling init function: 0x42007bec on core: 0[0m
+[0m--- 0x42007bec: [0;33m__esp_system_init_fn_init_libc[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_libc/src/init.c[0m[0m:[1;31m12[0m
+D (431) cpu_start: calling init function: 0x42002df4 on core: 0[0m
+[0m--- 0x42002df4: [0;33m__esp_system_init_fn_init_brownout[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/startup_funcs.c[0m[0m:[1;31m68[0m
+D (437) intr_alloc: Connected src 39 to int 1 (cpu 0)[0m
+D (442) cpu_start: calling init function: 0x42002e04 on core: 0[0m
+[0m--- 0x42002e04: [0;33m__esp_system_init_fn_init_newlib_time[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/startup_funcs.c[0m[0m:[1;31m93[0m
+D (448) cpu_start: calling init function: 0x42008c4c on core: 0[0m
+[0m--- 0x42008c4c: [0;33m__esp_system_init_fn_init_vfs_uart[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_uart/src/uart_vfs.c[0m[0m:[1;31m1153[0m
+D (454) cpu_start: calling init function: 0x420093b0 on core: 0[0m
+[0m--- 0x420093b0: [0;33m__esp_system_init_fn_init_vfs_usj_sec[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_usb_serial_jtag/src/usb_serial_jtag_vfs.c[0m[0m:[1;31m687[0m
+D (460) cpu_start: calling init function: 0x4200a018 on core: 0[0m
+[0m--- 0x4200a018: [0;33m__esp_system_init_fn_init_vfs_nullfs[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/vfs/nullfs.c[0m[0m:[1;31m322[0m
+D (466) cpu_start: calling init function: 0x42002458 on core: 0[0m
+[0m--- 0x42002458: [0;33m__esp_system_init_fn_init_vfs_console[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_stdio/stdio_vfs.c[0m[0m:[1;31m264[0m
+D (472) cpu_start: calling init function: 0x42007bf8 on core: 0[0m
+[0m--- 0x42007bf8: [0;33m__esp_system_init_fn_init_libc_stdio[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_libc/src/init.c[0m[0m:[1;31m18[0m
+D (478) cpu_start: calling init function: 0x42002888 on core: 0[0m
+[0m--- 0x42002888: [0;33m__esp_system_init_fn_init_flash[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/spi_flash/esp_flash_spi_init.c[0m[0m:[1;31m647[0m
+D (484) spi_flash: trying chip: issi[0m
+D (488) spi_flash: trying chip: gd[0m
+D (491) spi_flash: trying chip: mxic[0m
+D (495) spi_flash: trying chip: winbond[0m
+D (499) spi_flash: trying chip: boya[0m
+D (503) spi_flash: trying chip: th[0m
+D (506) spi_flash: trying chip: mxic (opi)[0m
+D (510) spi_flash: trying chip: generic[0m
+[0;32mI (514) spi_flash: detected chip: generic[0m
+[0;32mI (519) spi_flash: flash io: dio[0m
+[0;33mW (523) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+D (536) cpu_start: calling init function: 0x42002688 on core: 0[0m
+[0m--- 0x42002688: [0;33m__esp_system_init_fn_init_efuse[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/efuse/src/esp_efuse_startup.c[0m[0m:[1;31m158[0m
+D (542) cpu_start: calling init function: 0x4201a04c on core: 0[0m
+[0m--- 0x4201a04c: [0;33m__esp_system_init_fn_esp_security_init[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_security/src/init.c[0m[0m:[1;31m57[0m
+D (548) cpu_start: calling init function: 0x42015a10 on core: 0[0m
+[0m--- 0x42015a10: [0;33m__esp_system_init_fn_mbedtls_psa_crypto_init_fn[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/mbedtls/port/esp_psa_crypto_init.c[0m[0m:[1;31m23[0m
+D (554) cpu_start: calling init function: 0x42005790 on core: 0[0m
+[0m--- 0x42005790: [0;33m__esp_system_init_fn_esp_sleep_startup_init[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/sleep_gpio.c[0m[0m:[1;31m268[0m
+[0;32mI (560) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (567) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+D (575) cpu_start: calling init function: 0x42002e10 on core: 0[0m
+[0m--- 0x42002e10: [0;33m__esp_system_init_fn_init_apb_dma[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/startup_funcs.c[0m[0m:[1;31m119[0m
+D (580) cpu_start: calling init function: 0x42008d24 on core: 0[0m
+[0m--- 0x42008d24: [0;33m__esp_system_init_fn_usb_serial_jtag_conn_status_init[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_usb_serial_jtag/src/usb_serial_jtag_connection_monitor.c[0m[0m:[1;31m76[0m
+D (586) cpu_start: calling init function: 0x42002e1c on core: 0[0m
+[0m--- 0x42002e1c: [0;33m__esp_system_init_fn_init_disable_rtc_wdt[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/startup_funcs.c[0m[0m:[1;31m139[0m
+D (593) intr_alloc: Connected src 79 to int 2 (cpu 0)[0m
+D (598) app_start: Starting scheduler on CPU0[0m
+D (602) intr_alloc: Connected src 57 to int 3 (cpu 0)[0m
+D (602) intr_alloc: Connected src 80 to int 0 (cpu 1)[0m
+D (612) app_start: Starting scheduler on CPU1[0m
+D (612) intr_alloc: Connected src 58 to int 1 (cpu 1)[0m
+[0;32mI (00:14:06.239) main_task: Started on CPU0[0m
+D (622) heap_init: New heap initialised at 0x3fce9710[0m
+D (622) intr_alloc: Connected src 52 to int 5 (cpu 0)[0m
+[0;32mI (00:14:06.269) main_task: Calling app_main()[0m
+[0;32mI (00:14:06.274) main: MachineGuard starting...[0m
+[0;32mI (00:14:06.280) app_context: context initialized[0m
+D (00:14:06.285) spi_common: SPI2 use iomux pins.[0m
+D (00:14:06.290) spi_common: SPI3 use gpio matrix.[0m
+[0;32mI (00:14:06.310) dsp: FFT initialized (2048 points)[0m
+[0;32mI (00:14:06.311) dsp: task started[0m
+[0;32mI (00:14:06.311) main: Task 'dsp' created successfully (priority=23, core=0)[0m
+[0;32mI (00:14:06.317) system: task started | warm-up: 600 evaluations | threshold: 3.00[0m
+[0;32mI (00:14:06.325) main: Task 'system' created successfully (priority=22, core=0)[0m
+D (692) intr_alloc: Connected src 21 to int 2 (cpu 1)[0m
+D (702) spi_hal: eff: 10000, limit: 80000k(/0), 0 dummy, -1 delay[0m
+[0;32mI (00:14:06.333) main: Task 'accel' created successfully (priority=24, core=1)[0m
+D (00:14:06.345) spi_master: SPI2: New device added to CS0, effective clock: 10000000 Hz[0m
+[0;32mI (00:14:06.353) main: Task 'sensors' created successfully (priority=12, core=1)[0m
+[0;32mI (00:14:06.362) accelerometer: LSM6DS3TR-C ready: 6.66 kHz, +/-2g, FIFO continuous[0m
+D (00:14:06.369) rmt: new bytes encoder @0x3fcee900[0m
+[0;32mI (00:14:06.369) main: Task 'hmi' created successfully (priority=10, core=1)[0m
+D (00:14:06.390) rmt: new copy encoder @0x3fcee98c[0m
+D (00:14:06.414) rmt: new group(0) at 0x3fceeae4, occupy=ffffff00[0m
+[0;32mI (00:14:06.414) main: Task 'sd' created successfully (priority=8, core=1)[0m
+[0;32mI (00:14:06.427) main: Task initialization completed[0m
+[0;32mI (00:14:06.429) main_task: Returned from app_main()[0m
+D (802) intr_alloc: Connected src 40 to int 3 (cpu 1)[0m
+D (00:14:06.446) rmt: group (0) clock resolution:80000000Hz[0m
+D (00:14:06.464) rmt: new rx channel(0,0) at 0x3fceea08, gpio=4, res=1000000Hz, hw_mem_base=0x60016b00, ping_pong_size=24[0m
+D (852) intr_alloc: Connected src 40 to int 3 (cpu 1)[0m
+D (00:14:06.501) rmt: group (0) clock resolution:80000000Hz[0m
+D (00:14:06.520) rmt: new tx channel(0,0) at 0x3fceebd4, gpio=4, res=1000000Hz, hw_mem_base=0x60016800, dma_mem_base=0, ping_pong_size=24, queue_depth=4[0m
+[0;32mI (00:14:06.548) sensors: 1-Wire bus initialized on GPIO4[0m
+[0;32mI (00:14:06.575) hmi: Starting HMI task[0m
+[0;32mI (00:14:06.585) hmi: Initializing ILI9488 HMI[0m
+D (00:14:06.604) gpio: GPIO[21]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+D (00:14:06.650) gpio: GPIO[42]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+D (00:14:06.662) dsp: Mean: 16944.78 | RMS: 0.008775 | Min: -0.344698 | Max: 0.071078 | PkPk: 0.415776[0m
+[0;32mI (00:14:06.682) dsp: No valid vibration detected[0m
+[0;32mI (00:14:06.683) system: state: WARMUP[0m
+D (1062) intr_alloc: Connected src 22 to int 4 (cpu 1)[0m
+D (1082) spi_hal: eff: 20000, limit: 80000k(/0), 0 dummy, -1 delay[0m
+D (00:14:06.733) spi_master: SPI3: New device added to CS0, effective clock: 20000000 Hz[0m
+[0;32mI (00:14:06.771) hmi: ILI9488 SPI device added at 20000000 Hz[0m
+[0;32mI (00:14:06.798) dac: task_dac iniciada no Core 1[0m
+[0;32mI (00:14:06.817) storage: task_sd iniciada no Core 1[0m
+D (00:14:06.959) dsp: Mean: 16869.47 | RMS: 0.002931 | Min: -0.008630 | Max: 0.010829 | PkPk: 0.019459[0m
+[0;32mI (00:14:06.963) dsp: No valid vibration detected[0m
+D (00:14:07.207) gpio: GPIO[47]| InputEn: 1| OutputEn: 0| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:2 [0m
+D (00:14:07.256) dsp: Mean: 16839.83 | RMS: 0.002876 | Min: -0.010481 | Max: 0.008734 | PkPk: 0.019215[0m
+[0;32mI (00:14:07.260) dsp: No valid vibration detected[0m
+D (1632) intr_alloc: Connected src 16 to int 5 (cpu 1)[0m
+[0;32mI (00:14:07.281) hmi: HMI button configured on GPIO47[0m
+[0;32mI (00:14:07.318) hmi: ILI9488 initialized[0m
+D (00:14:07.553) dsp: Mean: 16824.04 | RMS: 0.002914 | Min: -0.008664 | Max: 0.009758 | PkPk: 0.018422[0m
+[0;32mI (00:14:07.557) dsp: No valid vibration detected[0m
+D (00:14:07.810) 1-wire.device: new 1-Wire device found, address: 090B255279196D28[0m
+[0;32mI (00:14:07.838) sensors: DS18B20 found: 090B255279196D28[0m
+[0;32mI (00:14:07.848) sensors: task_sensors started[0m
+D (00:14:07.850) dsp: Mean: 16812.22 | RMS: 0.002904 | Min: -0.010078 | Max: 0.009625 | PkPk: 0.019703[0m
+[0;32mI (00:14:07.864) dsp: No valid vibration detected[0m
+D (00:14:08.147) dsp: Mean: 16805.39 | RMS: 0.002967 | Min: -0.009723 | Max: 0.013213 | PkPk: 0.022936[0m
+[0;32mI (00:14:08.151) dsp: No valid vibration detected[0m
+D (00:14:08.444) dsp: Mean: 16800.48 | RMS: 0.003053 | Min: -0.010155 | Max: 0.010890 | PkPk: 0.021045[0m
+[0;32mI (00:14:08.448) dsp: No valid vibration detected[0m
+[0;32mI (00:14:08.720) sensors: temperature: 23.81 C[0m
+D (00:14:08.741) dsp: Mean: 16801.66 | RMS: 0.003046 | Min: -0.010960 | Max: 0.010146 | PkPk: 0.021106[0m
+[0;32mI (00:14:08.745) dsp: No valid vibration detected[0m
+D (00:14:09.038) dsp: Mean: 16799.06 | RMS: 0.002895 | Min: -0.009276 | Max: 0.010549 | PkPk: 0.019825[0m
+[0;32mI (00:14:09.042) dsp: No valid vibration detected[0m
+D (00:14:09.335) dsp: Mean: 16798.95 | RMS: 0.002836 | Min: -0.010733 | Max: 0.009214 | PkPk: 0.019947[0m
+[0;32mI (00:14:09.340) dsp: No valid vibration detected[0m
+D (00:14:09.632) dsp: Mean: 16797.36 | RMS: 0.002812 | Min: -0.007830 | Max: 0.009067 | PkPk: 0.016897[0m
+[0;32mI (00:14:09.637) dsp: No valid vibration detected[0m
+D (00:14:09.930) dsp: Mean: 16799.34 | RMS: 0.002899 | Min: -0.009964 | Max: 0.013155 | PkPk: 0.023119[0m
+[0;32mI (00:14:09.934) dsp: No valid vibration detected[0m
+D (00:14:10.227) dsp: Mean: 16801.08 | RMS: 0.002759 | Min: -0.009155 | Max: 0.009694 | PkPk: 0.018849[0m
+[0;32mI (00:14:10.231) dsp: No valid vibration detected[0m
+D (00:14:10.524) dsp: Mean: 16797.51 | RMS: 0.002856 | Min: -0.008876 | Max: 0.008997 | PkPk: 0.017873[0m
+[0;32mI (00:14:10.528) dsp: No valid vibration detected[0m
+[0;32mI (00:14:10.586) sensors: temperature: 23.81 C[0m
+D (00:14:10.821) dsp: Mean: 16797.35 | RMS: 0.002870 | Min: -0.008988 | Max: 0.011020 | PkPk: 0.020008[0m
+[0;32mI (00:14:10.825) dsp: No valid vibration detected[0m
+D (00:14:11.118) dsp: Mean: 16796.08 | RMS: 0.002802 | Min: -0.009582 | Max: 0.009633 | PkPk: 0.019215[0m
+[0;32mI (00:14:11.122) dsp: No valid vibration detected[0m
+D (00:14:11.415) dsp: Mean: 16797.56 | RMS: 0.002872 | Min: -0.009367 | Max: 0.009543 | PkPk: 0.018910[0m
+[0;32mI (00:14:11.419) dsp: No valid vibration detected[0m
+D (00:14:11.712) dsp: Mean: 16799.94 | RMS: 0.002785 | Min: -0.010549 | Max: 0.008727 | PkPk: 0.019276[0m
+[0;32mI (00:14:11.716) dsp: No valid vibration detected[0m
+D (00:14:12.009) dsp: Mean: 16798.21 | RMS: 0.002807 | Min: -0.008431 | Max: 0.011089 | PkPk: 0.019520[0m
+[0;32mI (00:14:12.013) dsp: No valid vibration detected[0m
+D (00:14:12.306) dsp: Mean: 16798.91 | RMS: 0.002847 | Min: -0.012134 | Max: 0.011412 | PkPk: 0.023546[0m
+[0;32mI (00:14:12.310) dsp: No valid vibration detected[0m
+[0;32mI (00:14:12.461) sensors: temperature: 23.81 C[0m
+D (00:14:12.603) dsp: Mean: 16798.74 | RMS: 0.002850 | Min: -0.009988 | Max: 0.008800 | PkPk: 0.018788[0m
+[0;32mI (00:14:12.607) dsp: No valid vibration detected[0m
+D (00:14:12.900) dsp: Mean: 16799.82 | RMS: 0.002831 | Min: -0.010420 | Max: 0.008673 | PkPk: 0.019093[0m
+[0;32mI (00:14:12.904) dsp: No valid vibration detected[0m
+D (00:14:13.197) dsp: Mean: 16804.31 | RMS: 0.004234 | Min: -0.010450 | Max: 0.023222 | PkPk: 0.033672[0m
+[0;32mI (00:14:13.201) dsp: No valid vibration detected[0m
+D (00:14:13.494) dsp: Mean: 16791.83 | RMS: 0.005439 | Min: -0.018778 | Max: 0.017334 | PkPk: 0.036112[0m
+[0;32mI (00:14:13.498) dsp: Peak: 20.37 Hz | 1222.1 RPM | 0.00938 g[0m
+D (00:14:13.791) dsp: Mean: 16796.56 | RMS: 0.003120 | Min: -0.009733 | Max: 0.010275 | PkPk: 0.020008[0m
+[0;32mI (00:14:13.795) dsp: No valid vibration detected[0m
+D (00:14:14.088) dsp: Mean: 16798.70 | RMS: 0.002977 | Min: -0.009681 | Max: 0.010022 | PkPk: 0.019703[0m
+[0;32mI (00:14:14.092) dsp: No valid vibration detected[0m
+[0;32mI (00:14:14.327) sensors: temperature: 23.81 C[0m
+D (00:14:14.385) dsp: Mean: 16795.32 | RMS: 0.002800 | Min: -0.010512 | Max: 0.009862 | PkPk: 0.020374[0m
+[0;32mI (00:14:14.389) dsp: No valid vibration detected[0m
+D (00:14:14.682) dsp: Mean: 16794.30 | RMS: 0.002867 | Min: -0.009229 | Max: 0.009254 | PkPk: 0.018483[0m
+[0;32mI (00:14:14.686) dsp: No valid vibration detected[0m
+[0;32mI (00:14:14.930) status: STATUS screen initialized[0m
+D (00:14:14.979) dsp: Mean: 16794.05 | RMS: 0.002838 | Min: -0.009946 | Max: 0.008903 | PkPk: 0.018849[0m
+[0;32mI (00:14:14.983) dsp: No valid vibration detected[0m
+D (00:14:15.276) dsp: Mean: 16794.22 | RMS: 0.002873 | Min: -0.010445 | Max: 0.010295 | PkPk: 0.020740[0m
+[0;32mI (00:14:15.280) dsp: No valid vibration detected[0m
+D (00:14:15.573) dsp: Mean: 16792.79 | RMS: 0.002778 | Min: -0.009076 | Max: 0.012274 | PkPk: 0.021350[0m
+[0;32mI (00:14:15.577) dsp: No valid vibration detected[0m
+D (00:14:15.870) dsp: Mean: 16792.81 | RMS: 0.002829 | Min: -0.008650 | Max: 0.008979 | PkPk: 0.017629[0m
+[0;32mI (00:14:15.874) dsp: No valid vibration detected[0m
+D (00:14:16.167) dsp: Mean: 16792.96 | RMS: 0.002820 | Min: -0.009025 | Max: 0.009702 | PkPk: 0.018727[0m
+[0;32mI (00:14:16.171) dsp: No valid vibration detected[0m
+[0;32mI (00:14:16.192) sensors: temperature: 23.81 C[0m
+D (00:14:16.464) dsp: Mean: 16795.69 | RMS: 0.002977 | Min: -0.011571 | Max: 0.010694 | PkPk: 0.022265[0m
+[0;32mI (00:14:16.468) dsp: No valid vibration detected[0m
+D (00:14:16.761) dsp: Mean: 16792.79 | RMS: 0.002842 | Min: -0.009503 | Max: 0.010139 | PkPk: 0.019642[0m
+[0;32mI (00:14:16.765) dsp: No valid vibration detected[0m
+D (00:14:17.058) dsp: Mean: 16791.82 | RMS: 0.002856 | Min: -0.008590 | Max: 0.010076 | PkPk: 0.018666[0m
+[0;32mI (00:14:17.062) dsp: No valid vibration detected[0m
+D (00:14:17.355) dsp: Mean: 16795.73 | RMS: 0.002846 | Min: -0.009012 | Max: 0.009288 | PkPk: 0.018300[0m
+[0;32mI (00:14:17.360) dsp: No valid vibration detected[0m
+D (00:14:17.652) dsp: Mean: 16794.25 | RMS: 0.002812 | Min: -0.011117 | Max: 0.009013 | PkPk: 0.020130[0m
+[0;32mI (00:14:17.657) dsp: No valid vibration detected[0m
+D (00:14:17.949) dsp: Mean: 16796.23 | RMS: 0.002795 | Min: -0.009591 | Max: 0.008770 | PkPk: 0.018361[0m
+[0;32mI (00:14:17.954) dsp: No valid vibration detected[0m
+[0;32mI (00:14:18.058) sensors: temperature: 23.81 C[0m
+D (00:14:18.246) dsp: Mean: 16794.93 | RMS: 0.002828 | Min: -0.010183 | Max: 0.011045 | PkPk: 0.021228[0m
+[0;32mI (00:14:18.250) dsp: No valid vibration detected[0m
+D (00:14:18.543) dsp: Mean: 16795.41 | RMS: 0.002867 | Min: -0.009480 | Max: 0.010467 | PkPk: 0.019947[0m
+[0;32mI (00:14:18.547) dsp: No valid vibration detected[0m
+D (00:14:18.840) dsp: Mean: 16794.93 | RMS: 0.002771 | Min: -0.007987 | Max: 0.008788 | PkPk: 0.016775[0m
+[0;32mI (00:14:18.844) dsp: No valid vibration detected[0m
+D (00:14:19.137) dsp: Mean: 16796.68 | RMS: 0.002863 | Min: -0.008338 | Max: 0.008803 | PkPk: 0.017141[0m
+[0;32mI (00:14:19.142) dsp: No valid vibration detected[0m
+D (00:14:19.434) dsp: Mean: 16797.95 | RMS: 0.002891 | Min: -0.011282 | Max: 0.009946 | PkPk: 0.021228[0m
+[0;32mI (00:14:19.439) dsp: No valid vibration detected[0m
+D (00:14:19.731) dsp: Mean: 16793.81 | RMS: 0.002880 | Min: -0.010664 | Max: 0.009405 | PkPk: 0.020069[0m
+[0;32mI (00:14:19.736) dsp: No valid vibration detected[0m
+[0;32mI (00:14:19.924) sensors: temperature: 23.81 C[0m
+D (00:14:20.028) dsp: Mean: 16794.40 | RMS: 0.002859 | Min: -0.010394 | Max: 0.009065 | PkPk: 0.019459[0m
+[0;32mI (00:14:20.033) dsp: No valid vibration detected[0m
+D (00:14:20.325) dsp: Mean: 16793.82 | RMS: 0.002834 | Min: -0.010054 | Max: 0.011479 | PkPk: 0.021533[0m
+[0;32mI (00:14:20.330) dsp: No valid vibration detected[0m
+D (00:14:20.622) dsp: Mean: 16796.62 | RMS: 0.002898 | Min: -0.010896 | Max: 0.010759 | PkPk: 0.021655[0m
+[0;32mI (00:14:20.627) dsp: No valid vibration detected[0m
+D (00:14:20.920) dsp: Mean: 16796.21 | RMS: 0.002863 | Min: -0.008492 | Max: 0.009625 | PkPk: 0.018117[0m
+[0;32mI (00:14:20.924) dsp: No valid vibration detected[0m
+D (00:14:21.217) dsp: Mean: 16792.57 | RMS: 0.002849 | Min: -0.009307 | Max: 0.009786 | PkPk: 0.019093[0m
+[0;32mI (00:14:21.221) dsp: No valid vibration detected[0m
+[0;32mI (00:14:21.222) system: warm-up: 50/600 | 1xRPM valid: 1[0m
+D (00:14:21.514) dsp: Mean: 16794.38 | RMS: 0.002801 | Min: -0.009295 | Max: 0.009188 | PkPk: 0.018483[0m
+[0;32mI (00:14:21.518) dsp: No valid vibration detected[0m
+[0;32mI (00:14:21.780) sensors: temperature: 23.81 C[0m
+D (00:14:21.811) dsp: Mean: 16792.49 | RMS: 0.002807 | Min: -0.009851 | Max: 0.010584 | PkPk: 0.020435[0m
+[0;32mI (00:14:21.815) dsp: No valid vibration detected[0m
+D (00:14:22.108) dsp: Mean: 16792.12 | RMS: 0.002862 | Min: -0.009463 | Max: 0.012619 | PkPk: 0.022082[0m
+[0;32mI (00:14:22.112) dsp: No valid vibration detected[0m
+D (00:14:22.405) dsp: Mean: 16790.97 | RMS: 0.002939 | Min: -0.009087 | Max: 0.009396 | PkPk: 0.018483[0m
+[0;32mI (00:14:22.409) dsp: No valid vibration detected[0m
+D (00:14:22.702) dsp: Mean: 16791.00 | RMS: 0.002829 | Min: -0.011102 | Max: 0.008723 | PkPk: 0.019825[0m
+[0;32mI (00:14:22.706) dsp: No valid vibration detected[0m
+D (00:14:22.999) dsp: Mean: 16791.72 | RMS: 0.002800 | Min: -0.010475 | Max: 0.012461 | PkPk: 0.022936[0m
+[0;32mI (00:14:23.003) dsp: No valid vibration detected[0m
+D (00:14:23.296) dsp: Mean: 16788.83 | RMS: 0.002820 | Min: -0.008713 | Max: 0.009770 | PkPk: 0.018483[0m
+[0;32mI (00:14:23.300) dsp: No valid vibration detected[0m
+D (00:14:23.593) dsp: Mean: 16792.16 | RMS: 0.002855 | Min: -0.009404 | Max: 0.009384 | PkPk: 0.018788[0m
+[0;32mI (00:14:23.597) dsp: No valid vibration detected[0m
+[0;32mI (00:14:23.646) sensors: temperature: 23.81 C[0m
+D (00:14:23.890) dsp: Mean: 16789.81 | RMS: 0.002852 | Min: -0.008956 | Max: 0.010015 | PkPk: 0.018971[0m
+[0;32mI (00:14:23.894) dsp: No valid vibration detected[0m
+[0;33mW (00:14:24.104) accelerometer: FIFO overrun; oldest samples were discarded[0m
+[0;33mW (00:14:24.105) accelerometer: FIFO overrun — descartando bloco em construção[0m
+[0;31mE (23472) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (23472) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (23472) task_wdt: Tasks currently running:[0m
+[0;31mE (23472) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (23472) task_wdt: CPU 1: accel[0m
+[0;31mE (23472) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x40378AD2:0x3FC95D90 0x40378259:0x3FC95DB0 0x400559DD:0x3FCBAD80 0x4037E896:0x3FCBAD90 0x403764A0:0x3FCBADB0 0x403773C9:0x3FCBADD0 0x4201A1E2:0x3FCBADF0 0x42005415:0x3FCBAE10 0x42011BA2:0x3FCBAE30 0x42011C59:0x3FCBAE70 0x4200B944:0x3FCBAEA0 0x4200B984:0x3FCBAEF0 0x4200BD0B:0x3FCBAF20 0x4201FB9E:0x3FCBAF50
+[0m--- 0x40378ad2: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40378259: [0;33m_xt_lowint1[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1264[0m
+[0m--- 0x400559dd: [0;33m_xtos_set_intlevel[0m[0m in [0;32mROM[0m
+[0m--- 0x4037e896: [0;33mvPortClearInterruptMaskFromISR[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m547[0m
+[0m--- (inlined by) [0;33mvPortExitCritical[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m528[0m
+[0m--- 0x403764a0: [0;33mvPortExitCriticalSafe[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m583[0m
+[0m--- (inlined by) [0;33mesp_intr_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/intr_alloc.c[0m[0m:[1;31m913[0m
+[0m--- 0x403773c9: [0;33mspi_bus_intr_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m726[0m
+[0m--- 0x4201a1e2: [0;33mbg_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m335[0m
+[0m--- (inlined by) [0;33mreq_core[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m361[0m
+[0m--- 0x42005415: [0;33mspi_bus_lock_bg_request[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m784[0m
+[0m--- 0x42011ba2: [0;33mspi_device_queue_trans[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1253[0m
+[0m--- 0x42011c59: [0;33mspi_device_transmit[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1294[0m
+[0m--- 0x4200b944: [0;33mread_register[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m216[0m
+[0m--- 0x4200b984: [0;33mfifo_get_level[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m331[0m
+[0m--- 0x4200bd0b: [0;33mtask_accel[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m161[0m
+[0m--- 0x4201fb9e: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m147[0m
+
+[0;31mE (28472) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (28472) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (28472) task_wdt: Tasks currently running:[0m
+[0;31mE (28472) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (28472) task_wdt: CPU 1: accel[0m
+[0;31mE (28472) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x40378AD2:0x3FC95D90 0x40378259:0x3FC95DB0 0x400559DD:0x3FCBAD80 0x4037E896:0x3FCBAD90 0x403764A0:0x3FCBADB0 0x403773C9:0x3FCBADD0 0x4201A1E2:0x3FCBADF0 0x42005415:0x3FCBAE10 0x42011BA2:0x3FCBAE30 0x42011C59:0x3FCBAE70 0x4200B944:0x3FCBAEA0 0x4200B990:0x3FCBAEF0 0x4200BD0B:0x3FCBAF20 0x4201FB9E:0x3FCBAF50
+[0m--- 0x40378ad2: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40378259: [0;33m_xt_lowint1[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1264[0m
+[0m--- 0x400559dd: [0;33m_xtos_set_intlevel[0m[0m in [0;32mROM[0m
+[0m--- 0x4037e896: [0;33mvPortClearInterruptMaskFromISR[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m547[0m
+[0m--- (inlined by) [0;33mvPortExitCritical[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m528[0m
+[0m--- 0x403764a0: [0;33mvPortExitCriticalSafe[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m583[0m
+[0m--- (inlined by) [0;33mesp_intr_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/intr_alloc.c[0m[0m:[1;31m913[0m
+[0m--- 0x403773c9: [0;33mspi_bus_intr_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m726[0m
+[0m--- 0x4201a1e2: [0;33mbg_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m335[0m
+[0m--- (inlined by) [0;33mreq_core[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m361[0m
+[0m--- 0x42005415: [0;33mspi_bus_lock_bg_request[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m784[0m
+[0m--- 0x42011ba2: [0;33mspi_device_queue_trans[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1253[0m
+[0m--- 0x42011c59: [0;33mspi_device_transmit[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1294[0m
+[0m--- 0x4200b944: [0;33mread_register[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m216[0m
+[0m--- 0x4200b990: [0;33mfifo_get_level[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m335[0m
+[0m--- 0x4200bd0b: [0;33mtask_accel[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m161[0m
+[0m--- 0x4201fb9e: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m147[0m
+
+[0;31mE (33472) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (33472) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (33472) task_wdt: Tasks currently running:[0m
+[0;31mE (33472) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (33472) task_wdt: CPU 1: accel[0m
+[0;31mE (33472) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x40378AD2:0x3FC95D90 0x40378259:0x3FC95DB0 0x400559DD:0x3FCBAD80 0x4037E896:0x3FCBAD90 0x403764A0:0x3FCBADB0 0x403773C9:0x3FCBADD0 0x4201A1E2:0x3FCBADF0 0x42005415:0x3FCBAE10 0x42011BA2:0x3FCBAE30 0x42011C59:0x3FCBAE70 0x4200B944:0x3FCBAEA0 0x4200B984:0x3FCBAEF0 0x4200BD0B:0x3FCBAF20 0x4201FB9E:0x3FCBAF50
+[0m--- 0x40378ad2: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40378259: [0;33m_xt_lowint1[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1264[0m
+[0m--- 0x400559dd: [0;33m_xtos_set_intlevel[0m[0m in [0;32mROM[0m
+[0m--- 0x4037e896: [0;33mvPortClearInterruptMaskFromISR[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m547[0m
+[0m--- (inlined by) [0;33mvPortExitCritical[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m528[0m
+[0m--- 0x403764a0: [0;33mvPortExitCriticalSafe[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m583[0m
+[0m--- (inlined by) [0;33mesp_intr_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/intr_alloc.c[0m[0m:[1;31m913[0m
+[0m--- 0x403773c9: [0;33mspi_bus_intr_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m726[0m
+[0m--- 0x4201a1e2: [0;33mbg_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m335[0m
+[0m--- (inlined by) [0;33mreq_core[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m361[0m
+[0m--- 0x42005415: [0;33mspi_bus_lock_bg_request[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m784[0m
+[0m--- 0x42011ba2: [0;33mspi_device_queue_trans[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1253[0m
+[0m--- 0x42011c59: [0;33mspi_device_transmit[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1294[0m
+[0m--- 0x4200b944: [0;33mread_register[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m216[0m
+[0m--- 0x4200b984: [0;33mfifo_get_level[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m331[0m
+[0m--- 0x4200bd0b: [0;33mtask_accel[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m161[0m
+[0m--- 0x4201fb9e: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m147[0m
+
+[0;31mE (38472) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (38472) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (38472) task_wdt: Tasks currently running:[0m
+[0;31mE (38472) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (38472) task_wdt: CPU 1: accel[0m
+[0;31mE (38472) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x40378AD2:0x3FC95D90 0x40378259:0x3FC95DB0 0x403807EE:0x3FCBAD90 0x4038079D:0x3FCBADB0 0x40376066:0x3FCBADD0 0x4037DCE5:0x3FCBADF0 0x403773B1:0x3FCBAE10 0x42011C2B:0x3FCBAE30 0x42011C66:0x3FCBAE70 0x4200B944:0x3FCBAEA0 0x4200B990:0x3FCBAEF0 0x4200BD0B:0x3FCBAF20 0x4201FB9E:0x3FCBAF50
+[0m--- 0x40378ad2: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40378259: [0;33m_xt_lowint1[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1264[0m
+[0m--- 0x403807ee: [0;33mvPortExitCriticalSafe[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m583[0m
+[0m--- (inlined by) [0;33mmulti_heap_internal_unlock[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/heap/multi_heap.c[0m[0m:[1;31m176[0m
+[0m--- 0x4038079d: [0;33mmulti_heap_free_impl[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/heap/multi_heap.c[0m[0m:[1;31m241[0m
+[0m--- 0x40376066: [0;33mheap_caps_free[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/heap/heap_caps_base.c[0m[0m:[1;31m86[0m
+[0m--- 0x4037dce5: [0;33mfree[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_libc/src/heap.c[0m[0m:[1;31m34[0m
+[0m--- 0x403773b1: [0;33muninstall_priv_desc[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1176[0m
+[0m--- 0x42011c2b: [0;33mspi_device_get_trans_result[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1282[0m
+[0m--- 0x42011c66: [0;33mspi_device_transmit[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1299[0m
+[0m--- 0x4200b944: [0;33mread_register[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m216[0m
+[0m--- 0x4200b990: [0;33mfifo_get_level[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m335[0m
+[0m--- 0x4200bd0b: [0;33mtask_accel[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m161[0m
+[0m--- 0x4201fb9e: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m147[0m
+
+[0;31mE (43472) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (43472) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (43472) task_wdt: Tasks currently running:[0m
+[0;31mE (43472) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (43472) task_wdt: CPU 1: accel[0m
+[0;31mE (43472) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x40378AD2:0x3FC95D90 0x40378259:0x3FC95DB0 0x400559DD:0x3FCBADC0 0x4037E896:0x3FCBADD0 0x420200EF:0x3FCBADF0 0x42011B9A:0x3FCBAE30 0x42011C59:0x3FCBAE70 0x4200B944:0x3FCBAEA0 0x4200B990:0x3FCBAEF0 0x4200BD0B:0x3FCBAF20 0x4201FB9E:0x3FCBAF50
+[0m--- 0x40378ad2: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40378259: [0;33m_xt_lowint1[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1264[0m
+[0m--- 0x400559dd: [0;33m_xtos_set_intlevel[0m[0m in [0;32mROM[0m
+[0m--- 0x4037e896: [0;33mvPortClearInterruptMaskFromISR[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m547[0m
+[0m--- (inlined by) [0;33mvPortExitCritical[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m528[0m
+[0m--- 0x420200ef: [0;33mxQueueGenericSend[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/queue.c[0m[0m:[1;31m1056[0m
+[0m--- 0x42011b9a: [0;33mspi_device_queue_trans[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1242[0m
+[0m--- 0x42011c59: [0;33mspi_device_transmit[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1294[0m
+[0m--- 0x4200b944: [0;33mread_register[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m216[0m
+[0m--- 0x4200b990: [0;33mfifo_get_level[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m335[0m
+[0m--- 0x4200bd0b: [0;33mtask_accel[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m161[0m
+[0m--- 0x4201fb9e: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m147[0m
+
+[0;31mE (48472) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (48472) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (48472) task_wdt: Tasks currently running:[0m
+[0;31mE (48472) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (48472) task_wdt: CPU 1: accel[0m
+[0;31mE (48472) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x40378AD2:0x3FC95D90 0x40378259:0x3FC95DB0 0x400559DD:0x3FCBAD80 0x4037E896:0x3FCBAD90 0x403764A0:0x3FCBADB0 0x403773C9:0x3FCBADD0 0x4201A1E2:0x3FCBADF0 0x42005415:0x3FCBAE10 0x42011BA2:0x3FCBAE30 0x42011C59:0x3FCBAE70 0x4200B944:0x3FCBAEA0 0x4200B990:0x3FCBAEF0 0x4200BD0B:0x3FCBAF20 0x4201FB9E:0x3FCBAF50
+[0m--- 0x40378ad2: [0;33mesp_crosscore_isr[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_system/crosscore_int.c[0m[0m:[1;31m74[0m
+[0m--- 0x40378259: [0;33m_xt_lowint1[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/xtensa/xtensa_vectors.S[0m[0m:[1;31m1264[0m
+[0m--- 0x400559dd: [0;33m_xtos_set_intlevel[0m[0m in [0;32mROM[0m
+[0m--- 0x4037e896: [0;33mvPortClearInterruptMaskFromISR[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m547[0m
+[0m--- (inlined by) [0;33mvPortExitCritical[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m528[0m
+[0m--- 0x403764a0: [0;33mvPortExitCriticalSafe[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h[0m[0m:[1;31m583[0m
+[0m--- (inlined by) [0;33mesp_intr_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/intr_alloc.c[0m[0m:[1;31m913[0m
+[0m--- 0x403773c9: [0;33mspi_bus_intr_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m726[0m
+[0m--- 0x4201a1e2: [0;33mbg_enable[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m335[0m
+[0m--- (inlined by) [0;33mreq_core[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m361[0m
+[0m--- 0x42005415: [0;33mspi_bus_lock_bg_request[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_hw_support/spi_bus_lock.c[0m[0m:[1;31m784[0m
+[0m--- 0x42011ba2: [0;33mspi_device_queue_trans[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1253[0m
+[0m--- 0x42011c59: [0;33mspi_device_transmit[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/esp_driver_spi/src/gpspi/spi_master.c[0m[0m:[1;31m1294[0m
+[0m--- 0x4200b944: [0;33mread_register[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m216[0m
+[0m--- 0x4200b990: [0;33mfifo_get_level[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m335[0m
+[0m--- 0x4200bd0b: [0;33mtask_accel[0m[0m at [0;32m/home/freitasj1/Documentos/Embedded/MachineGuard/firmware/components/accelerometer/accelerometer.c[0m[0m:[1;31m161[0m
+[0m--- 0x4201fb9e: [0;33mvPortTaskWrapper[0m[0m at [0;32m/home/freitasj1/.espressif/v6.0.2/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c[0m[0m:[1;31m147[0m
+
+[0m

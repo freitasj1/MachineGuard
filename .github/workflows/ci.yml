@@ -22,10 +22,84 @@ jobs:
         working-directory: firmware
 
     steps:
+      # ---------------------------------------------------------
+      # Checkout
+      # ---------------------------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ---------------------------------------------------------
+      # ESP-IDF
+      # ---------------------------------------------------------
+      - name: Show ESP-IDF version
+        run: |
+          . $IDF_PATH/export.sh
+          idf.py --version
+
+      # ---------------------------------------------------------
+      # Project configuration
+      # ---------------------------------------------------------
+      - name: Generate project configuration
+        run: |
+          . $IDF_PATH/export.sh
+
+          echo "=== sdkconfig.defaults ==="
+          cat sdkconfig.defaults
+
+          echo ""
+          echo "=== Generating sdkconfig ==="
+          idf.py reconfigure
+
+          echo ""
+          echo "=== Partition configuration ==="
+          grep -E "CONFIG_PARTITION_TABLE|CONFIG_PARTITION_TABLE_CUSTOM" sdkconfig
+
+      # ---------------------------------------------------------
+      # Build
+      # ---------------------------------------------------------
       - name: Build firmware
         run: |
           . $IDF_PATH/export.sh
           idf.py build
+
+      # ---------------------------------------------------------
+      # Partition table
+      # ---------------------------------------------------------
+      - name: Check partition table
+        run: |
+          . $IDF_PATH/export.sh
+
+          echo "=== Generated partition table ==="
+          idf.py partition-table
+
+      # ---------------------------------------------------------
+      # Firmware size
+      # ---------------------------------------------------------
+      - name: Analyze firmware size
+        run: |
+          . $IDF_PATH/export.sh
+
+          echo "=== Firmware size ==="
+          idf.py size
+
+          echo ""
+          echo "=== Component sizes ==="
+          idf.py size-components
+
+          echo ""
+          echo "=== Largest files ==="
+          idf.py size-files
+
+      # ---------------------------------------------------------
+      # Artifacts
+      # ---------------------------------------------------------
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: machineguard-firmware
+          path: |
+            firmware/build/*.bin
+            firmware/build/*.elf
+            firmware/build/*.map
+          if-no-files-found: error
+          retention-days: 14

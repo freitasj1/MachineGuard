@@ -15,3 +15,4 @@ dependencies:
   #   # All dependencies of `main` are public by default.
   #   public: true
   espressif/esp-dsp: ^1.6.0
+  espressif/mqtt: '*'

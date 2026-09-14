@@ -38,14 +38,31 @@ enum {
 /**
  * @brief Machine operating state.
  */
+/**
+ * @brief Machine operating state.
+ */
 typedef enum
 {
     SYSTEM_STATE_INIT = 0,
     SYSTEM_STATE_WARMUP,
     SYSTEM_STATE_HEALTHY,
-    SYSTEM_STATE_ALARM
+    SYSTEM_STATE_ALARM,
+    SYSTEM_STATE_NO_MOTOR
 
 } system_state_t;
+
+/**
+ * @brief Telemetry connectivity information for the HMI.
+ */
+typedef struct
+{
+    bool wifi_connected;
+    bool mqtt_connected;
+    bool last_publish_ok;
+
+    uint64_t last_publish_timestamp_ms;
+
+} hmi_telemetry_t;
 
 /**
  * @brief Result produced by the DSP pipeline for the system task.
@@ -219,6 +236,8 @@ typedef struct
     system_features_t features;
     system_diagnostics_t diagnostics;
     system_warmup_t warmup;
+
+    hmi_telemetry_t telemetry;
 
     /** Magnitudes of native FFT bins 2 through 76, inclusive. */
     float fft_magnitude[HMI_FFT_POINT_COUNT];

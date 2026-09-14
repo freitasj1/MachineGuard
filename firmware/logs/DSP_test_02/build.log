@@ -1,0 +1,1927 @@
+Executing action: monitor
+Serial port /dev/ttyACM0:
+Connecting...
+Detecting chip type... ESP32-S3
+Running idf_monitor in directory /home/freitasj1/Documentos/Embedded/MachineGuard/firmware
+Executing "/home/freitasj1/.espressif/tools/python/v6.0.2/venv/bin/python /home/freitasj1/.espressif/v6.0.2/esp-idf/tools/idf_monitor.py -p /dev/ttyACM0 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /home/freitasj1/Documentos/Embedded/MachineGuard/firmware/build/MachineGuard.elf /home/freitasj1/Documentos/Embedded/MachineGuard/firmware/build/bootloader/bootloader.elf -m '/home/freitasj1/.espressif/tools/python/v6.0.2/venv/bin/python' '/home/freitasj1/.espressif/v6.0.2/esp-idf/tools/idf.py'"...
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40048ede
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xda0
+load:0x403cb700,len:0x2f54
+entry 0x403c8908
+[0;32mI (24) boot: ESP-IDF v6.0.2 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Aug  4 2026 17:50:14[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (27) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (50) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=113c4h ( 70596) map[0m
+[0;32mI (99) esp_image: segment 1: paddr=000213ec vaddr=3fc92c00 size=036dch ( 14044) load[0m
+[0;32mI (103) esp_image: segment 2: paddr=00024ad0 vaddr=40374000 size=0b548h ( 46408) load[0m
+[0;32mI (114) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=1a154h (106836) map[0m
+[0;32mI (133) esp_image: segment 4: paddr=0004a17c vaddr=4037f548 size=035fch ( 13820) load[0m
+[0;32mI (137) esp_image: segment 5: paddr=0004d780 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (144) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (144) boot: Disabling RNG early entropy source...[0m
+[0;32mI (159) cpu_start: Multicore app[0m
+D (159) cpu_start: Pro cpu up[0m
+D (159) cpu_start: Starting app cpu, entry point is 0x4037562c[0m
+D (0) cpu_start: App cpu up[0m
+D (169) clk: RTC_SLOW_CLK calibration value: 3239962[0m
+[0;32mI (180) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+D (181) cpu_start: calling init function: 0x42001e00 on core: 0[0m
+D (182) cpu_start: calling init function: 0x420025d0 on core: 0[0m
+[0;32mI (188) cpu_start: Pro cpu start user code[0m
+[0;32mI (192) cpu_start: cpu freq: 160000000 Hz[0m
+D (197) cpu_start: calling init function: 0x42001d30 on core: 0[0m
+[0;32mI (203) app_init: Application information:[0m
+[0;32mI (208) app_init: Project name:     MachineGuard[0m
+[0;32mI (213) app_init: App version:      dsp-test-f46e9d0-13-gbb35c30-di[0m
+[0;32mI (220) app_init: Compile time:     Aug 20 2026 19:06:01[0m
+[0;32mI (226) app_init: ELF file SHA256:  6c2c4e7eb...[0m
+[0;32mI (231) app_init: ESP-IDF:          v6.0.2[0m
+D (236) cpu_start: calling init function: 0x42001e14 on core: 0[0m
+[0;32mI (242) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (247) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (252) efuse_init: Chip rev:         v0.2[0m
+D (257) cpu_start: calling init function: 0x42003d90 on core: 0[0m
+D (263) memory_layout: Checking 6 reserved memory ranges:[0m
+D (268) memory_layout: Reserved memory range 0x3fc84000 - 0x3fc92c00[0m
+D (275) memory_layout: Reserved memory range 0x3fc92c00 - 0x3fcaae80[0m
+D (281) memory_layout: Reserved memory range 0x3fceee34 - 0x3fcf0000[0m
+D (287) memory_layout: Reserved memory range 0x40374000 - 0x40382c00[0m
+D (294) memory_layout: Reserved memory range 0x600fe000 - 0x600fe000[0m
+D (300) memory_layout: Reserved memory range 0x600fffe8 - 0x60100000[0m
+D (307) memory_layout: Building list of available memory regions:[0m
+D (313) memory_layout: Available memory region 0x3fcaae80 - 0x3fcb0000[0m
+D (319) memory_layout: Available memory region 0x3fcb0000 - 0x3fcc0000[0m
+D (326) memory_layout: Available memory region 0x3fcc0000 - 0x3fcd0000[0m
+D (333) memory_layout: Available memory region 0x3fcd0000 - 0x3fce0000[0m
+D (339) memory_layout: Available memory region 0x3fce0000 - 0x3fce9710[0m
+D (346) memory_layout: Available memory region 0x3fce9710 - 0x3fceee34[0m
+D (352) memory_layout: Available memory region 0x3fcf0000 - 0x3fcf8000[0m
+D (359) memory_layout: Available memory region 0x600fe000 - 0x600fffe8[0m
+[0;32mI (366) heap_init: Initializing. RAM available for dynamic allocation:[0m
+D (373) heap_init: New heap initialised at 0x3fcaae80[0m
+[0;32mI (378) heap_init: At 3FCAAE80 len 0003E890 (250 KiB): RAM[0m
+[0;32mI (384) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+D (390) heap_init: New heap initialised at 0x3fcf0000[0m
+[0;32mI (395) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+D (401) heap_init: New heap initialised at 0x600fe000[0m
+[0;32mI (407) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+D (413) cpu_start: calling init function: 0x42007a90 on core: 0[0m
+D (419) cpu_start: calling init function: 0x42007378 on core: 0[0m
+D (425) cpu_start: calling init function: 0x4200261c on core: 0[0m
+D (431) intr_alloc: Connected src 39 to int 1 (cpu 0)[0m
+D (436) cpu_start: calling init function: 0x4200262c on core: 0[0m
+D (442) cpu_start: calling init function: 0x420083d8 on core: 0[0m
+D (448) cpu_start: calling init function: 0x42008b3c on core: 0[0m
+D (454) cpu_start: calling init function: 0x420097a4 on core: 0[0m
+D (460) cpu_start: calling init function: 0x42001c80 on core: 0[0m
+D (466) cpu_start: calling init function: 0x42007384 on core: 0[0m
+D (472) cpu_start: calling init function: 0x420020b0 on core: 0[0m
+D (478) spi_flash: trying chip: issi[0m
+D (481) spi_flash: trying chip: gd[0m
+D (485) spi_flash: trying chip: mxic[0m
+D (489) spi_flash: trying chip: winbond[0m
+D (492) spi_flash: trying chip: boya[0m
+D (496) spi_flash: trying chip: th[0m
+D (500) spi_flash: trying chip: mxic (opi)[0m
+D (504) spi_flash: trying chip: generic[0m
+[0;32mI (508) spi_flash: detected chip: generic[0m
+[0;32mI (512) spi_flash: flash io: dio[0m
+[0;33mW (516) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+D (529) cpu_start: calling init function: 0x42001eb0 on core: 0[0m
+D (536) cpu_start: calling init function: 0x420150dc on core: 0[0m
+D (541) cpu_start: calling init function: 0x42010aa0 on core: 0[0m
+D (548) cpu_start: calling init function: 0x42004fb8 on core: 0[0m
+[0;32mI (553) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (561) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+D (568) cpu_start: calling init function: 0x42002638 on core: 0[0m
+D (574) cpu_start: calling init function: 0x420084b0 on core: 0[0m
+D (580) cpu_start: calling init function: 0x42002644 on core: 0[0m
+D (586) intr_alloc: Connected src 79 to int 2 (cpu 0)[0m
+D (591) app_start: Starting scheduler on CPU0[0m
+D (596) intr_alloc: Connected src 57 to int 3 (cpu 0)[0m
+D (596) intr_alloc: Connected src 80 to int 0 (cpu 1)[0m
+D (606) app_start: Starting scheduler on CPU1[0m
+D (606) intr_alloc: Connected src 58 to int 1 (cpu 1)[0m
+[0;32mI (00:03:10.089) main_task: Started on CPU0[0m
+D (616) heap_init: New heap initialised at 0x3fce9710[0m
+D (616) intr_alloc: Connected src 52 to int 5 (cpu 0)[0m
+[0;32mI (00:03:10.119) main_task: Calling app_main()[0m
+[0;32mI (00:03:10.124) main: MachineGuard starting...[0m
+[0;32mI (00:03:10.129) app_context: context initialized[0m
+D (00:03:10.135) spi_common: SPI2 use iomux pins.[0m
+[0;32mI (00:03:10.155) dsp: FFT initialized (2048 points)[0m
+[0;32mI (00:03:10.156) dsp: task started[0m
+[0;32mI (00:03:10.156) main: Task 'dsp' created successfully (priority=23, core=0)[0m
+[0;32mI (00:03:10.162) system: task started | warm-up: 600 evaluations | threshold: 3.00[0m
+[0;32mI (00:03:10.170) main: Task 'system' created successfully (priority=22, core=0)[0m
+D (686) intr_alloc: Connected src 21 to int 2 (cpu 1)[0m
+D (686) spi_hal: eff: 10000, limit: 80000k(/0), 0 dummy, -1 delay[0m
+[0;32mI (00:03:10.178) main: Task 'accel' created successfully (priority=24, core=1)[0m
+D (00:03:10.190) spi_master: SPI2: New device added to CS0, effective clock: 10000000 Hz[0m
+[0;32mI (00:03:10.198) main: Task 'sensors' created successfully (priority=12, core=1)[0m
+[0;32mI (00:03:10.206) accelerometer: LSM6DS3TR-C ready: 6.66 kHz, +/-2g, FIFO continuous[0m
+[0;32mI (00:03:10.214) sensors: task_sensors started[0m
+[0;32mI (00:03:10.214) main: Task 'hmi' created successfully (priority=10, core=1)[0m
+[0;32mI (00:03:10.235) hmi: task_hmi iniciada[0m
+[0;32mI (00:03:10.244) main: Task 'sd' created successfully (priority=8, core=1)[0m
+[0;32mI (00:03:10.247) main: Task initialization completed[0m
+[0;32mI (00:03:10.252) main_task: Returned from app_main()[0m
+D (00:03:10.253) gpio: GPIO[48]| InputEn: 1| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (00:03:10.253) dac: task_dac iniciada no Core 1[0m
+[0;32mI (00:03:10.291) storage: task_sd iniciada no Core 1[0m
+D (00:03:10.507) dsp: Mean: 16896.79 | RMS: 0.008596 | Min: -0.348175 | Max: 0.066381 | PkPk: 0.414556[0m
+[0;32mI (00:03:10.511) dsp: No valid vibration detected[0m
+[0;32mI (00:03:10.512) system: state: WARMUP[0m
+D (00:03:10.805) dsp: Mean: 16856.20 | RMS: 0.003195 | Min: -0.011541 | Max: 0.011029 | PkPk: 0.022570[0m
+[0;32mI (00:03:10.809) dsp: No valid vibration detected[0m
+D (00:03:11.103) dsp: Mean: 16832.54 | RMS: 0.003046 | Min: -0.010281 | Max: 0.011557 | PkPk: 0.021838[0m
+[0;32mI (00:03:11.107) dsp: No valid vibration detected[0m
+D (00:03:11.400) dsp: Mean: 16819.81 | RMS: 0.002988 | Min: -0.009626 | Max: 0.011541 | PkPk: 0.021167[0m
+[0;32mI (00:03:11.404) dsp: No valid vibration detected[0m
+D (00:03:11.698) dsp: Mean: 16809.89 | RMS: 0.002957 | Min: -0.010424 | Max: 0.009645 | PkPk: 0.020069[0m
+[0;32mI (00:03:11.702) dsp: No valid vibration detected[0m
+D (00:03:11.996) dsp: Mean: 16805.19 | RMS: 0.003060 | Min: -0.011723 | Max: 0.009139 | PkPk: 0.020862[0m
+[0;32mI (00:03:12.000) dsp: No valid vibration detected[0m
+D (00:03:12.293) dsp: Mean: 16802.58 | RMS: 0.003013 | Min: -0.011198 | Max: 0.011860 | PkPk: 0.023058[0m
+[0;32mI (00:03:12.298) dsp: No valid vibration detected[0m
+D (00:03:12.591) dsp: Mean: 16793.60 | RMS: 0.002950 | Min: -0.009492 | Max: 0.011675 | PkPk: 0.021167[0m
+[0;32mI (00:03:12.595) dsp: No valid vibration detected[0m
+D (00:03:12.889) dsp: Mean: 16788.27 | RMS: 0.002945 | Min: -0.010569 | Max: 0.009561 | PkPk: 0.020130[0m
+[0;32mI (00:03:12.893) dsp: No valid vibration detected[0m
+D (00:03:13.186) dsp: Mean: 16788.95 | RMS: 0.003363 | Min: -0.017443 | Max: 0.013789 | PkPk: 0.031232[0m
+[0;32mI (00:03:13.191) dsp: No valid vibration detected[0m
+D (00:03:13.484) dsp: Mean: 16787.26 | RMS: 0.003071 | Min: -0.009349 | Max: 0.010171 | PkPk: 0.019520[0m
+[0;32mI (00:03:13.488) dsp: No valid vibration detected[0m
+D (00:03:13.782) dsp: Mean: 16791.49 | RMS: 0.002920 | Min: -0.011315 | Max: 0.010767 | PkPk: 0.022082[0m
+[0;32mI (00:03:13.786) dsp: No valid vibration detected[0m
+D (00:03:14.080) dsp: Mean: 16788.04 | RMS: 0.002912 | Min: -0.009640 | Max: 0.010063 | PkPk: 0.019703[0m
+[0;32mI (00:03:14.084) dsp: No valid vibration detected[0m
+D (00:03:14.377) dsp: Mean: 16782.60 | RMS: 0.003937 | Min: -0.015164 | Max: 0.015763 | PkPk: 0.030927[0m
+[0;32mI (00:03:14.382) dsp: Peak: 30.41 Hz | 1824.5 RPM | 0.00522 g[0m
+D (00:03:14.675) dsp: Mean: 16785.76 | RMS: 0.002880 | Min: -0.011149 | Max: 0.008981 | PkPk: 0.020130[0m
+[0;32mI (00:03:14.679) dsp: No valid vibration detected[0m
+D (00:03:14.973) dsp: Mean: 16780.97 | RMS: 0.002806 | Min: -0.008599 | Max: 0.009518 | PkPk: 0.018117[0m
+[0;32mI (00:03:14.977) dsp: No valid vibration detected[0m
+D (00:03:15.271) dsp: Mean: 16776.73 | RMS: 0.002898 | Min: -0.009439 | Max: 0.009898 | PkPk: 0.019337[0m
+[0;32mI (00:03:15.275) dsp: No valid vibration detected[0m
+D (00:03:15.568) dsp: Mean: 16775.76 | RMS: 0.002838 | Min: -0.009928 | Max: 0.008494 | PkPk: 0.018422[0m
+[0;32mI (00:03:15.573) dsp: No valid vibration detected[0m
+D (00:03:15.866) dsp: Mean: 16777.67 | RMS: 0.002939 | Min: -0.009862 | Max: 0.009292 | PkPk: 0.019154[0m
+[0;32mI (00:03:15.870) dsp: No valid vibration detected[0m
+D (00:03:16.164) dsp: Mean: 16779.71 | RMS: 0.002801 | Min: -0.009986 | Max: 0.009046 | PkPk: 0.019032[0m
+[0;32mI (00:03:16.168) dsp: No valid vibration detected[0m
+D (00:03:16.462) dsp: Mean: 16783.46 | RMS: 0.002851 | Min: -0.010886 | Max: 0.009000 | PkPk: 0.019886[0m
+[0;32mI (00:03:16.466) dsp: No valid vibration detected[0m
+D (00:03:16.759) dsp: Mean: 16787.96 | RMS: 0.007404 | Min: -0.024459 | Max: 0.032210 | PkPk: 0.056669[0m
+[0;32mI (00:03:16.764) dsp: Peak: 36.30 Hz | 2178.2 RPM | 0.01491 g[0m
+D (00:03:17.057) dsp: Mean: 16780.69 | RMS: 0.003593 | Min: -0.013218 | Max: 0.012707 | PkPk: 0.025925[0m
+[0;32mI (00:03:17.061) dsp: No valid vibration detected[0m
+D (00:03:17.355) dsp: Mean: 16785.16 | RMS: 0.002919 | Min: -0.011600 | Max: 0.008591 | PkPk: 0.020191[0m
+[0;32mI (00:03:17.359) dsp: No valid vibration detected[0m
+D (00:03:17.652) dsp: Mean: 16787.86 | RMS: 0.002848 | Min: -0.009629 | Max: 0.011355 | PkPk: 0.020984[0m
+[0;32mI (00:03:17.657) dsp: No valid vibration detected[0m
+D (00:03:17.950) dsp: Mean: 16785.17 | RMS: 0.003940 | Min: -0.015626 | Max: 0.015362 | PkPk: 0.030988[0m
+[0;32mI (00:03:17.955) dsp: No valid vibration detected[0m
+D (00:03:18.248) dsp: Mean: 16784.45 | RMS: 0.003238 | Min: -0.010458 | Max: 0.010404 | PkPk: 0.020862[0m
+[0;32mI (00:03:18.252) dsp: No valid vibration detected[0m
+D (00:00:00.596) gpio: GPIO[48]| InputEn: 1| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (00:00:00.596) dac: task_dac iniciada no Core 1[0m
+[0;32mI (00:00:00.633) storage: task_sd iniciada no Core 1[0m
+D (00:00:00.849) dsp: Mean: 16751.72 | RMS: 0.031811 | Min: -0.319196 | Max: 0.104510 | PkPk: 0.423706[0m
+[0;32mI (00:00:00.854) dsp: Peak: 29.13 Hz | 1747.8 RPM | 0.08388 g[0m
+[0;32mI (00:00:00.855) system: state: WARMUP[0m
+D (00:00:01.147) dsp: Mean: 16764.04 | RMS: 0.027224 | Min: -0.063869 | Max: 0.060876 | PkPk: 0.124745[0m
+[0;32mI (00:00:01.151) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.07076 g[0m
+D (00:00:01.445) dsp: Mean: 16760.79 | RMS: 0.026559 | Min: -0.064159 | Max: 0.057780 | PkPk: 0.121939[0m
+[0;32mI (00:00:01.449) dsp: Peak: 29.02 Hz | 1741.4 RPM | 0.06771 g[0m
+D (00:00:01.742) dsp: Mean: 16765.26 | RMS: 0.029882 | Min: -0.068885 | Max: 0.067145 | PkPk: 0.136030[0m
+[0;32mI (00:00:01.747) dsp: Peak: 29.00 Hz | 1739.8 RPM | 0.07883 g[0m
+D (00:00:02.040) dsp: Mean: 16766.30 | RMS: 0.032453 | Min: -0.075842 | Max: 0.075377 | PkPk: 0.151219[0m
+[0;32mI (00:00:02.044) dsp: Peak: 29.02 Hz | 1741.2 RPM | 0.08583 g[0m
+D (00:00:02.338) dsp: Mean: 16770.20 | RMS: 0.032948 | Min: -0.076079 | Max: 0.070931 | PkPk: 0.147010[0m
+[0;32mI (00:00:02.342) dsp: Peak: 29.02 Hz | 1741.5 RPM | 0.08745 g[0m
+D (00:00:02.636) dsp: Mean: 16771.85 | RMS: 0.033201 | Min: -0.076302 | Max: 0.072172 | PkPk: 0.148474[0m
+[0;32mI (00:00:02.640) dsp: Peak: 29.05 Hz | 1742.8 RPM | 0.08816 g[0m
+D (00:00:02.933) dsp: Mean: 16762.90 | RMS: 0.033571 | Min: -0.076000 | Max: 0.073389 | PkPk: 0.149389[0m
+[0;32mI (00:00:02.937) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08850 g[0m
+D (00:00:03.231) dsp: Mean: 16766.33 | RMS: 0.033394 | Min: -0.082370 | Max: 0.075803 | PkPk: 0.158173[0m
+[0;32mI (00:00:03.235) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08780 g[0m
+D (00:00:03.529) dsp: Mean: 16762.69 | RMS: 0.033164 | Min: -0.077634 | Max: 0.071511 | PkPk: 0.149145[0m
+[0;32mI (00:00:03.533) dsp: Peak: 29.05 Hz | 1743.1 RPM | 0.08747 g[0m
+D (00:00:03.826) dsp: Mean: 16750.59 | RMS: 0.033376 | Min: -0.076286 | Max: 0.074689 | PkPk: 0.150975[0m
+[0;32mI (00:00:03.831) dsp: Peak: 29.05 Hz | 1742.9 RPM | 0.08805 g[0m
+D (00:00:04.124) dsp: Mean: 16754.51 | RMS: 0.033088 | Min: -0.072011 | Max: 0.074206 | PkPk: 0.146217[0m
+[0;32mI (00:00:04.128) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08719 g[0m
+D (00:00:04.422) dsp: Mean: 16756.98 | RMS: 0.032926 | Min: -0.079543 | Max: 0.074360 | PkPk: 0.153903[0m
+[0;32mI (00:00:04.426) dsp: Peak: 29.07 Hz | 1743.9 RPM | 0.08629 g[0m
+D (00:00:04.719) dsp: Mean: 16757.96 | RMS: 0.032947 | Min: -0.075516 | Max: 0.075276 | PkPk: 0.150792[0m
+[0;32mI (00:00:04.724) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.08636 g[0m
+D (00:00:05.017) dsp: Mean: 16758.60 | RMS: 0.033118 | Min: -0.077567 | Max: 0.070236 | PkPk: 0.147803[0m
+[0;32mI (00:00:05.021) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08683 g[0m
+D (00:00:05.315) dsp: Mean: 16763.50 | RMS: 0.032786 | Min: -0.074328 | Max: 0.071706 | PkPk: 0.146034[0m
+[0;32mI (00:00:05.319) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08673 g[0m
+D (00:00:05.613) dsp: Mean: 16765.97 | RMS: 0.032737 | Min: -0.071612 | Max: 0.071067 | PkPk: 0.142679[0m
+[0;32mI (00:00:05.617) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08703 g[0m
+D (00:00:05.910) dsp: Mean: 16767.79 | RMS: 0.032799 | Min: -0.073492 | Max: 0.067967 | PkPk: 0.141459[0m
+[0;32mI (00:00:05.914) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08720 g[0m
+D (00:00:06.208) dsp: Mean: 16762.56 | RMS: 0.032802 | Min: -0.081164 | Max: 0.072068 | PkPk: 0.153232[0m
+[0;32mI (00:00:06.212) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08730 g[0m
+D (00:00:06.506) dsp: Mean: 16758.99 | RMS: 0.033261 | Min: -0.074968 | Max: 0.069541 | PkPk: 0.144509[0m
+[0;32mI (00:00:06.510) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08756 g[0m
+D (00:00:06.803) dsp: Mean: 16754.66 | RMS: 0.033024 | Min: -0.072447 | Max: 0.072245 | PkPk: 0.144692[0m
+[0;32mI (00:00:06.808) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08737 g[0m
+D (00:00:07.101) dsp: Mean: 16755.85 | RMS: 0.033249 | Min: -0.074716 | Max: 0.090655 | PkPk: 0.165371[0m
+[0;32mI (00:00:07.105) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08759 g[0m
+D (00:00:07.399) dsp: Mean: 16752.33 | RMS: 0.033042 | Min: -0.076636 | Max: 0.069581 | PkPk: 0.146217[0m
+[0;32mI (00:00:07.403) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08745 g[0m
+D (00:00:07.697) dsp: Mean: 16754.75 | RMS: 0.033062 | Min: -0.086910 | Max: 0.073032 | PkPk: 0.159942[0m
+[0;32mI (00:00:07.701) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08689 g[0m
+D (00:00:07.994) dsp: Mean: 16755.21 | RMS: 0.033430 | Min: -0.076202 | Max: 0.082581 | PkPk: 0.158783[0m
+[0;32mI (00:00:07.998) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.08723 g[0m
+D (00:00:08.292) dsp: Mean: 16757.04 | RMS: 0.033233 | Min: -0.087172 | Max: 0.071977 | PkPk: 0.159149[0m
+[0;32mI (00:00:08.296) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.08691 g[0m
+D (00:00:08.590) dsp: Mean: 16761.85 | RMS: 0.033691 | Min: -0.071239 | Max: 0.079736 | PkPk: 0.150975[0m
+[0;32mI (00:00:08.594) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.08761 g[0m
+D (00:00:08.887) dsp: Mean: 16773.12 | RMS: 0.033408 | Min: -0.081077 | Max: 0.069715 | PkPk: 0.150792[0m
+[0;32mI (00:00:08.892) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08711 g[0m
+D (00:00:09.185) dsp: Mean: 16768.60 | RMS: 0.033208 | Min: -0.078056 | Max: 0.078653 | PkPk: 0.156709[0m
+[0;32mI (00:00:09.189) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.08714 g[0m
+D (00:00:09.483) dsp: Mean: 16769.96 | RMS: 0.033112 | Min: -0.077406 | Max: 0.076131 | PkPk: 0.153537[0m
+[0;32mI (00:00:09.487) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08678 g[0m
+D (00:00:09.780) dsp: Mean: 16770.78 | RMS: 0.033367 | Min: -0.075505 | Max: 0.071322 | PkPk: 0.146827[0m
+[0;32mI (00:00:09.785) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08708 g[0m
+D (00:00:10.078) dsp: Mean: 16764.53 | RMS: 0.033369 | Min: -0.075123 | Max: 0.076767 | PkPk: 0.151890[0m
+[0;32mI (00:00:10.082) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08720 g[0m
+D (00:00:10.376) dsp: Mean: 16754.64 | RMS: 0.033323 | Min: -0.072324 | Max: 0.070904 | PkPk: 0.143228[0m
+[0;32mI (00:00:10.380) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.08754 g[0m
+D (00:00:10.673) dsp: Mean: 16750.38 | RMS: 0.033385 | Min: -0.072491 | Max: 0.074092 | PkPk: 0.146583[0m
+[0;32mI (00:00:10.678) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08792 g[0m
+D (00:00:10.971) dsp: Mean: 16749.26 | RMS: 0.033356 | Min: -0.086270 | Max: 0.076356 | PkPk: 0.162626[0m
+[0;32mI (00:00:10.975) dsp: Peak: 29.03 Hz | 1741.7 RPM | 0.08736 g[0m
+D (00:00:11.269) dsp: Mean: 16758.68 | RMS: 0.033559 | Min: -0.071961 | Max: 0.071755 | PkPk: 0.143716[0m
+[0;32mI (00:00:11.273) dsp: Peak: 29.05 Hz | 1742.9 RPM | 0.08803 g[0m
+D (00:00:11.566) dsp: Mean: 16759.86 | RMS: 0.033692 | Min: -0.080634 | Max: 0.079064 | PkPk: 0.159698[0m
+[0;32mI (00:00:11.571) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08778 g[0m
+D (00:00:11.864) dsp: Mean: 16760.86 | RMS: 0.033311 | Min: -0.077034 | Max: 0.077540 | PkPk: 0.154574[0m
+[0;32mI (00:00:11.868) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08720 g[0m
+D (00:00:12.162) dsp: Mean: 16763.68 | RMS: 0.033147 | Min: -0.072449 | Max: 0.075781 | PkPk: 0.148230[0m
+[0;32mI (00:00:12.166) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08715 g[0m
+D (00:00:12.460) dsp: Mean: 16768.87 | RMS: 0.032957 | Min: -0.076242 | Max: 0.082663 | PkPk: 0.158905[0m
+[0;32mI (00:00:12.464) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08715 g[0m
+D (00:00:12.757) dsp: Mean: 16763.63 | RMS: 0.033124 | Min: -0.079460 | Max: 0.080787 | PkPk: 0.160247[0m
+[0;32mI (00:00:12.762) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08729 g[0m
+D (00:00:13.055) dsp: Mean: 16765.41 | RMS: 0.032933 | Min: -0.075360 | Max: 0.080129 | PkPk: 0.155489[0m
+[0;32mI (00:00:13.059) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08716 g[0m
+D (00:00:13.353) dsp: Mean: 16765.89 | RMS: 0.033096 | Min: -0.075695 | Max: 0.072230 | PkPk: 0.147925[0m
+[0;32mI (00:00:13.357) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08681 g[0m
+D (00:00:13.650) dsp: Mean: 16759.21 | RMS: 0.033119 | Min: -0.076873 | Max: 0.084594 | PkPk: 0.161467[0m
+[0;32mI (00:00:13.655) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08543 g[0m
+D (00:00:13.948) dsp: Mean: 16745.83 | RMS: 0.032902 | Min: -0.090880 | Max: 0.075589 | PkPk: 0.166469[0m
+[0;32mI (00:00:13.952) dsp: Peak: 29.11 Hz | 1746.9 RPM | 0.08453 g[0m
+D (00:00:14.246) dsp: Mean: 16753.97 | RMS: 0.032236 | Min: -0.078383 | Max: 0.073202 | PkPk: 0.151585[0m
+[0;32mI (00:00:14.250) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08529 g[0m
+D (00:00:14.543) dsp: Mean: 16748.26 | RMS: 0.033003 | Min: -0.076022 | Max: 0.080077 | PkPk: 0.156099[0m
+[0;32mI (00:00:14.548) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08726 g[0m
+D (00:00:14.841) dsp: Mean: 16750.00 | RMS: 0.033301 | Min: -0.079849 | Max: 0.077470 | PkPk: 0.157319[0m
+[0;32mI (00:00:14.845) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08715 g[0m
+D (00:00:15.139) dsp: Mean: 16752.04 | RMS: 0.033445 | Min: -0.082597 | Max: 0.081737 | PkPk: 0.164334[0m
+[0;32mI (00:00:15.143) dsp: Peak: 29.07 Hz | 1743.9 RPM | 0.08737 g[0m
+D (00:00:15.436) dsp: Mean: 16754.90 | RMS: 0.033674 | Min: -0.081612 | Max: 0.071925 | PkPk: 0.153537[0m
+[0;32mI (00:00:15.441) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08792 g[0m
+[0;32mI (00:00:15.442) system: warm-up: 50/600 | 1xRPM valid: 50[0m
+D (00:00:15.734) dsp: Mean: 16754.69 | RMS: 0.033507 | Min: -0.077817 | Max: 0.069559 | PkPk: 0.147376[0m
+[0;32mI (00:00:15.738) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08740 g[0m
+D (00:00:16.032) dsp: Mean: 16762.38 | RMS: 0.033795 | Min: -0.077737 | Max: 0.077386 | PkPk: 0.155123[0m
+[0;32mI (00:00:16.036) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.08872 g[0m
+D (00:00:16.330) dsp: Mean: 16762.98 | RMS: 0.033544 | Min: -0.080946 | Max: 0.080277 | PkPk: 0.161223[0m
+[0;32mI (00:00:16.334) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08754 g[0m
+D (00:00:16.627) dsp: Mean: 16759.35 | RMS: 0.033564 | Min: -0.076332 | Max: 0.079889 | PkPk: 0.156221[0m
+[0;32mI (00:00:16.632) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08771 g[0m
+D (00:00:16.925) dsp: Mean: 16762.70 | RMS: 0.033529 | Min: -0.085321 | Max: 0.080782 | PkPk: 0.166103[0m
+[0;32mI (00:00:16.929) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08756 g[0m
+D (00:00:17.223) dsp: Mean: 16757.16 | RMS: 0.033628 | Min: -0.080408 | Max: 0.075752 | PkPk: 0.156160[0m
+[0;32mI (00:00:17.227) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08787 g[0m
+D (00:00:17.520) dsp: Mean: 16752.35 | RMS: 0.033659 | Min: -0.074197 | Max: 0.077632 | PkPk: 0.151829[0m
+[0;32mI (00:00:17.525) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08877 g[0m
+D (00:00:17.818) dsp: Mean: 16743.50 | RMS: 0.033378 | Min: -0.076403 | Max: 0.069205 | PkPk: 0.145607[0m
+[0;32mI (00:00:17.822) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08829 g[0m
+D (00:00:18.116) dsp: Mean: 16731.73 | RMS: 0.033366 | Min: -0.074709 | Max: 0.079865 | PkPk: 0.154574[0m
+[0;32mI (00:00:18.120) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08876 g[0m
+D (00:00:18.414) dsp: Mean: 16731.96 | RMS: 0.033253 | Min: -0.080274 | Max: 0.070823 | PkPk: 0.151097[0m
+[0;32mI (00:00:18.418) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08864 g[0m
+D (00:00:18.711) dsp: Mean: 16740.88 | RMS: 0.033692 | Min: -0.076182 | Max: 0.075159 | PkPk: 0.151341[0m
+[0;32mI (00:00:18.715) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08905 g[0m
+D (00:00:19.009) dsp: Mean: 16746.20 | RMS: 0.033464 | Min: -0.079800 | Max: 0.076055 | PkPk: 0.155855[0m
+[0;32mI (00:00:19.013) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08808 g[0m
+D (00:00:19.307) dsp: Mean: 16745.90 | RMS: 0.033347 | Min: -0.075207 | Max: 0.067106 | PkPk: 0.142313[0m
+[0;32mI (00:00:19.311) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08765 g[0m
+D (00:00:19.604) dsp: Mean: 16752.17 | RMS: 0.033352 | Min: -0.074552 | Max: 0.076850 | PkPk: 0.151402[0m
+[0;32mI (00:00:19.608) dsp: Peak: 29.05 Hz | 1743.3 RPM | 0.08775 g[0m
+D (00:00:19.902) dsp: Mean: 16756.65 | RMS: 0.033224 | Min: -0.075497 | Max: 0.072001 | PkPk: 0.147498[0m
+[0;32mI (00:00:19.906) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08825 g[0m
+D (00:00:20.200) dsp: Mean: 16761.68 | RMS: 0.033431 | Min: -0.079647 | Max: 0.077062 | PkPk: 0.156709[0m
+[0;32mI (00:00:20.204) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08810 g[0m
+D (00:00:20.497) dsp: Mean: 16763.71 | RMS: 0.033160 | Min: -0.080563 | Max: 0.080355 | PkPk: 0.160918[0m
+[0;32mI (00:00:20.501) dsp: Peak: 29.05 Hz | 1742.8 RPM | 0.08795 g[0m
+D (00:00:20.795) dsp: Mean: 16759.73 | RMS: 0.033344 | Min: -0.084468 | Max: 0.084136 | PkPk: 0.168604[0m
+[0;32mI (00:00:20.799) dsp: Peak: 29.05 Hz | 1743.0 RPM | 0.08752 g[0m
+D (00:00:21.093) dsp: Mean: 16758.27 | RMS: 0.033598 | Min: -0.073949 | Max: 0.072512 | PkPk: 0.146461[0m
+[0;32mI (00:00:21.097) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08779 g[0m
+D (00:00:21.390) dsp: Mean: 16752.46 | RMS: 0.033291 | Min: -0.073411 | Max: 0.077442 | PkPk: 0.150853[0m
+[0;32mI (00:00:21.395) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08838 g[0m
+D (00:00:21.688) dsp: Mean: 16751.14 | RMS: 0.033305 | Min: -0.072477 | Max: 0.071117 | PkPk: 0.143594[0m
+[0;32mI (00:00:21.692) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08782 g[0m
+D (00:00:21.986) dsp: Mean: 16751.59 | RMS: 0.033313 | Min: -0.080800 | Max: 0.068040 | PkPk: 0.148840[0m
+[0;32mI (00:00:21.990) dsp: Peak: 29.05 Hz | 1743.1 RPM | 0.08744 g[0m
+D (00:00:22.283) dsp: Mean: 16750.95 | RMS: 0.033815 | Min: -0.075027 | Max: 0.081987 | PkPk: 0.157014[0m
+[0;32mI (00:00:22.288) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08865 g[0m
+D (00:00:22.581) dsp: Mean: 16749.23 | RMS: 0.034057 | Min: -0.079436 | Max: 0.076175 | PkPk: 0.155611[0m
+[0;32mI (00:00:22.585) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08785 g[0m
+D (00:00:22.879) dsp: Mean: 16756.75 | RMS: 0.034166 | Min: -0.076235 | Max: 0.078949 | PkPk: 0.155184[0m
+[0;32mI (00:00:22.883) dsp: Peak: 29.05 Hz | 1743.1 RPM | 0.08898 g[0m
+D (00:00:23.176) dsp: Mean: 16763.52 | RMS: 0.033877 | Min: -0.083174 | Max: 0.089700 | PkPk: 0.172874[0m
+[0;32mI (00:00:23.181) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08851 g[0m
+D (00:00:23.474) dsp: Mean: 16764.91 | RMS: 0.034031 | Min: -0.078441 | Max: 0.079366 | PkPk: 0.157807[0m
+[0;32mI (00:00:23.478) dsp: Peak: 29.04 Hz | 1742.7 RPM | 0.08804 g[0m
+D (00:00:23.772) dsp: Mean: 16760.68 | RMS: 0.033886 | Min: -0.078243 | Max: 0.078283 | PkPk: 0.156526[0m
+[0;32mI (00:00:23.776) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08836 g[0m
+D (00:00:24.070) dsp: Mean: 16754.97 | RMS: 0.034161 | Min: -0.091864 | Max: 0.087659 | PkPk: 0.179523[0m
+[0;32mI (00:00:24.074) dsp: Peak: 29.04 Hz | 1742.5 RPM | 0.08800 g[0m
+D (00:00:24.367) dsp: Mean: 16750.65 | RMS: 0.034200 | Min: -0.091235 | Max: 0.078345 | PkPk: 0.169580[0m
+[0;32mI (00:00:24.371) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08835 g[0m
+D (00:00:24.665) dsp: Mean: 16747.74 | RMS: 0.034015 | Min: -0.077698 | Max: 0.075778 | PkPk: 0.153476[0m
+[0;32mI (00:00:24.669) dsp: Peak: 29.11 Hz | 1746.6 RPM | 0.08823 g[0m
+D (00:00:24.963) dsp: Mean: 16742.86 | RMS: 0.034280 | Min: -0.090332 | Max: 0.085958 | PkPk: 0.176290[0m
+[0;32mI (00:00:24.967) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08895 g[0m
+D (00:00:25.260) dsp: Mean: 16751.47 | RMS: 0.033972 | Min: -0.081525 | Max: 0.074208 | PkPk: 0.155733[0m
+[0;32mI (00:00:25.265) dsp: Peak: 29.05 Hz | 1743.2 RPM | 0.08816 g[0m
+D (00:00:25.558) dsp: Mean: 16743.10 | RMS: 0.034044 | Min: -0.089432 | Max: 0.075878 | PkPk: 0.165310[0m
+[0;32mI (00:00:25.562) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08870 g[0m
+D (00:00:25.856) dsp: Mean: 16744.97 | RMS: 0.034294 | Min: -0.081189 | Max: 0.073263 | PkPk: 0.154452[0m
+[0;32mI (00:00:25.860) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.08887 g[0m
+D (00:00:26.154) dsp: Mean: 16745.94 | RMS: 0.034294 | Min: -0.083383 | Max: 0.081927 | PkPk: 0.165310[0m
+[0;32mI (00:00:26.158) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08937 g[0m
+D (00:00:26.451) dsp: Mean: 16747.96 | RMS: 0.034031 | Min: -0.088691 | Max: 0.075216 | PkPk: 0.163907[0m
+[0;32mI (00:00:26.455) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08887 g[0m
+D (00:00:26.749) dsp: Mean: 16751.43 | RMS: 0.034225 | Min: -0.079448 | Max: 0.092755 | PkPk: 0.172203[0m
+[0;32mI (00:00:26.753) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08944 g[0m
+D (00:00:27.047) dsp: Mean: 16756.00 | RMS: 0.033970 | Min: -0.075457 | Max: 0.075884 | PkPk: 0.151341[0m
+[0;32mI (00:00:27.051) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.08905 g[0m
+D (00:00:27.344) dsp: Mean: 16764.79 | RMS: 0.034115 | Min: -0.081727 | Max: 0.085474 | PkPk: 0.167201[0m
+[0;32mI (00:00:27.349) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.08902 g[0m
+D (00:00:27.642) dsp: Mean: 16765.43 | RMS: 0.034149 | Min: -0.079387 | Max: 0.077505 | PkPk: 0.156892[0m
+[0;32mI (00:00:27.646) dsp: Peak: 29.04 Hz | 1742.6 RPM | 0.08897 g[0m
+D (00:00:27.940) dsp: Mean: 16757.58 | RMS: 0.034414 | Min: -0.074212 | Max: 0.079386 | PkPk: 0.153598[0m
+[0;32mI (00:00:27.944) dsp: Peak: 29.05 Hz | 1743.3 RPM | 0.08938 g[0m
+D (00:00:28.237) dsp: Mean: 16753.82 | RMS: 0.034511 | Min: -0.081424 | Max: 0.085228 | PkPk: 0.166652[0m
+[0;32mI (00:00:28.242) dsp: Peak: 29.04 Hz | 1742.2 RPM | 0.08912 g[0m
+D (00:00:28.535) dsp: Mean: 16743.71 | RMS: 0.034084 | Min: -0.078184 | Max: 0.083527 | PkPk: 0.161711[0m
+[0;32mI (00:00:28.539) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08892 g[0m
+D (00:00:28.833) dsp: Mean: 16744.11 | RMS: 0.034058 | Min: -0.074061 | Max: 0.082831 | PkPk: 0.156892[0m
+[0;32mI (00:00:28.837) dsp: Peak: 29.05 Hz | 1743.1 RPM | 0.08918 g[0m
+D (00:00:29.130) dsp: Mean: 16747.74 | RMS: 0.034187 | Min: -0.076234 | Max: 0.071691 | PkPk: 0.147925[0m
+[0;32mI (00:00:29.135) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08895 g[0m
+D (00:00:29.428) dsp: Mean: 16752.72 | RMS: 0.034369 | Min: -0.080930 | Max: 0.075535 | PkPk: 0.156465[0m
+[0;32mI (00:00:29.432) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08912 g[0m
+D (00:00:29.726) dsp: Mean: 16751.33 | RMS: 0.034410 | Min: -0.081455 | Max: 0.074522 | PkPk: 0.155977[0m
+[0;32mI (00:00:29.730) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08979 g[0m
+D (00:00:30.024) dsp: Mean: 16756.24 | RMS: 0.034629 | Min: -0.092491 | Max: 0.076845 | PkPk: 0.169336[0m
+[0;32mI (00:00:30.028) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08943 g[0m
+D (00:00:30.321) dsp: Mean: 16751.72 | RMS: 0.034461 | Min: -0.075806 | Max: 0.080964 | PkPk: 0.156770[0m
+[0;32mI (00:00:30.325) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09005 g[0m
+[0;32mI (00:00:30.327) system: warm-up: 100/600 | 1xRPM valid: 100[0m
+D (00:00:30.619) dsp: Mean: 16757.88 | RMS: 0.033932 | Min: -0.073681 | Max: 0.083028 | PkPk: 0.156709[0m
+[0;32mI (00:00:30.623) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08948 g[0m
+D (00:00:30.917) dsp: Mean: 16755.24 | RMS: 0.034273 | Min: -0.078095 | Max: 0.073124 | PkPk: 0.151219[0m
+[0;32mI (00:00:30.921) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.08984 g[0m
+D (00:00:31.214) dsp: Mean: 16754.04 | RMS: 0.034054 | Min: -0.076863 | Max: 0.073624 | PkPk: 0.150487[0m
+[0;32mI (00:00:31.218) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.08922 g[0m
+D (00:00:31.512) dsp: Mean: 16754.35 | RMS: 0.034362 | Min: -0.087984 | Max: 0.076472 | PkPk: 0.164456[0m
+[0;32mI (00:00:31.516) dsp: Peak: 29.04 Hz | 1742.6 RPM | 0.08962 g[0m
+D (00:00:31.810) dsp: Mean: 16753.72 | RMS: 0.034481 | Min: -0.079710 | Max: 0.074132 | PkPk: 0.153842[0m
+[0;32mI (00:00:31.814) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08979 g[0m
+D (00:00:32.107) dsp: Mean: 16746.74 | RMS: 0.034494 | Min: -0.075929 | Max: 0.076510 | PkPk: 0.152439[0m
+[0;32mI (00:00:32.111) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08986 g[0m
+D (00:00:32.405) dsp: Mean: 16747.21 | RMS: 0.033876 | Min: -0.078093 | Max: 0.080507 | PkPk: 0.158600[0m
+[0;32mI (00:00:32.409) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08895 g[0m
+D (00:00:32.703) dsp: Mean: 16748.73 | RMS: 0.034402 | Min: -0.083736 | Max: 0.076633 | PkPk: 0.160369[0m
+[0;32mI (00:00:32.707) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08993 g[0m
+D (00:00:33.000) dsp: Mean: 16750.12 | RMS: 0.033928 | Min: -0.091873 | Max: 0.075328 | PkPk: 0.167201[0m
+[0;32mI (00:00:33.004) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08861 g[0m
+D (00:00:33.298) dsp: Mean: 16749.91 | RMS: 0.034454 | Min: -0.079234 | Max: 0.079732 | PkPk: 0.158966[0m
+[0;32mI (00:00:33.302) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09009 g[0m
+D (00:00:33.596) dsp: Mean: 16755.17 | RMS: 0.034333 | Min: -0.080897 | Max: 0.080204 | PkPk: 0.161101[0m
+[0;32mI (00:00:33.600) dsp: Peak: 29.10 Hz | 1745.9 RPM | 0.08961 g[0m
+D (00:00:33.893) dsp: Mean: 16757.85 | RMS: 0.034514 | Min: -0.085452 | Max: 0.078455 | PkPk: 0.163907[0m
+[0;32mI (00:00:33.898) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.08911 g[0m
+D (00:00:34.191) dsp: Mean: 16759.22 | RMS: 0.034343 | Min: -0.089012 | Max: 0.076054 | PkPk: 0.165066[0m
+[0;32mI (00:00:34.195) dsp: Peak: 29.09 Hz | 1745.7 RPM | 0.08979 g[0m
+D (00:00:34.489) dsp: Mean: 16759.27 | RMS: 0.034224 | Min: -0.094810 | Max: 0.079223 | PkPk: 0.174033[0m
+[0;32mI (00:00:34.493) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.08961 g[0m
+D (00:00:34.786) dsp: Mean: 16760.01 | RMS: 0.034293 | Min: -0.075518 | Max: 0.077287 | PkPk: 0.152805[0m
+[0;32mI (00:00:34.791) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08938 g[0m
+D (00:00:35.084) dsp: Mean: 16759.75 | RMS: 0.034213 | Min: -0.082030 | Max: 0.072544 | PkPk: 0.154574[0m
+[0;32mI (00:00:35.088) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08902 g[0m
+D (00:00:35.382) dsp: Mean: 16753.60 | RMS: 0.034343 | Min: -0.083546 | Max: 0.082374 | PkPk: 0.165920[0m
+[0;32mI (00:00:35.386) dsp: Peak: 29.07 Hz | 1743.9 RPM | 0.08931 g[0m
+D (00:00:35.679) dsp: Mean: 16755.47 | RMS: 0.034009 | Min: -0.087076 | Max: 0.074635 | PkPk: 0.161711[0m
+[0;32mI (00:00:35.684) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08860 g[0m
+D (00:00:35.977) dsp: Mean: 16753.57 | RMS: 0.034305 | Min: -0.079640 | Max: 0.073165 | PkPk: 0.152805[0m
+[0;32mI (00:00:35.981) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.08935 g[0m
+D (00:00:36.275) dsp: Mean: 16751.45 | RMS: 0.033843 | Min: -0.076583 | Max: 0.071281 | PkPk: 0.147864[0m
+[0;32mI (00:00:36.279) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08881 g[0m
+D (00:00:36.573) dsp: Mean: 16743.45 | RMS: 0.033828 | Min: -0.079083 | Max: 0.085251 | PkPk: 0.164334[0m
+[0;32mI (00:00:36.577) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08865 g[0m
+D (00:00:36.870) dsp: Mean: 16749.54 | RMS: 0.034077 | Min: -0.081773 | Max: 0.078352 | PkPk: 0.160125[0m
+[0;32mI (00:00:36.875) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08953 g[0m
+D (00:00:37.168) dsp: Mean: 16749.87 | RMS: 0.034211 | Min: -0.073070 | Max: 0.080040 | PkPk: 0.153110[0m
+[0;32mI (00:00:37.172) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08971 g[0m
+D (00:00:37.466) dsp: Mean: 16753.09 | RMS: 0.033876 | Min: -0.086321 | Max: 0.076122 | PkPk: 0.162443[0m
+[0;32mI (00:00:37.470) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08846 g[0m
+D (00:00:37.763) dsp: Mean: 16757.22 | RMS: 0.034367 | Min: -0.075166 | Max: 0.072149 | PkPk: 0.147315[0m
+[0;32mI (00:00:37.768) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.08944 g[0m
+D (00:00:38.061) dsp: Mean: 16755.32 | RMS: 0.033910 | Min: -0.090910 | Max: 0.075864 | PkPk: 0.166774[0m
+[0;32mI (00:00:38.065) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08889 g[0m
+D (00:00:38.359) dsp: Mean: 16756.13 | RMS: 0.034061 | Min: -0.081992 | Max: 0.076242 | PkPk: 0.158234[0m
+[0;32mI (00:00:38.363) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08995 g[0m
+D (00:00:38.656) dsp: Mean: 16755.53 | RMS: 0.034059 | Min: -0.084212 | Max: 0.072375 | PkPk: 0.156587[0m
+[0;32mI (00:00:38.661) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08949 g[0m
+D (00:00:38.954) dsp: Mean: 16758.15 | RMS: 0.034129 | Min: -0.077845 | Max: 0.074167 | PkPk: 0.152012[0m
+[0;32mI (00:00:38.958) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08950 g[0m
+D (00:00:39.252) dsp: Mean: 16753.77 | RMS: 0.034239 | Min: -0.082031 | Max: 0.081876 | PkPk: 0.163907[0m
+[0;32mI (00:00:39.256) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.09001 g[0m
+D (00:00:39.549) dsp: Mean: 16751.46 | RMS: 0.034376 | Min: -0.086526 | Max: 0.083115 | PkPk: 0.169641[0m
+[0;32mI (00:00:39.554) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09008 g[0m
+D (00:00:39.847) dsp: Mean: 16748.85 | RMS: 0.033895 | Min: -0.077522 | Max: 0.078638 | PkPk: 0.156160[0m
+[0;32mI (00:00:39.851) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08973 g[0m
+D (00:00:40.145) dsp: Mean: 16752.37 | RMS: 0.033839 | Min: -0.072246 | Max: 0.071531 | PkPk: 0.143777[0m
+[0;32mI (00:00:40.149) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08951 g[0m
+D (00:00:40.442) dsp: Mean: 16752.29 | RMS: 0.033572 | Min: -0.077366 | Max: 0.071779 | PkPk: 0.149145[0m
+[0;32mI (00:00:40.447) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08878 g[0m
+D (00:00:40.740) dsp: Mean: 16751.73 | RMS: 0.033735 | Min: -0.076417 | Max: 0.072179 | PkPk: 0.148596[0m
+[0;32mI (00:00:40.744) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08957 g[0m
+D (00:00:41.038) dsp: Mean: 16752.91 | RMS: 0.033733 | Min: -0.073744 | Max: 0.082721 | PkPk: 0.156465[0m
+[0;32mI (00:00:41.042) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08855 g[0m
+D (00:00:41.335) dsp: Mean: 16752.41 | RMS: 0.034037 | Min: -0.077495 | Max: 0.072138 | PkPk: 0.149633[0m
+[0;32mI (00:00:41.340) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08865 g[0m
+D (00:00:41.633) dsp: Mean: 16762.38 | RMS: 0.033977 | Min: -0.078774 | Max: 0.078606 | PkPk: 0.157380[0m
+[0;32mI (00:00:41.637) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08944 g[0m
+D (00:00:41.931) dsp: Mean: 16759.55 | RMS: 0.034009 | Min: -0.074087 | Max: 0.078596 | PkPk: 0.152683[0m
+[0;32mI (00:00:41.935) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08944 g[0m
+D (00:00:42.228) dsp: Mean: 16752.75 | RMS: 0.033910 | Min: -0.079712 | Max: 0.075716 | PkPk: 0.155428[0m
+[0;32mI (00:00:42.232) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08858 g[0m
+D (00:00:42.526) dsp: Mean: 16750.16 | RMS: 0.034127 | Min: -0.085898 | Max: 0.075264 | PkPk: 0.161162[0m
+[0;32mI (00:00:42.530) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08912 g[0m
+D (00:00:42.823) dsp: Mean: 16755.13 | RMS: 0.034139 | Min: -0.076929 | Max: 0.079780 | PkPk: 0.156709[0m
+[0;32mI (00:00:42.827) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.08962 g[0m
+D (00:00:43.121) dsp: Mean: 16751.22 | RMS: 0.034037 | Min: -0.079618 | Max: 0.075078 | PkPk: 0.154696[0m
+[0;32mI (00:00:43.125) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.08933 g[0m
+D (00:00:43.418) dsp: Mean: 16748.29 | RMS: 0.033850 | Min: -0.071144 | Max: 0.069156 | PkPk: 0.140300[0m
+[0;32mI (00:00:43.422) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08917 g[0m
+D (00:00:43.716) dsp: Mean: 16743.52 | RMS: 0.033626 | Min: -0.074574 | Max: 0.076279 | PkPk: 0.150853[0m
+[0;32mI (00:00:43.720) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.08926 g[0m
+D (00:00:44.013) dsp: Mean: 16744.38 | RMS: 0.033846 | Min: -0.079872 | Max: 0.075922 | PkPk: 0.155794[0m
+[0;32mI (00:00:44.018) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08967 g[0m
+D (00:00:44.311) dsp: Mean: 16746.37 | RMS: 0.033549 | Min: -0.072064 | Max: 0.072262 | PkPk: 0.144326[0m
+[0;32mI (00:00:44.315) dsp: Peak: 29.07 Hz | 1743.9 RPM | 0.08887 g[0m
+D (00:00:44.609) dsp: Mean: 16751.49 | RMS: 0.034035 | Min: -0.070607 | Max: 0.075305 | PkPk: 0.145912[0m
+[0;32mI (00:00:44.613) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09036 g[0m
+D (00:00:44.906) dsp: Mean: 16752.34 | RMS: 0.034121 | Min: -0.079626 | Max: 0.080133 | PkPk: 0.159759[0m
+[0;32mI (00:00:44.910) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08908 g[0m
+D (00:00:45.204) dsp: Mean: 16755.09 | RMS: 0.034168 | Min: -0.084246 | Max: 0.076184 | PkPk: 0.160430[0m
+[0;32mI (00:00:45.208) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08950 g[0m
+[0;32mI (00:00:45.210) system: warm-up: 150/600 | 1xRPM valid: 150[0m
+D (00:00:45.502) dsp: Mean: 16753.74 | RMS: 0.034351 | Min: -0.082700 | Max: 0.078523 | PkPk: 0.161223[0m
+[0;32mI (00:00:45.506) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08986 g[0m
+D (00:00:45.799) dsp: Mean: 16755.86 | RMS: 0.034355 | Min: -0.079902 | Max: 0.078210 | PkPk: 0.158112[0m
+[0;32mI (00:00:45.804) dsp: Peak: 29.05 Hz | 1743.3 RPM | 0.08983 g[0m
+D (00:00:46.097) dsp: Mean: 16760.98 | RMS: 0.034282 | Min: -0.077835 | Max: 0.081924 | PkPk: 0.159759[0m
+[0;32mI (00:00:46.101) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08916 g[0m
+D (00:00:46.395) dsp: Mean: 16759.73 | RMS: 0.034369 | Min: -0.087214 | Max: 0.076510 | PkPk: 0.163724[0m
+[0;32mI (00:00:46.399) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.08950 g[0m
+D (00:00:46.692) dsp: Mean: 16753.15 | RMS: 0.034921 | Min: -0.085409 | Max: 0.084659 | PkPk: 0.170068[0m
+[0;32mI (00:00:46.697) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09041 g[0m
+D (00:00:46.990) dsp: Mean: 16752.21 | RMS: 0.034743 | Min: -0.077056 | Max: 0.088498 | PkPk: 0.165554[0m
+[0;32mI (00:00:46.994) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08956 g[0m
+D (00:00:47.288) dsp: Mean: 16747.20 | RMS: 0.034618 | Min: -0.086693 | Max: 0.077519 | PkPk: 0.164212[0m
+[0;32mI (00:00:47.292) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08966 g[0m
+D (00:00:47.585) dsp: Mean: 16745.23 | RMS: 0.034179 | Min: -0.075715 | Max: 0.074223 | PkPk: 0.149938[0m
+[0;32mI (00:00:47.590) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08960 g[0m
+D (00:00:47.883) dsp: Mean: 16746.81 | RMS: 0.034178 | Min: -0.085815 | Max: 0.079129 | PkPk: 0.164944[0m
+[0;32mI (00:00:47.887) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08954 g[0m
+D (00:00:48.181) dsp: Mean: 16743.63 | RMS: 0.033858 | Min: -0.076105 | Max: 0.078591 | PkPk: 0.154696[0m
+[0;32mI (00:00:48.185) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.08892 g[0m
+D (00:00:48.479) dsp: Mean: 16750.23 | RMS: 0.034183 | Min: -0.080046 | Max: 0.083556 | PkPk: 0.163602[0m
+[0;32mI (00:00:48.483) dsp: Peak: 29.10 Hz | 1745.7 RPM | 0.08899 g[0m
+D (00:00:48.776) dsp: Mean: 16746.89 | RMS: 0.034230 | Min: -0.084234 | Max: 0.079002 | PkPk: 0.163236[0m
+[0;32mI (00:00:48.781) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08915 g[0m
+D (00:00:49.074) dsp: Mean: 16750.57 | RMS: 0.033903 | Min: -0.081531 | Max: 0.081766 | PkPk: 0.163297[0m
+[0;32mI (00:00:49.078) dsp: Peak: 29.09 Hz | 1745.7 RPM | 0.08855 g[0m
+D (00:00:49.372) dsp: Mean: 16748.45 | RMS: 0.034293 | Min: -0.082926 | Max: 0.078358 | PkPk: 0.161284[0m
+[0;32mI (00:00:49.376) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08954 g[0m
+D (00:00:49.669) dsp: Mean: 16750.32 | RMS: 0.034235 | Min: -0.084687 | Max: 0.080196 | PkPk: 0.164883[0m
+[0;32mI (00:00:49.674) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08890 g[0m
+D (00:00:49.967) dsp: Mean: 16753.42 | RMS: 0.033966 | Min: -0.076641 | Max: 0.078726 | PkPk: 0.155367[0m
+[0;32mI (00:00:49.971) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08928 g[0m
+D (00:00:50.265) dsp: Mean: 16756.08 | RMS: 0.034577 | Min: -0.091139 | Max: 0.079783 | PkPk: 0.170922[0m
+[0;32mI (00:00:50.269) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08931 g[0m
+D (00:00:50.562) dsp: Mean: 16755.27 | RMS: 0.034576 | Min: -0.085234 | Max: 0.082150 | PkPk: 0.167384[0m
+[0;32mI (00:00:50.567) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08921 g[0m
+D (00:00:50.860) dsp: Mean: 16751.00 | RMS: 0.034737 | Min: -0.079056 | Max: 0.086681 | PkPk: 0.165737[0m
+[0;32mI (00:00:50.864) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08952 g[0m
+D (00:00:51.158) dsp: Mean: 16751.42 | RMS: 0.034806 | Min: -0.087988 | Max: 0.079945 | PkPk: 0.167933[0m
+[0;32mI (00:00:51.162) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08978 g[0m
+D (00:00:51.456) dsp: Mean: 16748.30 | RMS: 0.034601 | Min: -0.083283 | Max: 0.092519 | PkPk: 0.175802[0m
+[0;32mI (00:00:51.460) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08896 g[0m
+D (00:00:51.753) dsp: Mean: 16742.21 | RMS: 0.034449 | Min: -0.079679 | Max: 0.076359 | PkPk: 0.156038[0m
+[0;32mI (00:00:51.757) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08949 g[0m
+D (00:00:52.051) dsp: Mean: 16744.31 | RMS: 0.034562 | Min: -0.083833 | Max: 0.095202 | PkPk: 0.179035[0m
+[0;32mI (00:00:52.055) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08948 g[0m
+D (00:00:52.348) dsp: Mean: 16750.15 | RMS: 0.034492 | Min: -0.082664 | Max: 0.075875 | PkPk: 0.158539[0m
+[0;32mI (00:00:52.353) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08938 g[0m
+D (00:00:52.646) dsp: Mean: 16752.97 | RMS: 0.034766 | Min: -0.092596 | Max: 0.076191 | PkPk: 0.168787[0m
+[0;32mI (00:00:52.650) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08986 g[0m
+D (00:00:52.943) dsp: Mean: 16752.45 | RMS: 0.034650 | Min: -0.082682 | Max: 0.075186 | PkPk: 0.157868[0m
+[0;32mI (00:00:52.948) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08965 g[0m
+D (00:00:53.241) dsp: Mean: 16753.57 | RMS: 0.034157 | Min: -0.073296 | Max: 0.076276 | PkPk: 0.149572[0m
+[0;32mI (00:00:53.245) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08962 g[0m
+D (00:00:53.539) dsp: Mean: 16758.79 | RMS: 0.034035 | Min: -0.079714 | Max: 0.072847 | PkPk: 0.152561[0m
+[0;32mI (00:00:53.543) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08975 g[0m
+D (00:00:53.836) dsp: Mean: 16761.62 | RMS: 0.034147 | Min: -0.082144 | Max: 0.075053 | PkPk: 0.157197[0m
+[0;32mI (00:00:53.840) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08998 g[0m
+D (00:00:54.134) dsp: Mean: 16756.16 | RMS: 0.033978 | Min: -0.076260 | Max: 0.073434 | PkPk: 0.149694[0m
+[0;32mI (00:00:54.138) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08952 g[0m
+D (00:00:54.432) dsp: Mean: 16753.26 | RMS: 0.034115 | Min: -0.080231 | Max: 0.070378 | PkPk: 0.150609[0m
+[0;32mI (00:00:54.436) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08961 g[0m
+D (00:00:54.729) dsp: Mean: 16753.15 | RMS: 0.034064 | Min: -0.075588 | Max: 0.082097 | PkPk: 0.157685[0m
+[0;32mI (00:00:54.734) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08925 g[0m
+D (00:00:55.027) dsp: Mean: 16746.43 | RMS: 0.034341 | Min: -0.087195 | Max: 0.076346 | PkPk: 0.163541[0m
+[0;32mI (00:00:55.031) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08931 g[0m
+D (00:00:55.325) dsp: Mean: 16745.74 | RMS: 0.034384 | Min: -0.084835 | Max: 0.081207 | PkPk: 0.166042[0m
+[0;32mI (00:00:55.329) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08945 g[0m
+D (00:00:55.622) dsp: Mean: 16743.55 | RMS: 0.034618 | Min: -0.094279 | Max: 0.085305 | PkPk: 0.179584[0m
+[0;32mI (00:00:55.626) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.08972 g[0m
+D (00:00:55.920) dsp: Mean: 16743.45 | RMS: 0.034752 | Min: -0.086648 | Max: 0.094522 | PkPk: 0.181170[0m
+[0;32mI (00:00:55.924) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08906 g[0m
+D (00:00:56.218) dsp: Mean: 16746.16 | RMS: 0.034818 | Min: -0.095231 | Max: 0.081608 | PkPk: 0.176839[0m
+[0;32mI (00:00:56.222) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08940 g[0m
+D (00:00:56.515) dsp: Mean: 16752.49 | RMS: 0.034461 | Min: -0.079269 | Max: 0.085065 | PkPk: 0.164334[0m
+[0;32mI (00:00:56.519) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08903 g[0m
+D (00:00:56.813) dsp: Mean: 16753.88 | RMS: 0.034333 | Min: -0.082892 | Max: 0.080527 | PkPk: 0.163419[0m
+[0;32mI (00:00:56.817) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08910 g[0m
+D (00:00:57.110) dsp: Mean: 16755.16 | RMS: 0.034126 | Min: -0.080103 | Max: 0.078680 | PkPk: 0.158783[0m
+[0;32mI (00:00:57.115) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08945 g[0m
+D (00:00:57.408) dsp: Mean: 16757.29 | RMS: 0.034025 | Min: -0.074865 | Max: 0.079648 | PkPk: 0.154513[0m
+[0;32mI (00:00:57.412) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08943 g[0m
+D (00:00:57.706) dsp: Mean: 16753.57 | RMS: 0.034289 | Min: -0.080738 | Max: 0.076764 | PkPk: 0.157502[0m
+[0;32mI (00:00:57.710) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.08919 g[0m
+D (00:00:58.003) dsp: Mean: 16748.31 | RMS: 0.034312 | Min: -0.083528 | Max: 0.075743 | PkPk: 0.159271[0m
+[0;32mI (00:00:58.008) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08999 g[0m
+D (00:00:58.301) dsp: Mean: 16745.89 | RMS: 0.034347 | Min: -0.075633 | Max: 0.077721 | PkPk: 0.153354[0m
+[0;32mI (00:00:58.305) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08935 g[0m
+D (00:00:58.599) dsp: Mean: 16744.19 | RMS: 0.034570 | Min: -0.084985 | Max: 0.073676 | PkPk: 0.158661[0m
+[0;32mI (00:00:58.603) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08945 g[0m
+D (00:00:58.896) dsp: Mean: 16737.78 | RMS: 0.034215 | Min: -0.078372 | Max: 0.075714 | PkPk: 0.154086[0m
+[0;32mI (00:00:58.901) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08951 g[0m
+D (00:00:59.194) dsp: Mean: 16733.23 | RMS: 0.034242 | Min: -0.082730 | Max: 0.078127 | PkPk: 0.160857[0m
+[0;32mI (00:00:59.198) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08969 g[0m
+D (00:00:59.492) dsp: Mean: 16739.74 | RMS: 0.034370 | Min: -0.076356 | Max: 0.074192 | PkPk: 0.150548[0m
+[0;32mI (00:00:59.496) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.08961 g[0m
+D (00:00:59.789) dsp: Mean: 16739.67 | RMS: 0.034352 | Min: -0.081964 | Max: 0.071146 | PkPk: 0.153110[0m
+[0;32mI (00:00:59.793) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08968 g[0m
+D (00:01:00.087) dsp: Mean: 16751.48 | RMS: 0.034686 | Min: -0.088663 | Max: 0.077318 | PkPk: 0.165981[0m
+[0;32mI (00:01:00.091) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08956 g[0m
+[0;32mI (00:01:00.093) system: warm-up: 200/600 | 1xRPM valid: 200[0m
+D (00:01:00.384) dsp: Mean: 16748.79 | RMS: 0.034652 | Min: -0.089474 | Max: 0.079862 | PkPk: 0.169336[0m
+[0;32mI (00:01:00.389) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08965 g[0m
+D (00:01:00.682) dsp: Mean: 16755.08 | RMS: 0.034649 | Min: -0.083148 | Max: 0.074964 | PkPk: 0.158112[0m
+[0;32mI (00:01:00.686) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08952 g[0m
+D (00:01:00.980) dsp: Mean: 16757.09 | RMS: 0.034420 | Min: -0.080769 | Max: 0.078441 | PkPk: 0.159210[0m
+[0;32mI (00:01:00.984) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08932 g[0m
+D (00:01:01.277) dsp: Mean: 16753.69 | RMS: 0.034464 | Min: -0.087516 | Max: 0.084626 | PkPk: 0.172142[0m
+[0;32mI (00:01:01.282) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08932 g[0m
+D (00:01:01.575) dsp: Mean: 16754.13 | RMS: 0.034292 | Min: -0.077356 | Max: 0.074229 | PkPk: 0.151585[0m
+[0;32mI (00:01:01.579) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08986 g[0m
+D (00:01:01.873) dsp: Mean: 16752.81 | RMS: 0.034355 | Min: -0.082156 | Max: 0.085533 | PkPk: 0.167689[0m
+[0;32mI (00:01:01.877) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.08975 g[0m
+D (00:01:02.170) dsp: Mean: 16747.39 | RMS: 0.034525 | Min: -0.089816 | Max: 0.078056 | PkPk: 0.167872[0m
+[0;32mI (00:01:02.175) dsp: Peak: 29.05 Hz | 1743.2 RPM | 0.08972 g[0m
+D (00:01:02.468) dsp: Mean: 16746.77 | RMS: 0.034157 | Min: -0.069404 | Max: 0.073031 | PkPk: 0.142435[0m
+[0;32mI (00:01:02.472) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08921 g[0m
+D (00:01:02.766) dsp: Mean: 16748.59 | RMS: 0.034172 | Min: -0.090255 | Max: 0.088963 | PkPk: 0.179218[0m
+[0;32mI (00:01:02.770) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08913 g[0m
+D (00:01:03.063) dsp: Mean: 16744.31 | RMS: 0.034190 | Min: -0.079319 | Max: 0.069826 | PkPk: 0.149145[0m
+[0;32mI (00:01:03.068) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08948 g[0m
+D (00:01:03.361) dsp: Mean: 16744.83 | RMS: 0.034429 | Min: -0.074959 | Max: 0.093523 | PkPk: 0.168482[0m
+[0;32mI (00:01:03.365) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08965 g[0m
+D (00:01:03.659) dsp: Mean: 16745.91 | RMS: 0.034507 | Min: -0.085090 | Max: 0.086320 | PkPk: 0.171410[0m
+[0;32mI (00:01:03.663) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.08945 g[0m
+D (00:01:03.956) dsp: Mean: 16749.29 | RMS: 0.034931 | Min: -0.092433 | Max: 0.087761 | PkPk: 0.180194[0m
+[0;32mI (00:01:03.961) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09018 g[0m
+D (00:01:04.254) dsp: Mean: 16755.75 | RMS: 0.034453 | Min: -0.078248 | Max: 0.073276 | PkPk: 0.151524[0m
+[0;32mI (00:01:04.258) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08972 g[0m
+D (00:01:04.552) dsp: Mean: 16754.83 | RMS: 0.034245 | Min: -0.087464 | Max: 0.076748 | PkPk: 0.164212[0m
+[0;32mI (00:01:04.556) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08941 g[0m
+D (00:01:04.849) dsp: Mean: 16755.38 | RMS: 0.034433 | Min: -0.079384 | Max: 0.091599 | PkPk: 0.170983[0m
+[0;32mI (00:01:04.854) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08958 g[0m
+D (00:01:05.147) dsp: Mean: 16754.20 | RMS: 0.034414 | Min: -0.075652 | Max: 0.081972 | PkPk: 0.157624[0m
+[0;32mI (00:01:05.151) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08927 g[0m
+D (00:01:05.445) dsp: Mean: 16754.24 | RMS: 0.034706 | Min: -0.086024 | Max: 0.084349 | PkPk: 0.170373[0m
+[0;32mI (00:01:05.449) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08967 g[0m
+D (00:01:05.742) dsp: Mean: 16751.16 | RMS: 0.034706 | Min: -0.079981 | Max: 0.080571 | PkPk: 0.160552[0m
+[0;32mI (00:01:05.747) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08982 g[0m
+D (00:01:06.040) dsp: Mean: 16739.34 | RMS: 0.034977 | Min: -0.083408 | Max: 0.092577 | PkPk: 0.175985[0m
+[0;32mI (00:01:06.044) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.09064 g[0m
+D (00:01:06.338) dsp: Mean: 16743.02 | RMS: 0.034613 | Min: -0.080216 | Max: 0.081861 | PkPk: 0.162077[0m
+[0;32mI (00:01:06.342) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.09013 g[0m
+D (00:01:06.635) dsp: Mean: 16741.90 | RMS: 0.034459 | Min: -0.095154 | Max: 0.073267 | PkPk: 0.168421[0m
+[0;32mI (00:01:06.640) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08969 g[0m
+D (00:01:06.933) dsp: Mean: 16740.14 | RMS: 0.034349 | Min: -0.082725 | Max: 0.080145 | PkPk: 0.162870[0m
+[0;32mI (00:01:06.937) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08964 g[0m
+D (00:01:07.231) dsp: Mean: 16745.02 | RMS: 0.034541 | Min: -0.082961 | Max: 0.078262 | PkPk: 0.161223[0m
+[0;32mI (00:01:07.235) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08959 g[0m
+D (00:01:07.528) dsp: Mean: 16746.61 | RMS: 0.034323 | Min: -0.082448 | Max: 0.078714 | PkPk: 0.161162[0m
+[0;32mI (00:01:07.533) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09010 g[0m
+D (00:01:07.826) dsp: Mean: 16754.16 | RMS: 0.034154 | Min: -0.076260 | Max: 0.077521 | PkPk: 0.153781[0m
+[0;32mI (00:01:07.830) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.09001 g[0m
+D (00:01:08.124) dsp: Mean: 16752.99 | RMS: 0.033761 | Min: -0.076615 | Max: 0.068504 | PkPk: 0.145119[0m
+[0;32mI (00:01:08.128) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08955 g[0m
+D (00:01:08.421) dsp: Mean: 16753.95 | RMS: 0.033937 | Min: -0.087166 | Max: 0.080340 | PkPk: 0.167506[0m
+[0;32mI (00:01:08.425) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08999 g[0m
+D (00:01:08.719) dsp: Mean: 16757.33 | RMS: 0.033961 | Min: -0.072732 | Max: 0.074461 | PkPk: 0.147193[0m
+[0;32mI (00:01:08.723) dsp: Peak: 29.04 Hz | 1742.5 RPM | 0.08976 g[0m
+D (00:01:09.017) dsp: Mean: 16757.27 | RMS: 0.034234 | Min: -0.076266 | Max: 0.081602 | PkPk: 0.157868[0m
+[0;32mI (00:01:09.021) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08992 g[0m
+D (00:01:09.314) dsp: Mean: 16754.08 | RMS: 0.034548 | Min: -0.088150 | Max: 0.079661 | PkPk: 0.167811[0m
+[0;32mI (00:01:09.318) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.09012 g[0m
+D (00:01:09.612) dsp: Mean: 16751.50 | RMS: 0.034317 | Min: -0.077134 | Max: 0.073597 | PkPk: 0.150731[0m
+[0;32mI (00:01:09.616) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08969 g[0m
+D (00:01:09.910) dsp: Mean: 16744.69 | RMS: 0.034285 | Min: -0.074279 | Max: 0.078038 | PkPk: 0.152317[0m
+[0;32mI (00:01:09.914) dsp: Peak: 29.09 Hz | 1745.7 RPM | 0.08999 g[0m
+D (00:01:10.207) dsp: Mean: 16745.91 | RMS: 0.034456 | Min: -0.078319 | Max: 0.079305 | PkPk: 0.157624[0m
+[0;32mI (00:01:10.212) dsp: Peak: 29.05 Hz | 1743.2 RPM | 0.09040 g[0m
+D (00:01:10.505) dsp: Mean: 16747.94 | RMS: 0.034344 | Min: -0.085701 | Max: 0.076559 | PkPk: 0.162260[0m
+[0;32mI (00:01:10.509) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08972 g[0m
+D (00:01:10.802) dsp: Mean: 16748.14 | RMS: 0.034678 | Min: -0.074489 | Max: 0.083196 | PkPk: 0.157685[0m
+[0;32mI (00:01:10.807) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09052 g[0m
+D (00:01:11.100) dsp: Mean: 16753.29 | RMS: 0.034506 | Min: -0.075535 | Max: 0.088006 | PkPk: 0.163541[0m
+[0;32mI (00:01:11.104) dsp: Peak: 29.05 Hz | 1742.9 RPM | 0.08973 g[0m
+D (00:01:11.398) dsp: Mean: 16754.00 | RMS: 0.034679 | Min: -0.077958 | Max: 0.074786 | PkPk: 0.152744[0m
+[0;32mI (00:01:11.402) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08923 g[0m
+D (00:01:11.695) dsp: Mean: 16757.01 | RMS: 0.034517 | Min: -0.084241 | Max: 0.079056 | PkPk: 0.163297[0m
+[0;32mI (00:01:11.700) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.09006 g[0m
+D (00:01:11.993) dsp: Mean: 16753.25 | RMS: 0.034510 | Min: -0.089746 | Max: 0.078126 | PkPk: 0.167872[0m
+[0;32mI (00:01:11.997) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.09007 g[0m
+D (00:01:12.291) dsp: Mean: 16755.32 | RMS: 0.034416 | Min: -0.086396 | Max: 0.080073 | PkPk: 0.166469[0m
+[0;32mI (00:01:12.295) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08978 g[0m
+D (00:01:12.588) dsp: Mean: 16757.68 | RMS: 0.034422 | Min: -0.079585 | Max: 0.079686 | PkPk: 0.159271[0m
+[0;32mI (00:01:12.593) dsp: Peak: 29.05 Hz | 1743.2 RPM | 0.08926 g[0m
+D (00:01:12.886) dsp: Mean: 16751.19 | RMS: 0.034427 | Min: -0.079494 | Max: 0.078130 | PkPk: 0.157624[0m
+[0;32mI (00:01:12.890) dsp: Peak: 29.05 Hz | 1742.9 RPM | 0.08968 g[0m
+D (00:01:13.184) dsp: Mean: 16749.31 | RMS: 0.034689 | Min: -0.096033 | Max: 0.086174 | PkPk: 0.182207[0m
+[0;32mI (00:01:13.188) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08993 g[0m
+D (00:01:13.481) dsp: Mean: 16745.32 | RMS: 0.034714 | Min: -0.079076 | Max: 0.083794 | PkPk: 0.162870[0m
+[0;32mI (00:01:13.486) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09017 g[0m
+D (00:01:13.779) dsp: Mean: 16746.83 | RMS: 0.034248 | Min: -0.087464 | Max: 0.069794 | PkPk: 0.157258[0m
+[0;32mI (00:01:13.783) dsp: Peak: 29.05 Hz | 1743.0 RPM | 0.08946 g[0m
+D (00:01:14.077) dsp: Mean: 16743.27 | RMS: 0.034599 | Min: -0.077303 | Max: 0.080138 | PkPk: 0.157441[0m
+[0;32mI (00:01:14.081) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09033 g[0m
+D (00:01:14.374) dsp: Mean: 16745.62 | RMS: 0.034489 | Min: -0.080619 | Max: 0.083044 | PkPk: 0.163663[0m
+[0;32mI (00:01:14.379) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08995 g[0m
+D (00:01:14.672) dsp: Mean: 16752.65 | RMS: 0.034629 | Min: -0.082511 | Max: 0.079810 | PkPk: 0.162321[0m
+[0;32mI (00:01:14.676) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08998 g[0m
+D (00:01:14.970) dsp: Mean: 16754.30 | RMS: 0.034400 | Min: -0.082185 | Max: 0.076354 | PkPk: 0.158539[0m
+[0;32mI (00:01:14.974) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08999 g[0m
+[0;32mI (00:01:14.975) system: warm-up: 250/600 | 1xRPM valid: 250[0m
+D (00:01:15.267) dsp: Mean: 16754.92 | RMS: 0.034829 | Min: -0.078075 | Max: 0.082538 | PkPk: 0.160613[0m
+[0;32mI (00:01:15.272) dsp: Peak: 29.05 Hz | 1743.2 RPM | 0.08973 g[0m
+D (00:01:15.565) dsp: Mean: 16757.23 | RMS: 0.034694 | Min: -0.088708 | Max: 0.076053 | PkPk: 0.164761[0m
+[0;32mI (00:01:15.569) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08971 g[0m
+D (00:01:15.863) dsp: Mean: 16757.10 | RMS: 0.034718 | Min: -0.090713 | Max: 0.079172 | PkPk: 0.169885[0m
+[0;32mI (00:01:15.867) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.09003 g[0m
+D (00:01:16.160) dsp: Mean: 16754.55 | RMS: 0.034500 | Min: -0.082322 | Max: 0.079511 | PkPk: 0.161833[0m
+[0;32mI (00:01:16.165) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08992 g[0m
+D (00:01:16.458) dsp: Mean: 16747.97 | RMS: 0.034593 | Min: -0.082714 | Max: 0.084243 | PkPk: 0.166957[0m
+[0;32mI (00:01:16.462) dsp: Peak: 29.04 Hz | 1742.5 RPM | 0.08955 g[0m
+D (00:01:16.756) dsp: Mean: 16746.79 | RMS: 0.034648 | Min: -0.076847 | Max: 0.080533 | PkPk: 0.157380[0m
+[0;32mI (00:01:16.760) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09028 g[0m
+D (00:01:17.053) dsp: Mean: 16745.56 | RMS: 0.034317 | Min: -0.082384 | Max: 0.086098 | PkPk: 0.168482[0m
+[0;32mI (00:01:17.058) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08907 g[0m
+D (00:01:17.351) dsp: Mean: 16745.49 | RMS: 0.034297 | Min: -0.083295 | Max: 0.077562 | PkPk: 0.160857[0m
+[0;32mI (00:01:17.355) dsp: Peak: 29.05 Hz | 1743.0 RPM | 0.08949 g[0m
+D (00:01:17.649) dsp: Mean: 16746.03 | RMS: 0.034440 | Min: -0.085158 | Max: 0.078078 | PkPk: 0.163236[0m
+[0;32mI (00:01:17.653) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08990 g[0m
+D (00:01:17.946) dsp: Mean: 16747.57 | RMS: 0.035019 | Min: -0.088424 | Max: 0.090245 | PkPk: 0.178669[0m
+[0;32mI (00:01:17.951) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09007 g[0m
+D (00:01:18.244) dsp: Mean: 16752.30 | RMS: 0.034859 | Min: -0.093165 | Max: 0.079343 | PkPk: 0.172508[0m
+[0;32mI (00:01:18.248) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08957 g[0m
+D (00:01:18.542) dsp: Mean: 16752.20 | RMS: 0.034891 | Min: -0.079983 | Max: 0.088194 | PkPk: 0.168177[0m
+[0;32mI (00:01:18.546) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08968 g[0m
+D (00:01:18.839) dsp: Mean: 16753.01 | RMS: 0.035590 | Min: -0.084181 | Max: 0.088998 | PkPk: 0.173179[0m
+[0;32mI (00:01:18.844) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09056 g[0m
+D (00:01:19.137) dsp: Mean: 16757.19 | RMS: 0.034991 | Min: -0.086876 | Max: 0.084839 | PkPk: 0.171715[0m
+[0;32mI (00:01:19.141) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09031 g[0m
+D (00:01:19.435) dsp: Mean: 16755.99 | RMS: 0.034929 | Min: -0.088266 | Max: 0.086804 | PkPk: 0.175070[0m
+[0;32mI (00:01:19.439) dsp: Peak: 29.07 Hz | 1743.9 RPM | 0.08963 g[0m
+D (00:01:19.732) dsp: Mean: 16753.16 | RMS: 0.035152 | Min: -0.080530 | Max: 0.081669 | PkPk: 0.162199[0m
+[0;32mI (00:01:19.737) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.09011 g[0m
+D (00:01:20.030) dsp: Mean: 16750.67 | RMS: 0.035175 | Min: -0.092212 | Max: 0.079991 | PkPk: 0.172203[0m
+[0;32mI (00:01:20.034) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09011 g[0m
+D (00:01:20.328) dsp: Mean: 16748.32 | RMS: 0.035007 | Min: -0.083284 | Max: 0.078427 | PkPk: 0.161711[0m
+[0;32mI (00:01:20.332) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09018 g[0m
+D (00:01:20.625) dsp: Mean: 16739.79 | RMS: 0.034615 | Min: -0.078738 | Max: 0.080533 | PkPk: 0.159271[0m
+[0;32mI (00:01:20.630) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.08958 g[0m
+D (00:01:20.923) dsp: Mean: 16741.98 | RMS: 0.034285 | Min: -0.074053 | Max: 0.072530 | PkPk: 0.146583[0m
+[0;32mI (00:01:20.927) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08976 g[0m
+D (00:01:21.221) dsp: Mean: 16740.39 | RMS: 0.034240 | Min: -0.083472 | Max: 0.075006 | PkPk: 0.158478[0m
+[0;32mI (00:01:21.225) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08989 g[0m
+D (00:01:21.519) dsp: Mean: 16742.90 | RMS: 0.034376 | Min: -0.084174 | Max: 0.084369 | PkPk: 0.168543[0m
+[0;32mI (00:01:21.523) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08970 g[0m
+D (00:01:21.816) dsp: Mean: 16747.87 | RMS: 0.034355 | Min: -0.081305 | Max: 0.073757 | PkPk: 0.155062[0m
+[0;32mI (00:01:21.821) dsp: Peak: 29.07 Hz | 1743.9 RPM | 0.08988 g[0m
+D (00:01:22.114) dsp: Mean: 16747.58 | RMS: 0.034699 | Min: -0.082020 | Max: 0.079813 | PkPk: 0.161833[0m
+[0;32mI (00:01:22.118) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09031 g[0m
+D (00:01:22.412) dsp: Mean: 16748.62 | RMS: 0.034562 | Min: -0.079826 | Max: 0.079811 | PkPk: 0.159637[0m
+[0;32mI (00:01:22.416) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08995 g[0m
+D (00:01:22.709) dsp: Mean: 16753.44 | RMS: 0.034527 | Min: -0.087867 | Max: 0.079944 | PkPk: 0.167811[0m
+[0;32mI (00:01:22.713) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08986 g[0m
+D (00:01:23.007) dsp: Mean: 16753.65 | RMS: 0.034626 | Min: -0.082329 | Max: 0.081700 | PkPk: 0.164029[0m
+[0;32mI (00:01:23.011) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09014 g[0m
+D (00:01:23.305) dsp: Mean: 16754.04 | RMS: 0.034573 | Min: -0.080950 | Max: 0.085702 | PkPk: 0.166652[0m
+[0;32mI (00:01:23.309) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08956 g[0m
+D (00:01:23.602) dsp: Mean: 16750.91 | RMS: 0.034708 | Min: -0.084175 | Max: 0.076743 | PkPk: 0.160918[0m
+[0;32mI (00:01:23.606) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08975 g[0m
+D (00:01:23.900) dsp: Mean: 16751.47 | RMS: 0.034855 | Min: -0.075486 | Max: 0.078600 | PkPk: 0.154086[0m
+[0;32mI (00:01:23.904) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08996 g[0m
+D (00:01:24.198) dsp: Mean: 16745.22 | RMS: 0.034477 | Min: -0.082180 | Max: 0.077335 | PkPk: 0.159515[0m
+[0;32mI (00:01:24.202) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08900 g[0m
+D (00:01:24.495) dsp: Mean: 16743.75 | RMS: 0.034693 | Min: -0.085263 | Max: 0.083158 | PkPk: 0.168421[0m
+[0;32mI (00:01:24.499) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08978 g[0m
+D (00:01:24.793) dsp: Mean: 16743.22 | RMS: 0.034397 | Min: -0.078460 | Max: 0.076541 | PkPk: 0.155001[0m
+[0;32mI (00:01:24.797) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08961 g[0m
+D (00:01:25.091) dsp: Mean: 16742.64 | RMS: 0.034643 | Min: -0.083304 | Max: 0.078590 | PkPk: 0.161894[0m
+[0;32mI (00:01:25.095) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08959 g[0m
+D (00:01:25.388) dsp: Mean: 16742.97 | RMS: 0.034542 | Min: -0.081494 | Max: 0.075886 | PkPk: 0.157380[0m
+[0;32mI (00:01:25.392) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08931 g[0m
+D (00:01:25.686) dsp: Mean: 16750.25 | RMS: 0.034503 | Min: -0.080657 | Max: 0.080017 | PkPk: 0.160674[0m
+[0;32mI (00:01:25.690) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08918 g[0m
+D (00:01:25.983) dsp: Mean: 16750.54 | RMS: 0.034475 | Min: -0.087202 | Max: 0.073350 | PkPk: 0.160552[0m
+[0;32mI (00:01:25.988) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08942 g[0m
+D (00:01:26.281) dsp: Mean: 16752.80 | RMS: 0.034620 | Min: -0.083924 | Max: 0.077421 | PkPk: 0.161345[0m
+[0;32mI (00:01:26.285) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08959 g[0m
+D (00:01:26.579) dsp: Mean: 16747.74 | RMS: 0.034313 | Min: -0.081114 | Max: 0.081207 | PkPk: 0.162321[0m
+[0;32mI (00:01:26.583) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08964 g[0m
+D (00:01:26.876) dsp: Mean: 16746.74 | RMS: 0.034426 | Min: -0.083798 | Max: 0.075473 | PkPk: 0.159271[0m
+[0;32mI (00:01:26.881) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08937 g[0m
+D (00:01:27.174) dsp: Mean: 16738.54 | RMS: 0.034771 | Min: -0.086531 | Max: 0.077376 | PkPk: 0.163907[0m
+[0;32mI (00:01:27.178) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08905 g[0m
+D (00:01:27.472) dsp: Mean: 16741.25 | RMS: 0.034917 | Min: -0.078522 | Max: 0.084348 | PkPk: 0.162870[0m
+[0;32mI (00:01:27.476) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.09024 g[0m
+D (00:01:27.769) dsp: Mean: 16740.23 | RMS: 0.035155 | Min: -0.088220 | Max: 0.077395 | PkPk: 0.165615[0m
+[0;32mI (00:01:27.774) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08967 g[0m
+D (00:01:28.067) dsp: Mean: 16737.43 | RMS: 0.034776 | Min: -0.085182 | Max: 0.085435 | PkPk: 0.170617[0m
+[0;32mI (00:01:28.071) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09005 g[0m
+D (00:01:28.365) dsp: Mean: 16737.71 | RMS: 0.034865 | Min: -0.086297 | Max: 0.084320 | PkPk: 0.170617[0m
+[0;32mI (00:01:28.369) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09041 g[0m
+D (00:01:28.662) dsp: Mean: 16734.72 | RMS: 0.034590 | Min: -0.085139 | Max: 0.077731 | PkPk: 0.162870[0m
+[0;32mI (00:01:28.667) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08980 g[0m
+D (00:01:28.960) dsp: Mean: 16735.00 | RMS: 0.034574 | Min: -0.091134 | Max: 0.076921 | PkPk: 0.168055[0m
+[0;32mI (00:01:28.964) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08974 g[0m
+D (00:01:29.258) dsp: Mean: 16744.33 | RMS: 0.034654 | Min: -0.088775 | Max: 0.086539 | PkPk: 0.175314[0m
+[0;32mI (00:01:29.262) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.09013 g[0m
+D (00:01:29.555) dsp: Mean: 16747.45 | RMS: 0.034764 | Min: -0.092015 | Max: 0.081042 | PkPk: 0.173057[0m
+[0;32mI (00:01:29.560) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08951 g[0m
+D (00:01:29.853) dsp: Mean: 16753.26 | RMS: 0.034575 | Min: -0.084501 | Max: 0.076051 | PkPk: 0.160552[0m
+[0;32mI (00:01:29.857) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08969 g[0m
+[0;32mI (00:01:29.859) system: warm-up: 300/600 | 1xRPM valid: 300[0m
+D (00:01:30.151) dsp: Mean: 16753.13 | RMS: 0.034360 | Min: -0.083578 | Max: 0.079780 | PkPk: 0.163358[0m
+[0;32mI (00:01:30.155) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08932 g[0m
+D (00:01:30.449) dsp: Mean: 16757.30 | RMS: 0.034624 | Min: -0.074255 | Max: 0.088249 | PkPk: 0.162504[0m
+[0;32mI (00:01:30.453) dsp: Peak: 29.09 Hz | 1745.7 RPM | 0.08961 g[0m
+D (00:01:30.746) dsp: Mean: 16757.41 | RMS: 0.034791 | Min: -0.084388 | Max: 0.075981 | PkPk: 0.160369[0m
+[0;32mI (00:01:30.751) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08970 g[0m
+D (00:01:31.044) dsp: Mean: 16751.11 | RMS: 0.034642 | Min: -0.078086 | Max: 0.086004 | PkPk: 0.164090[0m
+[0;32mI (00:01:31.048) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08965 g[0m
+D (00:01:31.342) dsp: Mean: 16749.86 | RMS: 0.034674 | Min: -0.080755 | Max: 0.078394 | PkPk: 0.159149[0m
+[0;32mI (00:01:31.346) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08940 g[0m
+D (00:01:31.639) dsp: Mean: 16747.82 | RMS: 0.035186 | Min: -0.079777 | Max: 0.087790 | PkPk: 0.167567[0m
+[0;32mI (00:01:31.644) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.08933 g[0m
+D (00:01:31.937) dsp: Mean: 16746.81 | RMS: 0.035083 | Min: -0.084473 | Max: 0.081874 | PkPk: 0.166347[0m
+[0;32mI (00:01:31.941) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08936 g[0m
+D (00:01:32.235) dsp: Mean: 16743.37 | RMS: 0.034782 | Min: -0.082556 | Max: 0.077935 | PkPk: 0.160491[0m
+[0;32mI (00:01:32.239) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08941 g[0m
+D (00:01:32.532) dsp: Mean: 16741.77 | RMS: 0.034884 | Min: -0.088863 | Max: 0.083645 | PkPk: 0.172508[0m
+[0;32mI (00:01:32.537) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.08931 g[0m
+D (00:01:32.830) dsp: Mean: 16744.63 | RMS: 0.035133 | Min: -0.087512 | Max: 0.091157 | PkPk: 0.178669[0m
+[0;32mI (00:01:32.834) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.09002 g[0m
+D (00:01:33.128) dsp: Mean: 16736.42 | RMS: 0.034766 | Min: -0.077800 | Max: 0.081837 | PkPk: 0.159637[0m
+[0;32mI (00:01:33.132) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08985 g[0m
+D (00:01:33.425) dsp: Mean: 16739.63 | RMS: 0.035336 | Min: -0.094161 | Max: 0.086338 | PkPk: 0.180499[0m
+[0;32mI (00:01:33.430) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.09007 g[0m
+D (00:01:33.723) dsp: Mean: 16742.89 | RMS: 0.035135 | Min: -0.090945 | Max: 0.085162 | PkPk: 0.176107[0m
+[0;32mI (00:01:33.727) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.09005 g[0m
+D (00:01:34.021) dsp: Mean: 16751.90 | RMS: 0.034910 | Min: -0.093019 | Max: 0.079001 | PkPk: 0.172020[0m
+[0;32mI (00:01:34.025) dsp: Peak: 29.10 Hz | 1746.1 RPM | 0.08969 g[0m
+D (00:01:34.319) dsp: Mean: 16757.03 | RMS: 0.034619 | Min: -0.092539 | Max: 0.086435 | PkPk: 0.178974[0m
+[0;32mI (00:01:34.323) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.08966 g[0m
+D (00:01:34.616) dsp: Mean: 16755.29 | RMS: 0.034656 | Min: -0.085906 | Max: 0.078306 | PkPk: 0.164212[0m
+[0;32mI (00:01:34.620) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.09007 g[0m
+D (00:01:34.914) dsp: Mean: 16755.20 | RMS: 0.034472 | Min: -0.076567 | Max: 0.075750 | PkPk: 0.152317[0m
+[0;32mI (00:01:34.918) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08962 g[0m
+D (00:01:35.212) dsp: Mean: 16748.41 | RMS: 0.034556 | Min: -0.081338 | Max: 0.077445 | PkPk: 0.158783[0m
+[0;32mI (00:01:35.216) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08902 g[0m
+D (00:01:35.509) dsp: Mean: 16749.62 | RMS: 0.034573 | Min: -0.081839 | Max: 0.087192 | PkPk: 0.169031[0m
+[0;32mI (00:01:35.514) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08982 g[0m
+D (00:01:35.807) dsp: Mean: 16735.97 | RMS: 0.034517 | Min: -0.086984 | Max: 0.084121 | PkPk: 0.171105[0m
+[0;32mI (00:01:35.811) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08958 g[0m
+D (00:01:36.105) dsp: Mean: 16740.00 | RMS: 0.034720 | Min: -0.078202 | Max: 0.088328 | PkPk: 0.166530[0m
+[0;32mI (00:01:36.109) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08998 g[0m
+D (00:01:36.402) dsp: Mean: 16736.63 | RMS: 0.034510 | Min: -0.079216 | Max: 0.076578 | PkPk: 0.155794[0m
+[0;32mI (00:01:36.407) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09009 g[0m
+D (00:01:36.700) dsp: Mean: 16737.82 | RMS: 0.034512 | Min: -0.083986 | Max: 0.077969 | PkPk: 0.161955[0m
+[0;32mI (00:01:36.704) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08947 g[0m
+D (00:01:36.998) dsp: Mean: 16740.67 | RMS: 0.034596 | Min: -0.079219 | Max: 0.078405 | PkPk: 0.157624[0m
+[0;32mI (00:01:37.002) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08933 g[0m
+D (00:01:37.295) dsp: Mean: 16741.09 | RMS: 0.034431 | Min: -0.077293 | Max: 0.078806 | PkPk: 0.156099[0m
+[0;32mI (00:01:37.300) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08923 g[0m
+D (00:01:37.593) dsp: Mean: 16741.66 | RMS: 0.034526 | Min: -0.081170 | Max: 0.080541 | PkPk: 0.161711[0m
+[0;32mI (00:01:37.597) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08940 g[0m
+D (00:01:37.891) dsp: Mean: 16745.26 | RMS: 0.034497 | Min: -0.080048 | Max: 0.074831 | PkPk: 0.154879[0m
+[0;32mI (00:01:37.895) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08943 g[0m
+D (00:01:38.188) dsp: Mean: 16741.09 | RMS: 0.034204 | Min: -0.088394 | Max: 0.072829 | PkPk: 0.161223[0m
+[0;32mI (00:01:38.193) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08978 g[0m
+D (00:01:38.486) dsp: Mean: 16739.18 | RMS: 0.034212 | Min: -0.087119 | Max: 0.091794 | PkPk: 0.178913[0m
+[0;32mI (00:01:38.490) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08973 g[0m
+D (00:01:38.784) dsp: Mean: 16736.83 | RMS: 0.034253 | Min: -0.077277 | Max: 0.077114 | PkPk: 0.154391[0m
+[0;32mI (00:01:38.788) dsp: Peak: 29.10 Hz | 1745.7 RPM | 0.08901 g[0m
+D (00:01:39.081) dsp: Mean: 16740.42 | RMS: 0.034343 | Min: -0.080607 | Max: 0.085008 | PkPk: 0.165615[0m
+[0;32mI (00:01:39.086) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08883 g[0m
+D (00:01:39.379) dsp: Mean: 16740.46 | RMS: 0.034734 | Min: -0.079389 | Max: 0.085311 | PkPk: 0.164700[0m
+[0;32mI (00:01:39.383) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09003 g[0m
+D (00:01:39.677) dsp: Mean: 16741.00 | RMS: 0.034329 | Min: -0.078812 | Max: 0.078995 | PkPk: 0.157807[0m
+[0;32mI (00:01:39.681) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.08928 g[0m
+D (00:01:39.974) dsp: Mean: 16736.94 | RMS: 0.034517 | Min: -0.076185 | Max: 0.075339 | PkPk: 0.151524[0m
+[0;32mI (00:01:39.979) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.08959 g[0m
+D (00:01:40.272) dsp: Mean: 16737.10 | RMS: 0.034645 | Min: -0.074365 | Max: 0.082649 | PkPk: 0.157014[0m
+[0;32mI (00:01:40.276) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.09004 g[0m
+D (00:01:40.570) dsp: Mean: 16736.72 | RMS: 0.034369 | Min: -0.077941 | Max: 0.076389 | PkPk: 0.154330[0m
+[0;32mI (00:01:40.574) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08990 g[0m
+D (00:01:40.867) dsp: Mean: 16744.11 | RMS: 0.034381 | Min: -0.082601 | Max: 0.067703 | PkPk: 0.150304[0m
+[0;32mI (00:01:40.872) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08971 g[0m
+D (00:01:41.165) dsp: Mean: 16747.81 | RMS: 0.034287 | Min: -0.079350 | Max: 0.079189 | PkPk: 0.158539[0m
+[0;32mI (00:01:41.169) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.08930 g[0m
+D (00:01:41.463) dsp: Mean: 16748.72 | RMS: 0.034372 | Min: -0.089287 | Max: 0.085051 | PkPk: 0.174338[0m
+[0;32mI (00:01:41.467) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08949 g[0m
+D (00:01:41.760) dsp: Mean: 16752.38 | RMS: 0.034815 | Min: -0.080604 | Max: 0.077203 | PkPk: 0.157807[0m
+[0;32mI (00:01:41.765) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08955 g[0m
+D (00:01:42.058) dsp: Mean: 16762.04 | RMS: 0.034111 | Min: -0.078876 | Max: 0.078077 | PkPk: 0.156953[0m
+[0;32mI (00:01:42.062) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08886 g[0m
+D (00:01:42.356) dsp: Mean: 16755.38 | RMS: 0.034172 | Min: -0.078530 | Max: 0.074641 | PkPk: 0.153171[0m
+[0;32mI (00:01:42.360) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08957 g[0m
+D (00:01:42.653) dsp: Mean: 16750.87 | RMS: 0.034593 | Min: -0.082647 | Max: 0.077051 | PkPk: 0.159698[0m
+[0;32mI (00:01:42.657) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09003 g[0m
+D (00:01:42.951) dsp: Mean: 16755.21 | RMS: 0.034614 | Min: -0.091269 | Max: 0.079592 | PkPk: 0.170861[0m
+[0;32mI (00:01:42.955) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08970 g[0m
+D (00:01:43.248) dsp: Mean: 16753.37 | RMS: 0.034315 | Min: -0.084202 | Max: 0.089831 | PkPk: 0.174033[0m
+[0;32mI (00:01:43.253) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08920 g[0m
+D (00:01:43.546) dsp: Mean: 16746.87 | RMS: 0.034897 | Min: -0.081183 | Max: 0.076929 | PkPk: 0.158112[0m
+[0;32mI (00:01:43.550) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08922 g[0m
+D (00:01:43.844) dsp: Mean: 16743.15 | RMS: 0.034434 | Min: -0.080590 | Max: 0.074289 | PkPk: 0.154879[0m
+[0;32mI (00:01:43.848) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.08963 g[0m
+D (00:01:44.141) dsp: Mean: 16736.57 | RMS: 0.034284 | Min: -0.094463 | Max: 0.090916 | PkPk: 0.185379[0m
+[0;32mI (00:01:44.146) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08899 g[0m
+D (00:01:44.439) dsp: Mean: 16736.44 | RMS: 0.034433 | Min: -0.086525 | Max: 0.088423 | PkPk: 0.174948[0m
+[0;32mI (00:01:44.443) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.08921 g[0m
+D (00:01:44.737) dsp: Mean: 16734.91 | RMS: 0.034635 | Min: -0.089360 | Max: 0.088699 | PkPk: 0.178059[0m
+[0;32mI (00:01:44.741) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08909 g[0m
+[0;32mI (00:01:44.742) system: warm-up: 350/600 | 1xRPM valid: 350[0m
+D (00:01:45.034) dsp: Mean: 16733.68 | RMS: 0.034786 | Min: -0.086234 | Max: 0.094692 | PkPk: 0.180926[0m
+[0;32mI (00:01:45.039) dsp: Peak: 29.10 Hz | 1745.9 RPM | 0.08983 g[0m
+D (00:01:45.332) dsp: Mean: 16738.13 | RMS: 0.035400 | Min: -0.084005 | Max: 0.083074 | PkPk: 0.167079[0m
+[0;32mI (00:01:45.336) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.09020 g[0m
+D (00:01:45.630) dsp: Mean: 16744.05 | RMS: 0.035404 | Min: -0.085342 | Max: 0.086495 | PkPk: 0.171837[0m
+[0;32mI (00:01:45.634) dsp: Peak: 29.10 Hz | 1745.9 RPM | 0.08959 g[0m
+D (00:01:45.927) dsp: Mean: 16742.18 | RMS: 0.035051 | Min: -0.084374 | Max: 0.084291 | PkPk: 0.168665[0m
+[0;32mI (00:01:45.932) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08927 g[0m
+D (00:01:46.225) dsp: Mean: 16743.75 | RMS: 0.034865 | Min: -0.079773 | Max: 0.078949 | PkPk: 0.158722[0m
+[0;32mI (00:01:46.230) dsp: Peak: 29.10 Hz | 1746.2 RPM | 0.08887 g[0m
+D (00:01:46.523) dsp: Mean: 16746.86 | RMS: 0.035020 | Min: -0.091552 | Max: 0.081871 | PkPk: 0.173423[0m
+[0;32mI (00:01:46.527) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08981 g[0m
+D (00:01:46.821) dsp: Mean: 16750.28 | RMS: 0.034697 | Min: -0.084380 | Max: 0.085749 | PkPk: 0.170129[0m
+[0;32mI (00:01:46.825) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08937 g[0m
+D (00:01:47.118) dsp: Mean: 16742.04 | RMS: 0.034781 | Min: -0.089062 | Max: 0.075454 | PkPk: 0.164517[0m
+[0;32mI (00:01:47.123) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08947 g[0m
+D (00:01:47.416) dsp: Mean: 16740.20 | RMS: 0.034730 | Min: -0.081630 | Max: 0.080874 | PkPk: 0.162504[0m
+[0;32mI (00:01:47.420) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08907 g[0m
+D (00:01:47.714) dsp: Mean: 16744.72 | RMS: 0.034682 | Min: -0.077819 | Max: 0.078829 | PkPk: 0.156648[0m
+[0;32mI (00:01:47.718) dsp: Peak: 29.05 Hz | 1743.2 RPM | 0.08957 g[0m
+D (00:01:48.011) dsp: Mean: 16740.52 | RMS: 0.034988 | Min: -0.082992 | Max: 0.082379 | PkPk: 0.165371[0m
+[0;32mI (00:01:48.016) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08977 g[0m
+D (00:01:48.309) dsp: Mean: 16739.21 | RMS: 0.034925 | Min: -0.080838 | Max: 0.082154 | PkPk: 0.162992[0m
+[0;32mI (00:01:48.313) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08958 g[0m
+D (00:01:48.607) dsp: Mean: 16740.81 | RMS: 0.034769 | Min: -0.079898 | Max: 0.078458 | PkPk: 0.158356[0m
+[0;32mI (00:01:48.611) dsp: Peak: 29.11 Hz | 1746.6 RPM | 0.08910 g[0m
+D (00:01:48.904) dsp: Mean: 16738.50 | RMS: 0.035048 | Min: -0.092873 | Max: 0.089761 | PkPk: 0.182634[0m
+[0;32mI (00:01:48.909) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.08952 g[0m
+D (00:01:49.202) dsp: Mean: 16736.77 | RMS: 0.035243 | Min: -0.086362 | Max: 0.091209 | PkPk: 0.177571[0m
+[0;32mI (00:01:49.206) dsp: Peak: 29.10 Hz | 1745.9 RPM | 0.08986 g[0m
+D (00:01:49.500) dsp: Mean: 16737.41 | RMS: 0.034981 | Min: -0.085669 | Max: 0.086107 | PkPk: 0.171776[0m
+[0;32mI (00:01:49.504) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08957 g[0m
+D (00:01:49.798) dsp: Mean: 16740.95 | RMS: 0.035029 | Min: -0.094242 | Max: 0.077351 | PkPk: 0.171593[0m
+[0;32mI (00:01:49.802) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.08957 g[0m
+D (00:01:50.095) dsp: Mean: 16742.42 | RMS: 0.035111 | Min: -0.095491 | Max: 0.082873 | PkPk: 0.178364[0m
+[0;32mI (00:01:50.099) dsp: Peak: 29.10 Hz | 1745.7 RPM | 0.08952 g[0m
+D (00:01:50.393) dsp: Mean: 16741.10 | RMS: 0.034612 | Min: -0.084369 | Max: 0.085882 | PkPk: 0.170251[0m
+[0;32mI (00:01:50.397) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08983 g[0m
+D (00:01:50.691) dsp: Mean: 16747.90 | RMS: 0.034429 | Min: -0.085333 | Max: 0.083088 | PkPk: 0.168421[0m
+[0;32mI (00:01:50.695) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.08859 g[0m
+D (00:01:50.988) dsp: Mean: 16748.08 | RMS: 0.034770 | Min: -0.081806 | Max: 0.093386 | PkPk: 0.175192[0m
+[0;32mI (00:01:50.993) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08929 g[0m
+D (00:01:51.286) dsp: Mean: 16749.38 | RMS: 0.034502 | Min: -0.086887 | Max: 0.097882 | PkPk: 0.184769[0m
+[0;32mI (00:01:51.290) dsp: Peak: 29.10 Hz | 1745.7 RPM | 0.08907 g[0m
+D (00:01:51.584) dsp: Mean: 16748.64 | RMS: 0.034798 | Min: -0.086537 | Max: 0.077553 | PkPk: 0.164090[0m
+[0;32mI (00:01:51.588) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.09003 g[0m
+D (00:01:51.881) dsp: Mean: 16741.45 | RMS: 0.034522 | Min: -0.081218 | Max: 0.085983 | PkPk: 0.167201[0m
+[0;32mI (00:01:51.886) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08882 g[0m
+D (00:01:52.179) dsp: Mean: 16739.19 | RMS: 0.034455 | Min: -0.081508 | Max: 0.081789 | PkPk: 0.163297[0m
+[0;32mI (00:01:52.183) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08886 g[0m
+D (00:01:52.477) dsp: Mean: 16736.61 | RMS: 0.034671 | Min: -0.080557 | Max: 0.077677 | PkPk: 0.158234[0m
+[0;32mI (00:01:52.481) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08918 g[0m
+D (00:01:52.774) dsp: Mean: 16736.31 | RMS: 0.034542 | Min: -0.081454 | Max: 0.082819 | PkPk: 0.164273[0m
+[0;32mI (00:01:52.779) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08999 g[0m
+D (00:01:53.072) dsp: Mean: 16741.23 | RMS: 0.034529 | Min: -0.083035 | Max: 0.078920 | PkPk: 0.161955[0m
+[0;32mI (00:01:53.076) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08936 g[0m
+D (00:01:53.370) dsp: Mean: 16744.75 | RMS: 0.034497 | Min: -0.080139 | Max: 0.080047 | PkPk: 0.160186[0m
+[0;32mI (00:01:53.374) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08954 g[0m
+D (00:01:53.667) dsp: Mean: 16747.18 | RMS: 0.034549 | Min: -0.075895 | Max: 0.084718 | PkPk: 0.160613[0m
+[0;32mI (00:01:53.672) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08913 g[0m
+D (00:01:53.965) dsp: Mean: 16751.81 | RMS: 0.034826 | Min: -0.085022 | Max: 0.079800 | PkPk: 0.164822[0m
+[0;32mI (00:01:53.969) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08926 g[0m
+D (00:01:54.263) dsp: Mean: 16752.34 | RMS: 0.034686 | Min: -0.088593 | Max: 0.078364 | PkPk: 0.166957[0m
+[0;32mI (00:01:54.267) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08919 g[0m
+D (00:01:54.561) dsp: Mean: 16752.20 | RMS: 0.034716 | Min: -0.081508 | Max: 0.082948 | PkPk: 0.164456[0m
+[0;32mI (00:01:54.565) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08974 g[0m
+D (00:01:54.858) dsp: Mean: 16750.37 | RMS: 0.034996 | Min: -0.090364 | Max: 0.082632 | PkPk: 0.172996[0m
+[0;32mI (00:01:54.862) dsp: Peak: 29.10 Hz | 1746.1 RPM | 0.09011 g[0m
+D (00:01:55.156) dsp: Mean: 16743.18 | RMS: 0.034960 | Min: -0.082849 | Max: 0.082217 | PkPk: 0.165066[0m
+[0;32mI (00:01:55.160) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08998 g[0m
+D (00:01:55.454) dsp: Mean: 16744.34 | RMS: 0.034748 | Min: -0.078833 | Max: 0.079035 | PkPk: 0.157868[0m
+[0;32mI (00:01:55.458) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08960 g[0m
+D (00:01:55.751) dsp: Mean: 16742.80 | RMS: 0.034979 | Min: -0.084839 | Max: 0.077482 | PkPk: 0.162321[0m
+[0;32mI (00:01:55.756) dsp: Peak: 29.10 Hz | 1745.7 RPM | 0.08993 g[0m
+D (00:01:56.049) dsp: Mean: 16737.98 | RMS: 0.034510 | Min: -0.077103 | Max: 0.076922 | PkPk: 0.154025[0m
+[0;32mI (00:01:56.053) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08991 g[0m
+D (00:01:56.347) dsp: Mean: 16735.89 | RMS: 0.034607 | Min: -0.080330 | Max: 0.087176 | PkPk: 0.167506[0m
+[0;32mI (00:01:56.351) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.09005 g[0m
+D (00:01:56.645) dsp: Mean: 16734.25 | RMS: 0.034731 | Min: -0.093162 | Max: 0.088374 | PkPk: 0.181536[0m
+[0;32mI (00:01:56.649) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09004 g[0m
+D (00:01:56.942) dsp: Mean: 16741.85 | RMS: 0.034604 | Min: -0.080755 | Max: 0.075405 | PkPk: 0.156160[0m
+[0;32mI (00:01:56.946) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08995 g[0m
+D (00:01:57.240) dsp: Mean: 16743.23 | RMS: 0.034900 | Min: -0.085414 | Max: 0.101124 | PkPk: 0.186538[0m
+[0;32mI (00:01:57.244) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08971 g[0m
+D (00:01:57.538) dsp: Mean: 16744.49 | RMS: 0.035273 | Min: -0.090737 | Max: 0.079941 | PkPk: 0.170678[0m
+[0;32mI (00:01:57.542) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08940 g[0m
+D (00:01:57.835) dsp: Mean: 16743.03 | RMS: 0.035038 | Min: -0.084121 | Max: 0.077468 | PkPk: 0.161589[0m
+[0;32mI (00:01:57.839) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08931 g[0m
+D (00:01:58.133) dsp: Mean: 16740.92 | RMS: 0.034626 | Min: -0.081674 | Max: 0.075462 | PkPk: 0.157136[0m
+[0;32mI (00:01:58.137) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08883 g[0m
+D (00:01:58.431) dsp: Mean: 16744.33 | RMS: 0.034882 | Min: -0.083834 | Max: 0.101057 | PkPk: 0.184891[0m
+[0;32mI (00:01:58.435) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08941 g[0m
+D (00:01:58.728) dsp: Mean: 16742.43 | RMS: 0.034845 | Min: -0.088415 | Max: 0.076102 | PkPk: 0.164517[0m
+[0;32mI (00:01:58.733) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08973 g[0m
+D (00:01:59.026) dsp: Mean: 16746.12 | RMS: 0.034527 | Min: -0.084126 | Max: 0.076731 | PkPk: 0.160857[0m
+[0;32mI (00:01:59.030) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08905 g[0m
+D (00:01:59.324) dsp: Mean: 16746.45 | RMS: 0.034834 | Min: -0.081036 | Max: 0.080980 | PkPk: 0.162016[0m
+[0;32mI (00:01:59.328) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08955 g[0m
+D (00:01:59.621) dsp: Mean: 16744.80 | RMS: 0.034882 | Min: -0.078190 | Max: 0.077360 | PkPk: 0.155550[0m
+[0;32mI (00:01:59.626) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08974 g[0m
+[0;32mI (00:01:59.627) system: warm-up: 400/600 | 1xRPM valid: 400[0m
+D (00:01:59.919) dsp: Mean: 16740.12 | RMS: 0.034604 | Min: -0.079124 | Max: 0.079537 | PkPk: 0.158661[0m
+[0;32mI (00:01:59.923) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08958 g[0m
+D (00:02:00.217) dsp: Mean: 16743.86 | RMS: 0.034560 | Min: -0.087526 | Max: 0.079309 | PkPk: 0.166835[0m
+[0;32mI (00:02:00.221) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.09046 g[0m
+D (00:02:00.514) dsp: Mean: 16741.62 | RMS: 0.034552 | Min: -0.079216 | Max: 0.079689 | PkPk: 0.158905[0m
+[0;32mI (00:02:00.519) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.08978 g[0m
+D (00:02:00.812) dsp: Mean: 16744.80 | RMS: 0.034483 | Min: -0.076970 | Max: 0.075286 | PkPk: 0.152256[0m
+[0;32mI (00:02:00.816) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08976 g[0m
+D (00:02:01.110) dsp: Mean: 16741.74 | RMS: 0.034505 | Min: -0.076478 | Max: 0.076083 | PkPk: 0.152561[0m
+[0;32mI (00:02:01.114) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.09018 g[0m
+D (00:02:01.408) dsp: Mean: 16745.40 | RMS: 0.034563 | Min: -0.081398 | Max: 0.080069 | PkPk: 0.161467[0m
+[0;32mI (00:02:01.412) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08978 g[0m
+D (00:02:01.705) dsp: Mean: 16743.07 | RMS: 0.034562 | Min: -0.083635 | Max: 0.076673 | PkPk: 0.160308[0m
+[0;32mI (00:02:01.709) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08984 g[0m
+D (00:02:02.003) dsp: Mean: 16749.38 | RMS: 0.034552 | Min: -0.077798 | Max: 0.086170 | PkPk: 0.163968[0m
+[0;32mI (00:02:02.007) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09064 g[0m
+D (00:02:02.301) dsp: Mean: 16753.08 | RMS: 0.034308 | Min: -0.088516 | Max: 0.087896 | PkPk: 0.176412[0m
+[0;32mI (00:02:02.305) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08920 g[0m
+D (00:02:02.598) dsp: Mean: 16753.90 | RMS: 0.034499 | Min: -0.083015 | Max: 0.074182 | PkPk: 0.157197[0m
+[0;32mI (00:02:02.603) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08981 g[0m
+D (00:02:02.896) dsp: Mean: 16752.53 | RMS: 0.034857 | Min: -0.089519 | Max: 0.077499 | PkPk: 0.167018[0m
+[0;32mI (00:02:02.900) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.09031 g[0m
+D (00:02:03.194) dsp: Mean: 16748.60 | RMS: 0.034853 | Min: -0.077995 | Max: 0.083045 | PkPk: 0.161040[0m
+[0;32mI (00:02:03.198) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09000 g[0m
+D (00:02:03.492) dsp: Mean: 16748.44 | RMS: 0.034879 | Min: -0.086281 | Max: 0.079395 | PkPk: 0.165676[0m
+[0;32mI (00:02:03.496) dsp: Peak: 29.05 Hz | 1743.3 RPM | 0.09068 g[0m
+D (00:02:03.789) dsp: Mean: 16743.11 | RMS: 0.034730 | Min: -0.079368 | Max: 0.078927 | PkPk: 0.158295[0m
+[0;32mI (00:02:03.793) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09015 g[0m
+D (00:02:04.087) dsp: Mean: 16728.14 | RMS: 0.034331 | Min: -0.079309 | Max: 0.074350 | PkPk: 0.153659[0m
+[0;32mI (00:02:04.091) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08980 g[0m
+D (00:02:04.384) dsp: Mean: 16727.19 | RMS: 0.034454 | Min: -0.076688 | Max: 0.081973 | PkPk: 0.158661[0m
+[0;32mI (00:02:04.389) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.09053 g[0m
+D (00:02:04.682) dsp: Mean: 16729.33 | RMS: 0.034681 | Min: -0.090422 | Max: 0.081964 | PkPk: 0.172386[0m
+[0;32mI (00:02:04.686) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.09007 g[0m
+D (00:02:04.980) dsp: Mean: 16736.86 | RMS: 0.034778 | Min: -0.078987 | Max: 0.092545 | PkPk: 0.171532[0m
+[0;32mI (00:02:04.984) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.09007 g[0m
+D (00:02:05.278) dsp: Mean: 16738.70 | RMS: 0.034581 | Min: -0.079098 | Max: 0.082918 | PkPk: 0.162016[0m
+[0;32mI (00:02:05.282) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08965 g[0m
+D (00:02:05.575) dsp: Mean: 16745.21 | RMS: 0.034789 | Min: -0.087304 | Max: 0.075810 | PkPk: 0.163114[0m
+[0;32mI (00:02:05.579) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.09040 g[0m
+D (00:02:05.873) dsp: Mean: 16746.11 | RMS: 0.034618 | Min: -0.080709 | Max: 0.081856 | PkPk: 0.162565[0m
+[0;32mI (00:02:05.877) dsp: Peak: 29.05 Hz | 1743.2 RPM | 0.09057 g[0m
+D (00:02:06.171) dsp: Mean: 16745.97 | RMS: 0.034444 | Min: -0.080457 | Max: 0.082718 | PkPk: 0.163175[0m
+[0;32mI (00:02:06.175) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09005 g[0m
+D (00:02:06.468) dsp: Mean: 16742.47 | RMS: 0.034780 | Min: -0.094640 | Max: 0.073659 | PkPk: 0.168299[0m
+[0;32mI (00:02:06.472) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09045 g[0m
+D (00:02:06.766) dsp: Mean: 16741.16 | RMS: 0.034646 | Min: -0.078090 | Max: 0.082889 | PkPk: 0.160979[0m
+[0;32mI (00:02:06.770) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08972 g[0m
+D (00:02:07.064) dsp: Mean: 16742.73 | RMS: 0.034916 | Min: -0.080809 | Max: 0.084257 | PkPk: 0.165066[0m
+[0;32mI (00:02:07.068) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09013 g[0m
+D (00:02:07.361) dsp: Mean: 16741.75 | RMS: 0.034793 | Min: -0.090204 | Max: 0.077546 | PkPk: 0.167750[0m
+[0;32mI (00:02:07.365) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.09006 g[0m
+D (00:02:07.659) dsp: Mean: 16742.67 | RMS: 0.034866 | Min: -0.080195 | Max: 0.075660 | PkPk: 0.155855[0m
+[0;32mI (00:02:07.663) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09024 g[0m
+D (00:02:07.957) dsp: Mean: 16743.10 | RMS: 0.034369 | Min: -0.083942 | Max: 0.078928 | PkPk: 0.162870[0m
+[0;32mI (00:02:07.961) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08929 g[0m
+D (00:02:08.254) dsp: Mean: 16740.98 | RMS: 0.034572 | Min: -0.079604 | Max: 0.079667 | PkPk: 0.159271[0m
+[0;32mI (00:02:08.258) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.09051 g[0m
+D (00:02:08.552) dsp: Mean: 16741.34 | RMS: 0.034685 | Min: -0.088532 | Max: 0.075192 | PkPk: 0.163724[0m
+[0;32mI (00:02:08.556) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09029 g[0m
+D (00:02:08.850) dsp: Mean: 16740.16 | RMS: 0.034650 | Min: -0.083031 | Max: 0.070140 | PkPk: 0.153171[0m
+[0;32mI (00:02:08.854) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09043 g[0m
+D (00:02:09.147) dsp: Mean: 16747.51 | RMS: 0.034535 | Min: -0.079270 | Max: 0.083295 | PkPk: 0.162565[0m
+[0;32mI (00:02:09.152) dsp: Peak: 29.09 Hz | 1745.7 RPM | 0.09114 g[0m
+D (00:02:09.445) dsp: Mean: 16752.73 | RMS: 0.034536 | Min: -0.084346 | Max: 0.077487 | PkPk: 0.161833[0m
+[0;32mI (00:02:09.449) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.09024 g[0m
+D (00:02:09.743) dsp: Mean: 16755.88 | RMS: 0.034363 | Min: -0.082343 | Max: 0.076745 | PkPk: 0.159088[0m
+[0;32mI (00:02:09.747) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.09094 g[0m
+D (00:02:10.040) dsp: Mean: 16753.79 | RMS: 0.034291 | Min: -0.080141 | Max: 0.075409 | PkPk: 0.155550[0m
+[0;32mI (00:02:10.045) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.09045 g[0m
+D (00:02:10.338) dsp: Mean: 16753.89 | RMS: 0.034443 | Min: -0.073620 | Max: 0.073024 | PkPk: 0.146644[0m
+[0;32mI (00:02:10.342) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09006 g[0m
+D (00:02:10.636) dsp: Mean: 16752.69 | RMS: 0.034994 | Min: -0.076292 | Max: 0.078282 | PkPk: 0.154574[0m
+[0;32mI (00:02:10.640) dsp: Peak: 29.07 Hz | 1743.9 RPM | 0.09106 g[0m
+D (00:02:10.933) dsp: Mean: 16750.01 | RMS: 0.034896 | Min: -0.080886 | Max: 0.079117 | PkPk: 0.160003[0m
+[0;32mI (00:02:10.938) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09087 g[0m
+D (00:02:11.231) dsp: Mean: 16748.43 | RMS: 0.034953 | Min: -0.085426 | Max: 0.077017 | PkPk: 0.162443[0m
+[0;32mI (00:02:11.235) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.08938 g[0m
+D (00:02:11.529) dsp: Mean: 16741.04 | RMS: 0.034961 | Min: -0.083450 | Max: 0.088021 | PkPk: 0.171471[0m
+[0;32mI (00:02:11.533) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08972 g[0m
+D (00:02:11.826) dsp: Mean: 16741.74 | RMS: 0.034888 | Min: -0.090447 | Max: 0.089015 | PkPk: 0.179462[0m
+[0;32mI (00:02:11.831) dsp: Peak: 29.05 Hz | 1743.0 RPM | 0.08936 g[0m
+D (00:02:12.124) dsp: Mean: 16739.04 | RMS: 0.035413 | Min: -0.078997 | Max: 0.098635 | PkPk: 0.177632[0m
+[0;32mI (00:02:12.128) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.09038 g[0m
+D (00:02:12.422) dsp: Mean: 16741.69 | RMS: 0.035118 | Min: -0.084771 | Max: 0.084443 | PkPk: 0.169214[0m
+[0;32mI (00:02:12.426) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08979 g[0m
+D (00:02:12.719) dsp: Mean: 16746.61 | RMS: 0.035774 | Min: -0.101358 | Max: 0.081581 | PkPk: 0.182939[0m
+[0;32mI (00:02:12.724) dsp: Peak: 29.07 Hz | 1743.9 RPM | 0.09047 g[0m
+D (00:02:13.017) dsp: Mean: 16748.12 | RMS: 0.035209 | Min: -0.079612 | Max: 0.079781 | PkPk: 0.159393[0m
+[0;32mI (00:02:13.021) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.08977 g[0m
+D (00:02:13.315) dsp: Mean: 16750.31 | RMS: 0.035167 | Min: -0.085541 | Max: 0.080562 | PkPk: 0.166103[0m
+[0;32mI (00:02:13.319) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.09043 g[0m
+D (00:02:13.613) dsp: Mean: 16754.31 | RMS: 0.034937 | Min: -0.078099 | Max: 0.088065 | PkPk: 0.166164[0m
+[0;32mI (00:02:13.617) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.09035 g[0m
+D (00:02:13.910) dsp: Mean: 16753.89 | RMS: 0.034753 | Min: -0.083563 | Max: 0.077416 | PkPk: 0.160979[0m
+[0;32mI (00:02:13.915) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08994 g[0m
+D (00:02:14.208) dsp: Mean: 16747.80 | RMS: 0.034793 | Min: -0.080813 | Max: 0.085107 | PkPk: 0.165920[0m
+[0;32mI (00:02:14.212) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.08985 g[0m
+D (00:02:14.506) dsp: Mean: 16743.58 | RMS: 0.035070 | Min: -0.086656 | Max: 0.082985 | PkPk: 0.169641[0m
+[0;32mI (00:02:14.510) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.09124 g[0m
+[0;32mI (00:02:14.511) system: warm-up: 450/600 | 1xRPM valid: 450[0m
+D (00:02:14.803) dsp: Mean: 16738.60 | RMS: 0.034806 | Min: -0.078605 | Max: 0.079202 | PkPk: 0.157807[0m
+[0;32mI (00:02:14.807) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09006 g[0m
+D (00:02:15.101) dsp: Mean: 16733.89 | RMS: 0.035261 | Min: -0.085149 | Max: 0.088762 | PkPk: 0.173911[0m
+[0;32mI (00:02:15.105) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.09082 g[0m
+D (00:02:15.399) dsp: Mean: 16741.61 | RMS: 0.034678 | Min: -0.081899 | Max: 0.090731 | PkPk: 0.172630[0m
+[0;32mI (00:02:15.403) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09127 g[0m
+D (00:02:15.696) dsp: Mean: 16742.96 | RMS: 0.034618 | Min: -0.091132 | Max: 0.081132 | PkPk: 0.172264[0m
+[0;32mI (00:02:15.700) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09054 g[0m
+D (00:02:15.994) dsp: Mean: 16742.83 | RMS: 0.034504 | Min: -0.083987 | Max: 0.086508 | PkPk: 0.170495[0m
+[0;32mI (00:02:15.998) dsp: Peak: 29.05 Hz | 1743.2 RPM | 0.09057 g[0m
+D (00:02:16.292) dsp: Mean: 16744.15 | RMS: 0.034861 | Min: -0.077662 | Max: 0.078193 | PkPk: 0.155855[0m
+[0;32mI (00:02:16.296) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09091 g[0m
+D (00:02:16.589) dsp: Mean: 16739.23 | RMS: 0.034925 | Min: -0.082364 | Max: 0.075260 | PkPk: 0.157624[0m
+[0;32mI (00:02:16.593) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09091 g[0m
+D (00:02:16.887) dsp: Mean: 16741.60 | RMS: 0.034545 | Min: -0.080922 | Max: 0.071944 | PkPk: 0.152866[0m
+[0;32mI (00:02:16.891) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.09026 g[0m
+D (00:02:17.184) dsp: Mean: 16744.75 | RMS: 0.034329 | Min: -0.084226 | Max: 0.076143 | PkPk: 0.160369[0m
+[0;32mI (00:02:17.189) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.09100 g[0m
+D (00:02:17.482) dsp: Mean: 16744.10 | RMS: 0.034624 | Min: -0.083088 | Max: 0.079599 | PkPk: 0.162687[0m
+[0;32mI (00:02:17.486) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.09062 g[0m
+D (00:02:17.780) dsp: Mean: 16742.64 | RMS: 0.034788 | Min: -0.085500 | Max: 0.083958 | PkPk: 0.169458[0m
+[0;32mI (00:02:17.784) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09044 g[0m
+D (00:02:18.077) dsp: Mean: 16743.68 | RMS: 0.034754 | Min: -0.080744 | Max: 0.078039 | PkPk: 0.158783[0m
+[0;32mI (00:02:18.082) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09037 g[0m
+D (00:02:18.375) dsp: Mean: 16739.28 | RMS: 0.034979 | Min: -0.085478 | Max: 0.079039 | PkPk: 0.164517[0m
+[0;32mI (00:02:18.379) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09047 g[0m
+D (00:02:18.673) dsp: Mean: 16738.80 | RMS: 0.034898 | Min: -0.089414 | Max: 0.080410 | PkPk: 0.169824[0m
+[0;32mI (00:02:18.677) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.08985 g[0m
+D (00:02:18.970) dsp: Mean: 16737.97 | RMS: 0.034691 | Min: -0.082836 | Max: 0.081437 | PkPk: 0.164273[0m
+[0;32mI (00:02:18.975) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.09037 g[0m
+D (00:02:19.268) dsp: Mean: 16739.96 | RMS: 0.034671 | Min: -0.081860 | Max: 0.083389 | PkPk: 0.165249[0m
+[0;32mI (00:02:19.272) dsp: Peak: 29.04 Hz | 1742.6 RPM | 0.08960 g[0m
+D (00:02:19.566) dsp: Mean: 16740.16 | RMS: 0.034340 | Min: -0.084922 | Max: 0.087830 | PkPk: 0.172752[0m
+[0;32mI (00:02:19.570) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08925 g[0m
+D (00:02:19.864) dsp: Mean: 16743.20 | RMS: 0.034699 | Min: -0.077970 | Max: 0.083802 | PkPk: 0.161772[0m
+[0;32mI (00:02:19.868) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.09072 g[0m
+D (00:02:20.161) dsp: Mean: 16743.27 | RMS: 0.034832 | Min: -0.076023 | Max: 0.080991 | PkPk: 0.157014[0m
+[0;32mI (00:02:20.165) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08995 g[0m
+D (00:02:20.459) dsp: Mean: 16743.12 | RMS: 0.034572 | Min: -0.078942 | Max: 0.072582 | PkPk: 0.151524[0m
+[0;32mI (00:02:20.463) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09046 g[0m
+D (00:02:20.757) dsp: Mean: 16747.04 | RMS: 0.034717 | Min: -0.084610 | Max: 0.094242 | PkPk: 0.178852[0m
+[0;32mI (00:02:20.761) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09031 g[0m
+D (00:02:21.054) dsp: Mean: 16750.24 | RMS: 0.034894 | Min: -0.092918 | Max: 0.082091 | PkPk: 0.175009[0m
+[0;32mI (00:02:21.058) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.09040 g[0m
+D (00:02:21.352) dsp: Mean: 16745.62 | RMS: 0.034980 | Min: -0.081351 | Max: 0.078957 | PkPk: 0.160308[0m
+[0;32mI (00:02:21.356) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08994 g[0m
+D (00:02:21.650) dsp: Mean: 16740.10 | RMS: 0.035078 | Min: -0.086504 | Max: 0.078623 | PkPk: 0.165127[0m
+[0;32mI (00:02:21.654) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08996 g[0m
+D (00:02:21.947) dsp: Mean: 16740.22 | RMS: 0.035224 | Min: -0.088098 | Max: 0.078798 | PkPk: 0.166896[0m
+[0;32mI (00:02:21.951) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.09010 g[0m
+D (00:02:22.245) dsp: Mean: 16740.43 | RMS: 0.034857 | Min: -0.078411 | Max: 0.084825 | PkPk: 0.163236[0m
+[0;32mI (00:02:22.249) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.08997 g[0m
+D (00:02:22.543) dsp: Mean: 16739.39 | RMS: 0.034967 | Min: -0.081642 | Max: 0.081899 | PkPk: 0.163541[0m
+[0;32mI (00:02:22.547) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.09040 g[0m
+D (00:02:22.840) dsp: Mean: 16735.09 | RMS: 0.034780 | Min: -0.085039 | Max: 0.081369 | PkPk: 0.166408[0m
+[0;32mI (00:02:22.844) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.09024 g[0m
+D (00:02:23.138) dsp: Mean: 16740.49 | RMS: 0.034644 | Min: -0.081648 | Max: 0.080612 | PkPk: 0.162260[0m
+[0;32mI (00:02:23.142) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09037 g[0m
+D (00:02:23.436) dsp: Mean: 16741.06 | RMS: 0.034650 | Min: -0.075644 | Max: 0.080211 | PkPk: 0.155855[0m
+[0;32mI (00:02:23.440) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09002 g[0m
+D (00:02:23.733) dsp: Mean: 16743.38 | RMS: 0.034833 | Min: -0.081031 | Max: 0.082266 | PkPk: 0.163297[0m
+[0;32mI (00:02:23.737) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09047 g[0m
+D (00:02:24.031) dsp: Mean: 16744.60 | RMS: 0.034465 | Min: -0.083485 | Max: 0.077128 | PkPk: 0.160613[0m
+[0;32mI (00:02:24.035) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09025 g[0m
+D (00:02:24.328) dsp: Mean: 16750.68 | RMS: 0.034485 | Min: -0.078426 | Max: 0.072244 | PkPk: 0.150670[0m
+[0;32mI (00:02:24.333) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.09043 g[0m
+D (00:02:24.626) dsp: Mean: 16748.35 | RMS: 0.034737 | Min: -0.082188 | Max: 0.089954 | PkPk: 0.172142[0m
+[0;32mI (00:02:24.630) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.09007 g[0m
+D (00:02:24.924) dsp: Mean: 16747.79 | RMS: 0.034915 | Min: -0.080751 | Max: 0.077178 | PkPk: 0.157929[0m
+[0;32mI (00:02:24.928) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.09091 g[0m
+D (00:02:25.221) dsp: Mean: 16749.17 | RMS: 0.035392 | Min: -0.082238 | Max: 0.085390 | PkPk: 0.167628[0m
+[0;32mI (00:02:25.226) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.09034 g[0m
+D (00:02:25.519) dsp: Mean: 16744.38 | RMS: 0.035210 | Min: -0.081885 | Max: 0.100688 | PkPk: 0.182573[0m
+[0;32mI (00:02:25.523) dsp: Peak: 29.06 Hz | 1743.6 RPM | 0.08950 g[0m
+D (00:02:25.816) dsp: Mean: 16742.65 | RMS: 0.035247 | Min: -0.089466 | Max: 0.086458 | PkPk: 0.175924[0m
+[0;32mI (00:02:25.821) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09011 g[0m
+D (00:02:26.114) dsp: Mean: 16740.28 | RMS: 0.035321 | Min: -0.094750 | Max: 0.089226 | PkPk: 0.183976[0m
+[0;32mI (00:02:26.118) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.08977 g[0m
+D (00:02:26.412) dsp: Mean: 16740.42 | RMS: 0.034986 | Min: -0.087927 | Max: 0.087509 | PkPk: 0.175436[0m
+[0;32mI (00:02:26.416) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08998 g[0m
+D (00:02:26.709) dsp: Mean: 16739.59 | RMS: 0.035121 | Min: -0.091231 | Max: 0.092623 | PkPk: 0.183854[0m
+[0;32mI (00:02:26.714) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.09059 g[0m
+D (00:02:27.007) dsp: Mean: 16741.30 | RMS: 0.035085 | Min: -0.085785 | Max: 0.082575 | PkPk: 0.168360[0m
+[0;32mI (00:02:27.011) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09013 g[0m
+D (00:02:27.305) dsp: Mean: 16746.53 | RMS: 0.034856 | Min: -0.087140 | Max: 0.082623 | PkPk: 0.169763[0m
+[0;32mI (00:02:27.309) dsp: Peak: 29.05 Hz | 1743.0 RPM | 0.08978 g[0m
+D (00:02:27.602) dsp: Mean: 16744.57 | RMS: 0.034842 | Min: -0.091413 | Max: 0.077374 | PkPk: 0.168787[0m
+[0;32mI (00:02:27.606) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09026 g[0m
+D (00:02:27.900) dsp: Mean: 16745.37 | RMS: 0.034544 | Min: -0.082067 | Max: 0.079278 | PkPk: 0.161345[0m
+[0;32mI (00:02:27.904) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.09006 g[0m
+D (00:02:28.198) dsp: Mean: 16745.45 | RMS: 0.034675 | Min: -0.084939 | Max: 0.094157 | PkPk: 0.179096[0m
+[0;32mI (00:02:28.202) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.09017 g[0m
+D (00:02:28.495) dsp: Mean: 16744.49 | RMS: 0.034854 | Min: -0.083539 | Max: 0.079941 | PkPk: 0.163480[0m
+[0;32mI (00:02:28.499) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.09073 g[0m
+D (00:02:28.793) dsp: Mean: 16739.16 | RMS: 0.035175 | Min: -0.078700 | Max: 0.079229 | PkPk: 0.157929[0m
+[0;32mI (00:02:28.797) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09107 g[0m
+D (00:02:29.090) dsp: Mean: 16739.32 | RMS: 0.035018 | Min: -0.081028 | Max: 0.085319 | PkPk: 0.166347[0m
+[0;32mI (00:02:29.095) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09082 g[0m
+D (00:02:29.388) dsp: Mean: 16743.10 | RMS: 0.034981 | Min: -0.080465 | Max: 0.075268 | PkPk: 0.155733[0m
+[0;32mI (00:02:29.392) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08991 g[0m
+[0;32mI (00:02:29.394) system: warm-up: 500/600 | 1xRPM valid: 500[0m
+D (00:02:29.686) dsp: Mean: 16744.40 | RMS: 0.035064 | Min: -0.082131 | Max: 0.075188 | PkPk: 0.157319[0m
+[0;32mI (00:02:29.690) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.09093 g[0m
+D (00:02:29.984) dsp: Mean: 16738.53 | RMS: 0.034370 | Min: -0.085066 | Max: 0.082318 | PkPk: 0.167384[0m
+[0;32mI (00:02:29.988) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08987 g[0m
+D (00:02:30.281) dsp: Mean: 16736.96 | RMS: 0.034647 | Min: -0.079115 | Max: 0.077106 | PkPk: 0.156221[0m
+[0;32mI (00:02:30.285) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08976 g[0m
+D (00:02:30.579) dsp: Mean: 16738.63 | RMS: 0.034626 | Min: -0.080070 | Max: 0.079872 | PkPk: 0.159942[0m
+[0;32mI (00:02:30.583) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.09048 g[0m
+D (00:02:30.876) dsp: Mean: 16740.75 | RMS: 0.034609 | Min: -0.078126 | Max: 0.078339 | PkPk: 0.156465[0m
+[0;32mI (00:02:30.881) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08972 g[0m
+D (00:02:31.174) dsp: Mean: 16741.42 | RMS: 0.034883 | Min: -0.098235 | Max: 0.086290 | PkPk: 0.184525[0m
+[0;32mI (00:02:31.178) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09005 g[0m
+D (00:02:31.472) dsp: Mean: 16748.09 | RMS: 0.035107 | Min: -0.090468 | Max: 0.081003 | PkPk: 0.171471[0m
+[0;32mI (00:02:31.476) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.09015 g[0m
+D (00:02:31.769) dsp: Mean: 16751.51 | RMS: 0.034947 | Min: -0.096045 | Max: 0.079513 | PkPk: 0.175558[0m
+[0;32mI (00:02:31.774) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09047 g[0m
+D (00:02:32.067) dsp: Mean: 16755.09 | RMS: 0.034911 | Min: -0.088943 | Max: 0.085334 | PkPk: 0.174277[0m
+[0;32mI (00:02:32.071) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09030 g[0m
+D (00:02:32.365) dsp: Mean: 16752.69 | RMS: 0.034829 | Min: -0.089529 | Max: 0.075110 | PkPk: 0.164639[0m
+[0;32mI (00:02:32.369) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09031 g[0m
+D (00:02:32.662) dsp: Mean: 16749.78 | RMS: 0.034924 | Min: -0.089778 | Max: 0.087976 | PkPk: 0.177754[0m
+[0;32mI (00:02:32.666) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.09024 g[0m
+D (00:02:32.960) dsp: Mean: 16749.30 | RMS: 0.034779 | Min: -0.085845 | Max: 0.078428 | PkPk: 0.164273[0m
+[0;32mI (00:02:32.964) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08955 g[0m
+D (00:02:33.258) dsp: Mean: 16743.70 | RMS: 0.035075 | Min: -0.083369 | Max: 0.080355 | PkPk: 0.163724[0m
+[0;32mI (00:02:33.262) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.08995 g[0m
+D (00:02:33.555) dsp: Mean: 16737.01 | RMS: 0.034703 | Min: -0.091745 | Max: 0.099185 | PkPk: 0.190930[0m
+[0;32mI (00:02:33.559) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08923 g[0m
+D (00:02:33.853) dsp: Mean: 16740.90 | RMS: 0.034509 | Min: -0.091799 | Max: 0.086321 | PkPk: 0.178120[0m
+[0;32mI (00:02:33.857) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.08910 g[0m
+D (00:02:34.151) dsp: Mean: 16740.00 | RMS: 0.034708 | Min: -0.083448 | Max: 0.080398 | PkPk: 0.163846[0m
+[0;32mI (00:02:34.155) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08994 g[0m
+D (00:02:34.448) dsp: Mean: 16737.07 | RMS: 0.034525 | Min: -0.086990 | Max: 0.077893 | PkPk: 0.164883[0m
+[0;32mI (00:02:34.453) dsp: Peak: 29.09 Hz | 1745.7 RPM | 0.08999 g[0m
+D (00:02:34.746) dsp: Mean: 16734.82 | RMS: 0.034659 | Min: -0.089537 | Max: 0.083276 | PkPk: 0.172813[0m
+[0;32mI (00:02:34.750) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08997 g[0m
+D (00:02:35.044) dsp: Mean: 16734.40 | RMS: 0.034845 | Min: -0.079385 | Max: 0.080618 | PkPk: 0.160003[0m
+[0;32mI (00:02:35.048) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09007 g[0m
+D (00:02:35.341) dsp: Mean: 16734.82 | RMS: 0.035196 | Min: -0.088866 | Max: 0.091084 | PkPk: 0.179950[0m
+[0;32mI (00:02:35.345) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08965 g[0m
+D (00:02:35.639) dsp: Mean: 16738.36 | RMS: 0.034587 | Min: -0.081945 | Max: 0.074337 | PkPk: 0.156282[0m
+[0;32mI (00:02:35.643) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09008 g[0m
+D (00:02:35.936) dsp: Mean: 16737.58 | RMS: 0.034703 | Min: -0.093060 | Max: 0.079814 | PkPk: 0.172874[0m
+[0;32mI (00:02:35.941) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.08988 g[0m
+D (00:02:36.234) dsp: Mean: 16734.87 | RMS: 0.034622 | Min: -0.082708 | Max: 0.083639 | PkPk: 0.166347[0m
+[0;32mI (00:02:36.238) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.09035 g[0m
+D (00:02:36.532) dsp: Mean: 16735.86 | RMS: 0.034318 | Min: -0.093870 | Max: 0.082969 | PkPk: 0.176839[0m
+[0;32mI (00:02:36.536) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.09014 g[0m
+D (00:02:36.829) dsp: Mean: 16732.40 | RMS: 0.034589 | Min: -0.083351 | Max: 0.082752 | PkPk: 0.166103[0m
+[0;32mI (00:02:36.834) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08972 g[0m
+D (00:02:37.127) dsp: Mean: 16730.92 | RMS: 0.034210 | Min: -0.075757 | Max: 0.070765 | PkPk: 0.146522[0m
+[0;32mI (00:02:37.131) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08997 g[0m
+D (00:02:37.425) dsp: Mean: 16727.04 | RMS: 0.034313 | Min: -0.081620 | Max: 0.077895 | PkPk: 0.159515[0m
+[0;32mI (00:02:37.429) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08985 g[0m
+D (00:02:37.722) dsp: Mean: 16728.10 | RMS: 0.034120 | Min: -0.075524 | Max: 0.075329 | PkPk: 0.150853[0m
+[0;32mI (00:02:37.726) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09014 g[0m
+D (00:02:38.020) dsp: Mean: 16726.13 | RMS: 0.034257 | Min: -0.078393 | Max: 0.073680 | PkPk: 0.152073[0m
+[0;32mI (00:02:38.024) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.09032 g[0m
+D (00:02:38.317) dsp: Mean: 16722.67 | RMS: 0.034263 | Min: -0.081598 | Max: 0.081516 | PkPk: 0.163114[0m
+[0;32mI (00:02:38.322) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08987 g[0m
+D (00:02:38.615) dsp: Mean: 16729.25 | RMS: 0.034711 | Min: -0.082548 | Max: 0.083616 | PkPk: 0.166164[0m
+[0;32mI (00:02:38.619) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.09041 g[0m
+D (00:02:38.913) dsp: Mean: 16735.53 | RMS: 0.034355 | Min: -0.087262 | Max: 0.076035 | PkPk: 0.163297[0m
+[0;32mI (00:02:38.917) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.08953 g[0m
+D (00:02:39.210) dsp: Mean: 16738.38 | RMS: 0.034703 | Min: -0.082251 | Max: 0.077996 | PkPk: 0.160247[0m
+[0;32mI (00:02:39.214) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08993 g[0m
+D (00:02:39.508) dsp: Mean: 16746.22 | RMS: 0.034748 | Min: -0.080411 | Max: 0.075505 | PkPk: 0.155916[0m
+[0;32mI (00:02:39.512) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08952 g[0m
+D (00:02:39.806) dsp: Mean: 16746.35 | RMS: 0.034406 | Min: -0.090484 | Max: 0.087819 | PkPk: 0.178303[0m
+[0;32mI (00:02:39.810) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.08939 g[0m
+D (00:02:40.103) dsp: Mean: 16748.04 | RMS: 0.034508 | Min: -0.084670 | Max: 0.078139 | PkPk: 0.162809[0m
+[0;32mI (00:02:40.107) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08924 g[0m
+D (00:02:40.401) dsp: Mean: 16749.22 | RMS: 0.034669 | Min: -0.076569 | Max: 0.082824 | PkPk: 0.159393[0m
+[0;32mI (00:02:40.405) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08980 g[0m
+D (00:02:40.698) dsp: Mean: 16753.60 | RMS: 0.034503 | Min: -0.081776 | Max: 0.077556 | PkPk: 0.159332[0m
+[0;32mI (00:02:40.703) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.08951 g[0m
+D (00:02:40.996) dsp: Mean: 16751.12 | RMS: 0.034318 | Min: -0.074427 | Max: 0.082648 | PkPk: 0.157075[0m
+[0;32mI (00:02:41.000) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.08917 g[0m
+D (00:02:41.294) dsp: Mean: 16739.52 | RMS: 0.034776 | Min: -0.076343 | Max: 0.080732 | PkPk: 0.157075[0m
+[0;32mI (00:02:41.298) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08983 g[0m
+D (00:02:41.591) dsp: Mean: 16719.72 | RMS: 0.034607 | Min: -0.086908 | Max: 0.076084 | PkPk: 0.162992[0m
+[0;32mI (00:02:41.596) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.09031 g[0m
+D (00:02:41.889) dsp: Mean: 16710.28 | RMS: 0.034211 | Min: -0.076572 | Max: 0.075562 | PkPk: 0.152134[0m
+[0;32mI (00:02:41.893) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08973 g[0m
+D (00:02:42.187) dsp: Mean: 16708.68 | RMS: 0.034332 | Min: -0.075255 | Max: 0.079441 | PkPk: 0.154696[0m
+[0;32mI (00:02:42.191) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08985 g[0m
+D (00:02:42.484) dsp: Mean: 16712.28 | RMS: 0.034159 | Min: -0.088101 | Max: 0.086298 | PkPk: 0.174399[0m
+[0;32mI (00:02:42.489) dsp: Peak: 29.12 Hz | 1747.2 RPM | 0.08913 g[0m
+D (00:02:42.782) dsp: Mean: 16710.35 | RMS: 0.034483 | Min: -0.074868 | Max: 0.080072 | PkPk: 0.154940[0m
+[0;32mI (00:02:42.786) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08983 g[0m
+D (00:02:43.080) dsp: Mean: 16720.61 | RMS: 0.034559 | Min: -0.077446 | Max: 0.080117 | PkPk: 0.157563[0m
+[0;32mI (00:02:43.084) dsp: Peak: 29.10 Hz | 1746.1 RPM | 0.09000 g[0m
+D (00:02:43.377) dsp: Mean: 16717.63 | RMS: 0.034349 | Min: -0.082572 | Max: 0.077736 | PkPk: 0.160308[0m
+[0;32mI (00:02:43.382) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08975 g[0m
+D (00:02:43.675) dsp: Mean: 16716.58 | RMS: 0.034255 | Min: -0.086716 | Max: 0.076703 | PkPk: 0.163419[0m
+[0;32mI (00:02:43.679) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.08964 g[0m
+D (00:02:43.973) dsp: Mean: 16720.02 | RMS: 0.033967 | Min: -0.077349 | Max: 0.075090 | PkPk: 0.152439[0m
+[0;32mI (00:02:43.977) dsp: Peak: 29.11 Hz | 1746.4 RPM | 0.08950 g[0m
+D (00:02:44.270) dsp: Mean: 16721.48 | RMS: 0.034030 | Min: -0.083294 | Max: 0.074269 | PkPk: 0.157563[0m
+[0;32mI (00:02:44.274) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.08973 g[0m
+[0;32mI (00:02:44.276) system: warm-up: 550/600 | 1xRPM valid: 550[0m
+D (00:02:44.568) dsp: Mean: 16722.28 | RMS: 0.034342 | Min: -0.077121 | Max: 0.075257 | PkPk: 0.152378[0m
+[0;32mI (00:02:44.572) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.09008 g[0m
+D (00:02:44.865) dsp: Mean: 16715.17 | RMS: 0.034076 | Min: -0.081873 | Max: 0.078008 | PkPk: 0.159881[0m
+[0;32mI (00:02:44.870) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08895 g[0m
+D (00:02:45.163) dsp: Mean: 16710.13 | RMS: 0.034149 | Min: -0.078881 | Max: 0.078011 | PkPk: 0.156892[0m
+[0;32mI (00:02:45.167) dsp: Peak: 29.11 Hz | 1746.4 RPM | 0.08916 g[0m
+D (00:02:45.461) dsp: Mean: 16718.75 | RMS: 0.034124 | Min: -0.074893 | Max: 0.077180 | PkPk: 0.152073[0m
+[0;32mI (00:02:45.465) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08991 g[0m
+D (00:02:45.758) dsp: Mean: 16729.19 | RMS: 0.034135 | Min: -0.085716 | Max: 0.073555 | PkPk: 0.159271[0m
+[0;32mI (00:02:45.763) dsp: Peak: 29.11 Hz | 1746.7 RPM | 0.08922 g[0m
+D (00:02:46.056) dsp: Mean: 16730.01 | RMS: 0.034123 | Min: -0.079544 | Max: 0.084668 | PkPk: 0.164212[0m
+[0;32mI (00:02:46.060) dsp: Peak: 29.11 Hz | 1746.8 RPM | 0.08894 g[0m
+D (00:02:46.354) dsp: Mean: 16725.46 | RMS: 0.033987 | Min: -0.098299 | Max: 0.073538 | PkPk: 0.171837[0m
+[0;32mI (00:02:46.358) dsp: Peak: 29.11 Hz | 1746.3 RPM | 0.08924 g[0m
+D (00:02:46.651) dsp: Mean: 16725.83 | RMS: 0.034303 | Min: -0.079229 | Max: 0.074003 | PkPk: 0.153232[0m
+[0;32mI (00:02:46.656) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08879 g[0m
+D (00:02:46.949) dsp: Mean: 16731.39 | RMS: 0.034389 | Min: -0.083899 | Max: 0.075006 | PkPk: 0.158905[0m
+[0;32mI (00:02:46.953) dsp: Peak: 29.10 Hz | 1746.1 RPM | 0.08967 g[0m
+D (00:02:47.247) dsp: Mean: 16736.80 | RMS: 0.034386 | Min: -0.078312 | Max: 0.076323 | PkPk: 0.154635[0m
+[0;32mI (00:02:47.251) dsp: Peak: 29.10 Hz | 1746.2 RPM | 0.08918 g[0m
+D (00:02:47.544) dsp: Mean: 16739.61 | RMS: 0.034674 | Min: -0.076287 | Max: 0.081398 | PkPk: 0.157685[0m
+[0;32mI (00:02:47.548) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.08938 g[0m
+D (00:02:47.842) dsp: Mean: 16735.83 | RMS: 0.034558 | Min: -0.076972 | Max: 0.084129 | PkPk: 0.161101[0m
+[0;32mI (00:02:47.846) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.08978 g[0m
+D (00:02:48.140) dsp: Mean: 16733.53 | RMS: 0.033908 | Min: -0.078051 | Max: 0.079268 | PkPk: 0.157319[0m
+[0;32mI (00:02:48.144) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08855 g[0m
+D (00:02:48.437) dsp: Mean: 16735.47 | RMS: 0.033982 | Min: -0.079451 | Max: 0.079820 | PkPk: 0.159271[0m
+[0;32mI (00:02:48.441) dsp: Peak: 29.10 Hz | 1746.2 RPM | 0.08911 g[0m
+D (00:02:48.735) dsp: Mean: 16742.14 | RMS: 0.034058 | Min: -0.079248 | Max: 0.074777 | PkPk: 0.154025[0m
+[0;32mI (00:02:48.739) dsp: Peak: 29.11 Hz | 1746.4 RPM | 0.08898 g[0m
+D (00:02:49.032) dsp: Mean: 16747.29 | RMS: 0.033867 | Min: -0.082002 | Max: 0.077818 | PkPk: 0.159820[0m
+[0;32mI (00:02:49.037) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.08931 g[0m
+D (00:02:49.330) dsp: Mean: 16748.53 | RMS: 0.034029 | Min: -0.080857 | Max: 0.071887 | PkPk: 0.152744[0m
+[0;32mI (00:02:49.334) dsp: Peak: 29.11 Hz | 1746.5 RPM | 0.08926 g[0m
+D (00:02:49.628) dsp: Mean: 16744.40 | RMS: 0.033894 | Min: -0.079507 | Max: 0.074884 | PkPk: 0.154391[0m
+[0;32mI (00:02:49.632) dsp: Peak: 29.11 Hz | 1746.5 RPM | 0.08836 g[0m
+D (00:02:49.925) dsp: Mean: 16737.93 | RMS: 0.034038 | Min: -0.083017 | Max: 0.074241 | PkPk: 0.157258[0m
+[0;32mI (00:02:49.930) dsp: Peak: 29.10 Hz | 1746.1 RPM | 0.08922 g[0m
+D (00:02:50.223) dsp: Mean: 16742.97 | RMS: 0.033982 | Min: -0.082165 | Max: 0.075825 | PkPk: 0.157990[0m
+[0;32mI (00:02:50.227) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.08895 g[0m
+D (00:02:50.521) dsp: Mean: 16742.07 | RMS: 0.033989 | Min: -0.079914 | Max: 0.077344 | PkPk: 0.157258[0m
+[0;32mI (00:02:50.525) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08928 g[0m
+D (00:02:50.818) dsp: Mean: 16744.56 | RMS: 0.034116 | Min: -0.083238 | Max: 0.077619 | PkPk: 0.160857[0m
+[0;32mI (00:02:50.823) dsp: Peak: 29.09 Hz | 1745.7 RPM | 0.08963 g[0m
+D (00:02:51.116) dsp: Mean: 16745.30 | RMS: 0.034094 | Min: -0.084930 | Max: 0.081783 | PkPk: 0.166713[0m
+[0;32mI (00:02:51.120) dsp: Peak: 29.11 Hz | 1746.6 RPM | 0.08946 g[0m
+D (00:02:51.414) dsp: Mean: 16742.10 | RMS: 0.033977 | Min: -0.074609 | Max: 0.075024 | PkPk: 0.149633[0m
+[0;32mI (00:02:51.418) dsp: Peak: 29.10 Hz | 1745.7 RPM | 0.08887 g[0m
+D (00:02:51.711) dsp: Mean: 16738.65 | RMS: 0.034387 | Min: -0.079218 | Max: 0.076210 | PkPk: 0.155428[0m
+[0;32mI (00:02:51.715) dsp: Peak: 29.10 Hz | 1746.3 RPM | 0.08952 g[0m
+D (00:02:52.009) dsp: Mean: 16736.57 | RMS: 0.035684 | Min: -0.102454 | Max: 0.089208 | PkPk: 0.191662[0m
+[0;32mI (00:02:52.013) dsp: Peak: 29.20 Hz | 1751.8 RPM | 0.09320 g[0m
+D (00:02:52.307) dsp: Mean: 16757.11 | RMS: 0.031701 | Min: -0.087542 | Max: 0.076060 | PkPk: 0.163602[0m
+[0;32mI (00:02:52.311) dsp: Peak: 29.05 Hz | 1743.3 RPM | 0.08154 g[0m
+D (00:02:52.604) dsp: Mean: 16751.67 | RMS: 0.033149 | Min: -0.079829 | Max: 0.071878 | PkPk: 0.151707[0m
+[0;32mI (00:02:52.609) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08589 g[0m
+D (00:02:52.902) dsp: Mean: 16748.74 | RMS: 0.028380 | Min: -0.076600 | Max: 0.071325 | PkPk: 0.147925[0m
+[0;32mI (00:02:52.906) dsp: Peak: 29.16 Hz | 1749.4 RPM | 0.07193 g[0m
+D (00:02:53.199) dsp: Mean: 16747.22 | RMS: 0.026108 | Min: -0.070590 | Max: 0.064281 | PkPk: 0.134871[0m
+[0;32mI (00:02:53.204) dsp: Peak: 29.13 Hz | 1748.1 RPM | 0.06434 g[0m
+D (00:02:53.497) dsp: Mean: 16741.09 | RMS: 0.026314 | Min: -0.068935 | Max: 0.071792 | PkPk: 0.140727[0m
+[0;32mI (00:02:53.501) dsp: Peak: 29.12 Hz | 1747.2 RPM | 0.06333 g[0m
+D (00:02:53.795) dsp: Mean: 16743.90 | RMS: 0.027824 | Min: -0.080209 | Max: 0.078940 | PkPk: 0.159149[0m
+[0;32mI (00:02:53.799) dsp: Peak: 29.12 Hz | 1746.9 RPM | 0.06644 g[0m
+D (00:02:54.092) dsp: Mean: 16739.83 | RMS: 0.030849 | Min: -0.083804 | Max: 0.076809 | PkPk: 0.160613[0m
+[0;32mI (00:02:54.097) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.07759 g[0m
+D (00:02:54.390) dsp: Mean: 16732.44 | RMS: 0.032410 | Min: -0.097078 | Max: 0.081835 | PkPk: 0.178913[0m
+[0;32mI (00:02:54.394) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08194 g[0m
+D (00:02:54.688) dsp: Mean: 16732.04 | RMS: 0.032586 | Min: -0.081742 | Max: 0.078993 | PkPk: 0.160735[0m
+[0;32mI (00:02:54.692) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08368 g[0m
+D (00:02:54.985) dsp: Mean: 16735.46 | RMS: 0.030759 | Min: -0.071703 | Max: 0.077991 | PkPk: 0.149694[0m
+[0;32mI (00:02:54.990) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.07896 g[0m
+D (00:02:55.283) dsp: Mean: 16738.53 | RMS: 0.031978 | Min: -0.081772 | Max: 0.077682 | PkPk: 0.159454[0m
+[0;32mI (00:02:55.287) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08304 g[0m
+D (00:02:55.581) dsp: Mean: 16740.15 | RMS: 0.032133 | Min: -0.071806 | Max: 0.080084 | PkPk: 0.151890[0m
+[0;32mI (00:02:55.585) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08435 g[0m
+D (00:02:55.878) dsp: Mean: 16740.63 | RMS: 0.032760 | Min: -0.082693 | Max: 0.078591 | PkPk: 0.161284[0m
+[0;32mI (00:02:55.882) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08496 g[0m
+D (00:02:56.176) dsp: Mean: 16742.75 | RMS: 0.033143 | Min: -0.082701 | Max: 0.073764 | PkPk: 0.156465[0m
+[0;32mI (00:02:56.180) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08521 g[0m
+D (00:02:56.473) dsp: Mean: 16745.03 | RMS: 0.032870 | Min: -0.082230 | Max: 0.073076 | PkPk: 0.155306[0m
+[0;32mI (00:02:56.478) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.08514 g[0m
+D (00:02:56.771) dsp: Mean: 16732.72 | RMS: 0.033247 | Min: -0.093374 | Max: 0.078402 | PkPk: 0.171776[0m
+[0;32mI (00:02:56.775) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.08537 g[0m
+D (00:02:57.069) dsp: Mean: 16741.54 | RMS: 0.033156 | Min: -0.082749 | Max: 0.076949 | PkPk: 0.159698[0m
+[0;32mI (00:02:57.073) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08482 g[0m
+D (00:02:57.366) dsp: Mean: 16735.04 | RMS: 0.033216 | Min: -0.083695 | Max: 0.074600 | PkPk: 0.158295[0m
+[0;32mI (00:02:57.371) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08579 g[0m
+D (00:02:57.664) dsp: Mean: 16742.27 | RMS: 0.033221 | Min: -0.087124 | Max: 0.074648 | PkPk: 0.161772[0m
+[0;32mI (00:02:57.668) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08559 g[0m
+D (00:02:57.962) dsp: Mean: 16730.15 | RMS: 0.033436 | Min: -0.083823 | Max: 0.082890 | PkPk: 0.166713[0m
+[0;32mI (00:02:57.966) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08551 g[0m
+D (00:02:58.259) dsp: Mean: 16718.75 | RMS: 0.033164 | Min: -0.083555 | Max: 0.077546 | PkPk: 0.161101[0m
+[0;32mI (00:02:58.264) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08527 g[0m
+D (00:02:58.557) dsp: Mean: 16721.38 | RMS: 0.033034 | Min: -0.073223 | Max: 0.075007 | PkPk: 0.148230[0m
+[0;32mI (00:02:58.561) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08521 g[0m
+D (00:02:58.855) dsp: Mean: 16720.10 | RMS: 0.032931 | Min: -0.082722 | Max: 0.079111 | PkPk: 0.161833[0m
+[0;32mI (00:02:58.859) dsp: Peak: 29.10 Hz | 1745.9 RPM | 0.08539 g[0m
+D (00:02:59.152) dsp: Mean: 16724.59 | RMS: 0.032950 | Min: -0.082081 | Max: 0.080911 | PkPk: 0.162992[0m
+[0;32mI (00:02:59.157) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.08558 g[0m
+[0;32mI (00:02:59.158) system: warm-up: 600/600 | 1xRPM valid: 600[0m
+[0;32mI (00:02:59.164) system: baseline validity: RMS=1 | Kurtosis=1 | 1xRPM=1 (600/100) | overall=1[0m
+[0;32mI (00:02:59.174) system: warm-up completed[0m
+[0;32mI (00:02:59.178) system: baseline RMS: mean=0.034232 stddev=0.000983 valid=1[0m
+[0;32mI (00:02:59.186) system: baseline Kurtosis: mean=1.912225 stddev=0.199190 valid=1[0m
+[0;32mI (00:02:59.194) system: baseline 1xRPM amplitude: mean=0.088991 stddev=0.002640 valid=1[0m
+[0;32mI (00:02:59.203) system: state: HEALTHY[0m
+D (00:02:59.450) dsp: Mean: 16729.55 | RMS: 0.033000 | Min: -0.079943 | Max: 0.086526 | PkPk: 0.166469[0m
+[0;32mI (00:02:59.454) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.08600 g[0m
+D (00:02:59.748) dsp: Mean: 16732.52 | RMS: 0.033008 | Min: -0.077014 | Max: 0.076828 | PkPk: 0.153842[0m
+[0;32mI (00:02:59.752) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08593 g[0m
+D (00:03:00.045) dsp: Mean: 16739.26 | RMS: 0.033184 | Min: -0.092065 | Max: 0.070744 | PkPk: 0.162809[0m
+[0;32mI (00:03:00.050) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08581 g[0m
+D (00:03:00.343) dsp: Mean: 16735.11 | RMS: 0.033215 | Min: -0.081259 | Max: 0.081977 | PkPk: 0.163236[0m
+[0;32mI (00:03:00.347) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08625 g[0m
+D (00:03:00.641) dsp: Mean: 16730.86 | RMS: 0.033305 | Min: -0.085086 | Max: 0.086873 | PkPk: 0.171959[0m
+[0;32mI (00:03:00.645) dsp: Peak: 29.10 Hz | 1746.1 RPM | 0.08597 g[0m
+D (00:03:00.938) dsp: Mean: 16734.67 | RMS: 0.033000 | Min: -0.080378 | Max: 0.076087 | PkPk: 0.156465[0m
+[0;32mI (00:03:00.943) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08608 g[0m
+D (00:03:01.236) dsp: Mean: 16739.48 | RMS: 0.032804 | Min: -0.078292 | Max: 0.082809 | PkPk: 0.161101[0m
+[0;32mI (00:03:01.240) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08521 g[0m
+D (00:03:01.534) dsp: Mean: 16734.76 | RMS: 0.032938 | Min: -0.083921 | Max: 0.074130 | PkPk: 0.158051[0m
+[0;32mI (00:03:01.538) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.08493 g[0m
+D (00:03:01.831) dsp: Mean: 16727.33 | RMS: 0.033511 | Min: -0.080662 | Max: 0.073729 | PkPk: 0.154391[0m
+[0;32mI (00:03:01.836) dsp: Peak: 29.10 Hz | 1746.2 RPM | 0.08611 g[0m
+D (00:03:02.129) dsp: Mean: 16726.67 | RMS: 0.033280 | Min: -0.080195 | Max: 0.087982 | PkPk: 0.168177[0m
+[0;32mI (00:03:02.133) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.08520 g[0m
+D (00:03:02.427) dsp: Mean: 16729.04 | RMS: 0.033078 | Min: -0.079058 | Max: 0.079847 | PkPk: 0.158905[0m
+[0;32mI (00:03:02.431) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.08523 g[0m
+D (00:03:02.724) dsp: Mean: 16742.63 | RMS: 0.032922 | Min: -0.072019 | Max: 0.071819 | PkPk: 0.143838[0m
+[0;32mI (00:03:02.729) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.08583 g[0m
+D (00:03:03.022) dsp: Mean: 16741.18 | RMS: 0.032942 | Min: -0.077542 | Max: 0.074226 | PkPk: 0.151768[0m
+[0;32mI (00:03:03.026) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.08630 g[0m
+D (00:03:03.320) dsp: Mean: 16738.90 | RMS: 0.032968 | Min: -0.083747 | Max: 0.073694 | PkPk: 0.157441[0m
+[0;32mI (00:03:03.324) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08631 g[0m
+D (00:03:03.618) dsp: Mean: 16733.10 | RMS: 0.033148 | Min: -0.083820 | Max: 0.082649 | PkPk: 0.166469[0m
+[0;32mI (00:03:03.622) dsp: Peak: 29.06 Hz | 1743.5 RPM | 0.08538 g[0m
+D (00:03:03.915) dsp: Mean: 16740.76 | RMS: 0.033176 | Min: -0.089167 | Max: 0.072544 | PkPk: 0.161711[0m
+[0;32mI (00:03:03.919) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.08624 g[0m
+D (00:03:04.213) dsp: Mean: 16742.52 | RMS: 0.033421 | Min: -0.078722 | Max: 0.079207 | PkPk: 0.157929[0m
+[0;32mI (00:03:04.217) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08529 g[0m
+D (00:03:04.511) dsp: Mean: 16741.62 | RMS: 0.033459 | Min: -0.082022 | Max: 0.081763 | PkPk: 0.163785[0m
+[0;32mI (00:03:04.515) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08578 g[0m
+D (00:03:04.808) dsp: Mean: 16751.13 | RMS: 0.033313 | Min: -0.081748 | Max: 0.075937 | PkPk: 0.157685[0m
+[0;32mI (00:03:04.812) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08641 g[0m
+D (00:03:05.106) dsp: Mean: 16750.59 | RMS: 0.033338 | Min: -0.082996 | Max: 0.071578 | PkPk: 0.154574[0m
+[0;32mI (00:03:05.110) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08578 g[0m
+D (00:03:05.404) dsp: Mean: 16747.67 | RMS: 0.033641 | Min: -0.086905 | Max: 0.078649 | PkPk: 0.165554[0m
+[0;32mI (00:03:05.408) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.08635 g[0m
+D (00:03:05.701) dsp: Mean: 16744.75 | RMS: 0.033601 | Min: -0.082091 | Max: 0.078156 | PkPk: 0.160247[0m
+[0;32mI (00:03:05.705) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.08634 g[0m
+D (00:03:05.999) dsp: Mean: 16744.80 | RMS: 0.033746 | Min: -0.077397 | Max: 0.083460 | PkPk: 0.160857[0m
+[0;32mI (00:03:06.003) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08638 g[0m
+D (00:03:06.297) dsp: Mean: 16737.14 | RMS: 0.033637 | Min: -0.083884 | Max: 0.076424 | PkPk: 0.160308[0m
+[0;32mI (00:03:06.301) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08616 g[0m
+D (00:03:06.594) dsp: Mean: 16733.12 | RMS: 0.033427 | Min: -0.080223 | Max: 0.085148 | PkPk: 0.165371[0m
+[0;32mI (00:03:06.598) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08601 g[0m
+D (00:03:06.892) dsp: Mean: 16729.19 | RMS: 0.033534 | Min: -0.081569 | Max: 0.085083 | PkPk: 0.166652[0m
+[0;32mI (00:03:06.896) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08606 g[0m
+D (00:03:07.190) dsp: Mean: 16734.22 | RMS: 0.033817 | Min: -0.084803 | Max: 0.083740 | PkPk: 0.168543[0m
+[0;32mI (00:03:07.194) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.08618 g[0m
+D (00:03:07.487) dsp: Mean: 16730.89 | RMS: 0.033759 | Min: -0.079477 | Max: 0.072962 | PkPk: 0.152439[0m
+[0;32mI (00:03:07.491) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.08619 g[0m
+D (00:03:07.785) dsp: Mean: 16733.41 | RMS: 0.033734 | Min: -0.085608 | Max: 0.083789 | PkPk: 0.169397[0m
+[0;32mI (00:03:07.789) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.08572 g[0m
+D (00:03:08.082) dsp: Mean: 16733.21 | RMS: 0.033806 | Min: -0.085535 | Max: 0.084350 | PkPk: 0.169885[0m
+[0;32mI (00:03:08.087) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08595 g[0m
+D (00:03:08.380) dsp: Mean: 16736.45 | RMS: 0.033593 | Min: -0.082560 | Max: 0.082079 | PkPk: 0.164639[0m
+[0;32mI (00:03:08.384) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08572 g[0m
+D (00:03:08.678) dsp: Mean: 16734.09 | RMS: 0.033792 | Min: -0.079001 | Max: 0.083137 | PkPk: 0.162138[0m
+[0;32mI (00:03:08.682) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.08659 g[0m
+D (00:03:08.975) dsp: Mean: 16724.79 | RMS: 0.033327 | Min: -0.077579 | Max: 0.079374 | PkPk: 0.156953[0m
+[0;32mI (00:03:08.980) dsp: Peak: 29.11 Hz | 1746.6 RPM | 0.08674 g[0m
+D (00:03:09.273) dsp: Mean: 16746.99 | RMS: 0.028701 | Min: -0.073931 | Max: 0.088512 | PkPk: 0.162443[0m
+[0;32mI (00:03:09.277) dsp: Peak: 29.28 Hz | 1756.6 RPM | 0.06684 g[0m
+D (00:03:09.571) dsp: Mean: 16737.20 | RMS: 0.025465 | Min: -0.080593 | Max: 0.081606 | PkPk: 0.162199[0m
+[0;32mI (00:03:09.575) dsp: Peak: 29.11 Hz | 1746.6 RPM | 0.05693 g[0m
+D (00:03:09.868) dsp: Mean: 16762.68 | RMS: 0.024984 | Min: -0.078610 | Max: 0.082552 | PkPk: 0.161162[0m
+[0;32mI (00:03:09.873) dsp: Peak: 29.04 Hz | 1742.3 RPM | 0.04709 g[0m
+D (00:03:10.166) dsp: Mean: 16755.40 | RMS: 0.029048 | Min: -0.093233 | Max: 0.075554 | PkPk: 0.168787[0m
+[0;32mI (00:03:10.170) dsp: Peak: 28.92 Hz | 1735.2 RPM | 0.06058 g[0m
+D (00:03:10.464) dsp: Mean: 16753.70 | RMS: 0.030985 | Min: -0.086236 | Max: 0.112807 | PkPk: 0.199043[0m
+[0;32mI (00:03:10.468) dsp: Peak: 29.47 Hz | 1768.1 RPM | 0.07007 g[0m
+D (00:03:10.761) dsp: Mean: 16744.76 | RMS: 0.030283 | Min: -0.137297 | Max: 0.105971 | PkPk: 0.243268[0m
+[0;32mI (00:03:10.766) dsp: Peak: 29.49 Hz | 1769.7 RPM | 0.05200 g[0m
+D (00:03:11.059) dsp: Mean: 16750.29 | RMS: 0.041146 | Min: -0.111709 | Max: 0.158948 | PkPk: 0.270657[0m
+[0;32mI (00:03:11.063) dsp: Peak: 28.88 Hz | 1732.7 RPM | 0.07938 g[0m
+D (00:03:11.065) system: abnormal evaluation: 1/5[0m
+D (00:03:11.357) dsp: Mean: 16723.56 | RMS: 0.032727 | Min: -0.123437 | Max: 0.093967 | PkPk: 0.217404[0m
+[0;32mI (00:03:11.361) dsp: Peak: 29.03 Hz | 1741.9 RPM | 0.06669 g[0m
+D (00:03:11.654) dsp: Mean: 16721.90 | RMS: 0.029329 | Min: -0.078074 | Max: 0.077476 | PkPk: 0.155550[0m
+[0;32mI (00:03:11.658) dsp: Peak: 28.82 Hz | 1729.4 RPM | 0.06939 g[0m
+D (00:03:11.952) dsp: Mean: 16721.99 | RMS: 0.033768 | Min: -0.084850 | Max: 0.075702 | PkPk: 0.160552[0m
+[0;32mI (00:03:11.956) dsp: Peak: 29.14 Hz | 1748.3 RPM | 0.08663 g[0m
+D (00:03:12.249) dsp: Mean: 16745.50 | RMS: 0.033143 | Min: -0.082746 | Max: 0.079148 | PkPk: 0.161894[0m
+[0;32mI (00:03:12.254) dsp: Peak: 29.07 Hz | 1744.5 RPM | 0.08474 g[0m
+D (00:03:12.547) dsp: Mean: 16755.03 | RMS: 0.031907 | Min: -0.078448 | Max: 0.078261 | PkPk: 0.156709[0m
+[0;32mI (00:03:12.551) dsp: Peak: 29.01 Hz | 1740.3 RPM | 0.08113 g[0m
+D (00:03:12.845) dsp: Mean: 16772.96 | RMS: 0.033361 | Min: -0.079114 | Max: 0.074179 | PkPk: 0.153293[0m
+[0;32mI (00:03:12.849) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.08592 g[0m
+D (00:03:13.142) dsp: Mean: 16760.58 | RMS: 0.037068 | Min: -0.089157 | Max: 0.163078 | PkPk: 0.252235[0m
+[0;32mI (00:03:13.147) dsp: Peak: 29.41 Hz | 1764.6 RPM | 0.07969 g[0m
+D (00:03:13.440) dsp: Mean: 16740.88 | RMS: 0.043603 | Min: -0.128520 | Max: 0.109014 | PkPk: 0.237534[0m
+[0;32mI (00:03:13.444) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.10042 g[0m
+D (00:03:13.446) system: abnormal evaluation: 1/5[0m
+D (00:03:13.738) dsp: Mean: 16655.55 | RMS: 0.095093 | Min: -0.351881 | Max: 0.581297 | PkPk: 0.933178[0m
+[0;32mI (00:03:13.742) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09813 g[0m
+D (00:03:13.743) system: abnormal evaluation: 2/5[0m
+D (00:03:14.035) dsp: Mean: 16664.36 | RMS: 0.071649 | Min: -0.211082 | Max: 0.389585 | PkPk: 0.600667[0m
+[0;32mI (00:03:14.039) dsp: Peak: 28.99 Hz | 1739.3 RPM | 0.08960 g[0m
+D (00:03:14.041) system: abnormal evaluation: 3/5[0m
+D (00:03:14.333) dsp: Mean: 16808.47 | RMS: 0.045424 | Min: -0.099947 | Max: 0.143504 | PkPk: 0.243451[0m
+[0;32mI (00:03:14.337) dsp: Peak: 29.19 Hz | 1751.1 RPM | 0.06978 g[0m
+D (00:03:14.630) dsp: Mean: 16634.51 | RMS: 0.077419 | Min: -0.188765 | Max: 0.527619 | PkPk: 0.716384[0m
+[0;32mI (00:03:14.635) dsp: Peak: 4.88 Hz | 292.7 RPM | 0.11260 g[0m
+D (00:03:14.636) system: abnormal evaluation: 1/5[0m
+D (00:03:14.928) dsp: Mean: 16634.37 | RMS: 0.099198 | Min: -0.310390 | Max: 0.680311 | PkPk: 0.990701[0m
+[0;32mI (00:03:14.932) dsp: Peak: 28.99 Hz | 1739.3 RPM | 0.21225 g[0m
+D (00:03:14.934) system: abnormal evaluation: 2/5[0m
+D (00:03:15.226) dsp: Mean: 16586.90 | RMS: 0.070800 | Min: -0.153226 | Max: 0.490568 | PkPk: 0.643794[0m
+[0;32mI (00:03:15.230) dsp: Peak: 42.33 Hz | 2539.7 RPM | 0.09644 g[0m
+D (00:03:15.231) system: abnormal evaluation: 3/5[0m
+D (00:03:15.523) dsp: Mean: 16812.38 | RMS: 0.169228 | Min: -0.634850 | Max: 0.962496 | PkPk: 1.597346[0m
+[0;32mI (00:03:15.527) dsp: Peak: 28.87 Hz | 1732.1 RPM | 0.12188 g[0m
+D (00:03:15.529) system: abnormal evaluation: 4/5[0m
+D (00:03:15.821) dsp: Mean: 16775.28 | RMS: 0.165010 | Min: -0.684437 | Max: 0.975312 | PkPk: 1.659749[0m
+[0;32mI (00:03:15.825) dsp: Peak: 32.59 Hz | 1955.6 RPM | 0.14582 g[0m
+D (00:03:15.827) system: abnormal evaluation: 5/5[0m
+[0;33mW (00:03:15.831) system: state changed: ALARM[0m
+D (00:03:16.118) dsp: Mean: 16636.24 | RMS: 0.092150 | Min: -0.285129 | Max: 0.683734 | PkPk: 0.968863[0m
+[0;32mI (00:03:16.123) dsp: Peak: 41.08 Hz | 2464.6 RPM | 0.14902 g[0m
+D (00:03:16.416) dsp: Mean: 16815.10 | RMS: 0.156573 | Min: -0.540710 | Max: 0.930305 | PkPk: 1.471015[0m
+[0;32mI (00:03:16.420) dsp: Peak: 29.96 Hz | 1797.4 RPM | 0.13720 g[0m
+D (00:03:16.714) dsp: Mean: 16690.63 | RMS: 0.114153 | Min: -0.421305 | Max: 0.834075 | PkPk: 1.255380[0m
+[0;32mI (00:03:16.718) dsp: Peak: 39.95 Hz | 2397.2 RPM | 0.13506 g[0m
+D (00:03:17.011) dsp: Mean: 16689.09 | RMS: 0.066313 | Min: -0.197157 | Max: 0.474270 | PkPk: 0.671427[0m
+[0;32mI (00:03:17.016) dsp: Peak: 26.73 Hz | 1603.8 RPM | 0.08639 g[0m
+D (00:03:17.309) dsp: Mean: 16804.10 | RMS: 0.119438 | Min: -0.402667 | Max: 0.717659 | PkPk: 1.120326[0m
+[0;32mI (00:03:17.313) dsp: Peak: 26.31 Hz | 1578.8 RPM | 0.08188 g[0m
+D (00:03:17.607) dsp: Mean: 16759.48 | RMS: 0.119449 | Min: -0.437765 | Max: 0.934430 | PkPk: 1.372195[0m
+[0;32mI (00:03:17.611) dsp: Peak: 32.18 Hz | 1930.9 RPM | 0.14940 g[0m
+D (00:03:17.904) dsp: Mean: 16727.40 | RMS: 0.032684 | Min: -0.093903 | Max: 0.077995 | PkPk: 0.171898[0m
+[0;32mI (00:03:17.909) dsp: Peak: 28.57 Hz | 1714.5 RPM | 0.06738 g[0m
+D (00:03:17.910) system: normal evaluation: 1/5[0m
+D (00:03:18.202) dsp: Mean: 16748.68 | RMS: 0.030773 | Min: -0.068545 | Max: 0.070535 | PkPk: 0.139080[0m
+[0;32mI (00:03:18.206) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.07869 g[0m
+D (00:03:18.208) system: normal evaluation: 2/5[0m
+D (00:03:18.499) dsp: Mean: 16755.60 | RMS: 0.031168 | Min: -0.077323 | Max: 0.073957 | PkPk: 0.151280[0m
+[0;32mI (00:03:18.504) dsp: Peak: 29.11 Hz | 1746.8 RPM | 0.07960 g[0m
+D (00:03:18.505) system: normal evaluation: 3/5[0m
+D (00:03:18.797) dsp: Mean: 16744.41 | RMS: 0.034179 | Min: -0.081460 | Max: 0.080983 | PkPk: 0.162443[0m
+[0;32mI (00:03:18.801) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.08926 g[0m
+D (00:03:18.803) system: normal evaluation: 4/5[0m
+D (00:03:19.095) dsp: Mean: 16754.05 | RMS: 0.038032 | Min: -0.096505 | Max: 0.103331 | PkPk: 0.199836[0m
+[0;32mI (00:03:19.099) dsp: Peak: 28.93 Hz | 1736.1 RPM | 0.09305 g[0m
+D (00:03:19.100) system: normal evaluation: 5/5[0m
+[0;32mI (00:03:19.105) system: state changed: HEALTHY[0m
+D (00:03:19.392) dsp: Mean: 16755.68 | RMS: 0.028174 | Min: -0.071961 | Max: 0.068156 | PkPk: 0.140117[0m
+[0;32mI (00:03:19.397) dsp: Peak: 29.13 Hz | 1747.8 RPM | 0.06951 g[0m
+D (00:03:19.690) dsp: Mean: 16750.64 | RMS: 0.027166 | Min: -0.068786 | Max: 0.066146 | PkPk: 0.134932[0m
+[0;32mI (00:03:19.694) dsp: Peak: 29.11 Hz | 1746.9 RPM | 0.06750 g[0m
+D (00:03:19.988) dsp: Mean: 16753.09 | RMS: 0.027226 | Min: -0.075341 | Max: 0.070388 | PkPk: 0.145729[0m
+[0;32mI (00:03:19.992) dsp: Peak: 29.10 Hz | 1746.3 RPM | 0.06594 g[0m
+D (00:03:20.285) dsp: Mean: 16750.86 | RMS: 0.027808 | Min: -0.068129 | Max: 0.065522 | PkPk: 0.133651[0m
+[0;32mI (00:03:20.290) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.06867 g[0m
+D (00:03:20.583) dsp: Mean: 16753.92 | RMS: 0.028784 | Min: -0.075330 | Max: 0.071924 | PkPk: 0.147254[0m
+[0;32mI (00:03:20.587) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.07246 g[0m
+D (00:03:20.881) dsp: Mean: 16756.07 | RMS: 0.028715 | Min: -0.074058 | Max: 0.074904 | PkPk: 0.148962[0m
+[0;32mI (00:03:20.885) dsp: Peak: 29.05 Hz | 1742.9 RPM | 0.07245 g[0m
+D (00:03:21.178) dsp: Mean: 16751.68 | RMS: 0.032572 | Min: -0.094835 | Max: 0.085298 | PkPk: 0.180133[0m
+[0;32mI (00:03:21.183) dsp: Peak: 29.03 Hz | 1741.8 RPM | 0.08361 g[0m
+D (00:03:21.476) dsp: Mean: 16754.06 | RMS: 0.035931 | Min: -0.092663 | Max: 0.077344 | PkPk: 0.170007[0m
+[0;32mI (00:03:21.480) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.09298 g[0m
+D (00:03:21.774) dsp: Mean: 16747.42 | RMS: 0.036738 | Min: -0.084267 | Max: 0.082751 | PkPk: 0.167018[0m
+[0;32mI (00:03:21.778) dsp: Peak: 29.06 Hz | 1743.4 RPM | 0.09684 g[0m
+D (00:03:22.071) dsp: Mean: 16727.02 | RMS: 0.036753 | Min: -0.086682 | Max: 0.080092 | PkPk: 0.166774[0m
+[0;32mI (00:03:22.076) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.09650 g[0m
+D (00:03:22.369) dsp: Mean: 16721.65 | RMS: 0.036889 | Min: -0.088002 | Max: 0.097987 | PkPk: 0.185989[0m
+[0;32mI (00:03:22.373) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09739 g[0m
+D (00:03:22.667) dsp: Mean: 16730.09 | RMS: 0.036175 | Min: -0.077780 | Max: 0.085151 | PkPk: 0.162931[0m
+[0;32mI (00:03:22.671) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.09592 g[0m
+D (00:03:22.964) dsp: Mean: 16733.02 | RMS: 0.036728 | Min: -0.089427 | Max: 0.084484 | PkPk: 0.173911[0m
+[0;32mI (00:03:22.969) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09623 g[0m
+D (00:03:23.262) dsp: Mean: 16721.39 | RMS: 0.036680 | Min: -0.088108 | Max: 0.088548 | PkPk: 0.176656[0m
+[0;32mI (00:03:23.266) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.09632 g[0m
+D (00:03:23.560) dsp: Mean: 16724.86 | RMS: 0.036535 | Min: -0.088807 | Max: 0.086629 | PkPk: 0.175436[0m
+[0;32mI (00:03:23.564) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.09580 g[0m
+D (00:03:23.857) dsp: Mean: 16737.65 | RMS: 0.036744 | Min: -0.085196 | Max: 0.083225 | PkPk: 0.168421[0m
+[0;32mI (00:03:23.862) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09701 g[0m
+D (00:03:24.155) dsp: Mean: 16749.24 | RMS: 0.036238 | Min: -0.081877 | Max: 0.079163 | PkPk: 0.161040[0m
+[0;32mI (00:03:24.159) dsp: Peak: 29.10 Hz | 1746.1 RPM | 0.09669 g[0m
+D (00:03:24.453) dsp: Mean: 16745.89 | RMS: 0.036256 | Min: -0.079903 | Max: 0.080283 | PkPk: 0.160186[0m
+[0;32mI (00:03:24.457) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.09615 g[0m
+D (00:03:24.750) dsp: Mean: 16753.19 | RMS: 0.036580 | Min: -0.073882 | Max: 0.077886 | PkPk: 0.151768[0m
+[0;32mI (00:03:24.755) dsp: Peak: 29.10 Hz | 1745.9 RPM | 0.09697 g[0m
+D (00:03:25.048) dsp: Mean: 16752.29 | RMS: 0.036786 | Min: -0.077915 | Max: 0.080868 | PkPk: 0.158783[0m
+[0;32mI (00:03:25.052) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09674 g[0m
+D (00:03:25.346) dsp: Mean: 16749.59 | RMS: 0.037104 | Min: -0.085192 | Max: 0.092623 | PkPk: 0.177815[0m
+[0;32mI (00:03:25.350) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09704 g[0m
+D (00:03:25.643) dsp: Mean: 16747.21 | RMS: 0.037853 | Min: -0.087853 | Max: 0.084411 | PkPk: 0.172264[0m
+[0;32mI (00:03:25.647) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.09756 g[0m
+D (00:03:25.649) system: abnormal evaluation: 1/5[0m
+D (00:03:25.941) dsp: Mean: 16743.02 | RMS: 0.037506 | Min: -0.088756 | Max: 0.091621 | PkPk: 0.180377[0m
+[0;32mI (00:03:25.945) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.09746 g[0m
+D (00:03:25.947) system: abnormal evaluation: 2/5[0m
+D (00:03:26.239) dsp: Mean: 16738.13 | RMS: 0.037408 | Min: -0.099621 | Max: 0.100154 | PkPk: 0.199775[0m
+[0;32mI (00:03:26.243) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.09676 g[0m
+D (00:03:26.536) dsp: Mean: 16732.71 | RMS: 0.037440 | Min: -0.083735 | Max: 0.085418 | PkPk: 0.169153[0m
+[0;32mI (00:03:26.540) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.09738 g[0m
+D (00:03:26.542) system: abnormal evaluation: 1/5[0m
+D (00:03:26.834) dsp: Mean: 16735.74 | RMS: 0.037322 | Min: -0.089654 | Max: 0.083830 | PkPk: 0.173484[0m
+[0;32mI (00:03:26.838) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09759 g[0m
+D (00:03:26.840) system: abnormal evaluation: 2/5[0m
+D (00:03:27.131) dsp: Mean: 16736.69 | RMS: 0.037373 | Min: -0.087882 | Max: 0.086151 | PkPk: 0.174033[0m
+[0;32mI (00:03:27.136) dsp: Peak: 29.09 Hz | 1745.1 RPM | 0.09732 g[0m
+D (00:03:27.137) system: abnormal evaluation: 3/5[0m
+D (00:03:27.429) dsp: Mean: 16737.60 | RMS: 0.037321 | Min: -0.091841 | Max: 0.085425 | PkPk: 0.177266[0m
+[0;32mI (00:03:27.433) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.09755 g[0m
+D (00:03:27.435) system: abnormal evaluation: 4/5[0m
+D (00:03:27.727) dsp: Mean: 16730.87 | RMS: 0.037158 | Min: -0.086917 | Max: 0.087299 | PkPk: 0.174216[0m
+[0;32mI (00:03:27.731) dsp: Peak: 29.09 Hz | 1745.7 RPM | 0.09746 g[0m
+D (00:03:28.025) dsp: Mean: 16734.56 | RMS: 0.036957 | Min: -0.084458 | Max: 0.089514 | PkPk: 0.173972[0m
+[0;32mI (00:03:28.029) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.09699 g[0m
+D (00:03:28.322) dsp: Mean: 16722.79 | RMS: 0.036686 | Min: -0.084533 | Max: 0.078825 | PkPk: 0.163358[0m
+[0;32mI (00:03:28.326) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09747 g[0m
+D (00:03:28.620) dsp: Mean: 16727.04 | RMS: 0.036926 | Min: -0.080278 | Max: 0.084910 | PkPk: 0.165188[0m
+[0;32mI (00:03:28.624) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.09698 g[0m
+D (00:03:28.917) dsp: Mean: 16732.48 | RMS: 0.036857 | Min: -0.088845 | Max: 0.080491 | PkPk: 0.169336[0m
+[0;32mI (00:03:28.922) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.09678 g[0m
+D (00:03:29.215) dsp: Mean: 16736.57 | RMS: 0.036782 | Min: -0.089888 | Max: 0.088903 | PkPk: 0.178791[0m
+[0;32mI (00:03:29.219) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.09653 g[0m
+D (00:03:29.513) dsp: Mean: 16737.49 | RMS: 0.036813 | Min: -0.079513 | Max: 0.084638 | PkPk: 0.164151[0m
+[0;32mI (00:03:29.517) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09682 g[0m
+D (00:03:29.810) dsp: Mean: 16731.19 | RMS: 0.036829 | Min: -0.084314 | Max: 0.086791 | PkPk: 0.171105[0m
+[0;32mI (00:03:29.815) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.09721 g[0m
+D (00:03:30.108) dsp: Mean: 16734.32 | RMS: 0.036680 | Min: -0.088165 | Max: 0.077389 | PkPk: 0.165554[0m
+[0;32mI (00:03:30.112) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09714 g[0m
+D (00:03:30.406) dsp: Mean: 16727.36 | RMS: 0.036662 | Min: -0.080481 | Max: 0.080132 | PkPk: 0.160613[0m
+[0;32mI (00:03:30.410) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.09706 g[0m
+D (00:03:30.703) dsp: Mean: 16716.24 | RMS: 0.036832 | Min: -0.094382 | Max: 0.086910 | PkPk: 0.181292[0m
+[0;32mI (00:03:30.707) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09684 g[0m
+D (00:03:31.001) dsp: Mean: 16725.42 | RMS: 0.036614 | Min: -0.083717 | Max: 0.080311 | PkPk: 0.164029[0m
+[0;32mI (00:03:31.005) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.09620 g[0m
+D (00:03:31.299) dsp: Mean: 16727.28 | RMS: 0.037138 | Min: -0.086820 | Max: 0.087640 | PkPk: 0.174460[0m
+[0;32mI (00:03:31.303) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.09725 g[0m
+D (00:03:31.596) dsp: Mean: 16728.33 | RMS: 0.037928 | Min: -0.094021 | Max: 0.088491 | PkPk: 0.182512[0m
+[0;32mI (00:03:31.600) dsp: Peak: 29.11 Hz | 1746.3 RPM | 0.09975 g[0m
+D (00:03:31.602) system: abnormal evaluation: 1/5[0m
+D (00:03:31.894) dsp: Mean: 16730.41 | RMS: 0.036835 | Min: -0.084693 | Max: 0.082081 | PkPk: 0.166774[0m
+[0;32mI (00:03:31.898) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.09673 g[0m
+D (00:03:32.191) dsp: Mean: 16738.52 | RMS: 0.037027 | Min: -0.082809 | Max: 0.092932 | PkPk: 0.175741[0m
+[0;32mI (00:03:32.196) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.09735 g[0m
+D (00:03:32.489) dsp: Mean: 16732.56 | RMS: 0.036268 | Min: -0.089765 | Max: 0.083536 | PkPk: 0.173301[0m
+[0;32mI (00:03:32.493) dsp: Peak: 29.08 Hz | 1744.7 RPM | 0.09586 g[0m
+D (00:03:32.787) dsp: Mean: 16729.72 | RMS: 0.039468 | Min: -0.092520 | Max: 0.104266 | PkPk: 0.196786[0m
+[0;32mI (00:03:32.791) dsp: Peak: 29.46 Hz | 1767.5 RPM | 0.10706 g[0m
+D (00:03:32.792) system: abnormal evaluation: 1/5[0m
+D (00:03:33.084) dsp: Mean: 16728.52 | RMS: 0.027279 | Min: -0.073536 | Max: 0.075914 | PkPk: 0.149450[0m
+[0;32mI (00:03:33.089) dsp: Peak: 28.96 Hz | 1737.8 RPM | 0.06352 g[0m
+D (00:03:33.382) dsp: Mean: 16722.42 | RMS: 0.024076 | Min: -0.067797 | Max: 0.062133 | PkPk: 0.129930[0m
+[0;32mI (00:03:33.386) dsp: Peak: 29.03 Hz | 1741.7 RPM | 0.05717 g[0m
+D (00:03:33.680) dsp: Mean: 16715.35 | RMS: 0.024497 | Min: -0.063095 | Max: 0.062931 | PkPk: 0.126026[0m
+[0;32mI (00:03:33.684) dsp: Peak: 29.11 Hz | 1746.5 RPM | 0.05859 g[0m
+D (00:03:33.977) dsp: Mean: 16714.48 | RMS: 0.024175 | Min: -0.065971 | Max: 0.061092 | PkPk: 0.127063[0m
+[0;32mI (00:03:33.981) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.05574 g[0m
+D (00:03:34.275) dsp: Mean: 16709.19 | RMS: 0.023825 | Min: -0.064427 | Max: 0.062941 | PkPk: 0.127368[0m
+[0;32mI (00:03:34.279) dsp: Peak: 29.10 Hz | 1746.1 RPM | 0.05494 g[0m
+D (00:03:34.573) dsp: Mean: 16713.20 | RMS: 0.023725 | Min: -0.064672 | Max: 0.063062 | PkPk: 0.127734[0m
+[0;32mI (00:03:34.577) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.05459 g[0m
+D (00:03:34.870) dsp: Mean: 16722.50 | RMS: 0.024064 | Min: -0.069692 | Max: 0.068961 | PkPk: 0.138653[0m
+[0;32mI (00:03:34.874) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.05437 g[0m
+D (00:03:35.168) dsp: Mean: 16721.38 | RMS: 0.024643 | Min: -0.068648 | Max: 0.064271 | PkPk: 0.132919[0m
+[0;32mI (00:03:35.172) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.05376 g[0m
+D (00:03:35.465) dsp: Mean: 16720.56 | RMS: 0.024812 | Min: -0.067622 | Max: 0.063467 | PkPk: 0.131089[0m
+[0;32mI (00:03:35.470) dsp: Peak: 29.12 Hz | 1747.4 RPM | 0.05697 g[0m
+D (00:03:35.763) dsp: Mean: 16728.53 | RMS: 0.023583 | Min: -0.065485 | Max: 0.063469 | PkPk: 0.128954[0m
+[0;32mI (00:03:35.767) dsp: Peak: 29.05 Hz | 1742.7 RPM | 0.05276 g[0m
+D (00:03:36.061) dsp: Mean: 16730.51 | RMS: 0.024201 | Min: -0.060848 | Max: 0.058712 | PkPk: 0.119560[0m
+[0;32mI (00:03:36.065) dsp: Peak: 29.03 Hz | 1741.9 RPM | 0.05559 g[0m
+D (00:03:36.358) dsp: Mean: 16735.86 | RMS: 0.023598 | Min: -0.063919 | Max: 0.059423 | PkPk: 0.123342[0m
+[0;32mI (00:03:36.363) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.05405 g[0m
+D (00:03:36.656) dsp: Mean: 16744.63 | RMS: 0.023986 | Min: -0.068175 | Max: 0.062060 | PkPk: 0.130235[0m
+[0;32mI (00:03:36.660) dsp: Peak: 29.23 Hz | 1753.9 RPM | 0.05609 g[0m
+D (00:03:36.954) dsp: Mean: 16746.47 | RMS: 0.023301 | Min: -0.055844 | Max: 0.063228 | PkPk: 0.119072[0m
+[0;32mI (00:03:36.958) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.05400 g[0m
+D (00:03:37.251) dsp: Mean: 16736.18 | RMS: 0.022824 | Min: -0.062109 | Max: 0.061599 | PkPk: 0.123708[0m
+[0;32mI (00:03:37.256) dsp: Peak: 29.04 Hz | 1742.1 RPM | 0.05343 g[0m
+D (00:03:37.549) dsp: Mean: 16739.44 | RMS: 0.021976 | Min: -0.065419 | Max: 0.056825 | PkPk: 0.122244[0m
+[0;32mI (00:03:37.553) dsp: Peak: 29.08 Hz | 1745.1 RPM | 0.05057 g[0m
+D (00:03:37.847) dsp: Mean: 16743.14 | RMS: 0.021993 | Min: -0.065035 | Max: 0.062394 | PkPk: 0.127429[0m
+[0;32mI (00:03:37.851) dsp: Peak: 29.11 Hz | 1746.7 RPM | 0.05059 g[0m
+D (00:03:38.144) dsp: Mean: 16744.91 | RMS: 0.022112 | Min: -0.059226 | Max: 0.056369 | PkPk: 0.115595[0m
+[0;32mI (00:03:38.149) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.04964 g[0m
+D (00:03:38.442) dsp: Mean: 16732.48 | RMS: 0.022330 | Min: -0.062615 | Max: 0.061520 | PkPk: 0.124135[0m
+[0;32mI (00:03:38.446) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.05201 g[0m
+D (00:03:38.740) dsp: Mean: 16734.98 | RMS: 0.023748 | Min: -0.064781 | Max: 0.060635 | PkPk: 0.125416[0m
+[0;32mI (00:03:38.744) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.05612 g[0m
+D (00:03:39.037) dsp: Mean: 16742.88 | RMS: 0.023985 | Min: -0.060017 | Max: 0.066802 | PkPk: 0.126819[0m
+[0;32mI (00:03:39.041) dsp: Peak: 29.05 Hz | 1742.7 RPM | 0.05546 g[0m
+D (00:03:39.335) dsp: Mean: 16739.63 | RMS: 0.023975 | Min: -0.063723 | Max: 0.063889 | PkPk: 0.127612[0m
+[0;32mI (00:03:39.339) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.05625 g[0m
+D (00:03:39.632) dsp: Mean: 16744.07 | RMS: 0.023275 | Min: -0.059113 | Max: 0.076124 | PkPk: 0.135237[0m
+[0;32mI (00:03:39.637) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.05428 g[0m
+D (00:03:39.930) dsp: Mean: 16749.38 | RMS: 0.022716 | Min: -0.067733 | Max: 0.072933 | PkPk: 0.140666[0m
+[0;32mI (00:03:39.934) dsp: Peak: 29.05 Hz | 1742.8 RPM | 0.05104 g[0m
+D (00:03:40.228) dsp: Mean: 16749.90 | RMS: 0.022651 | Min: -0.066484 | Max: 0.067045 | PkPk: 0.133529[0m
+[0;32mI (00:03:40.232) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.05278 g[0m
+D (00:03:40.525) dsp: Mean: 16752.24 | RMS: 0.022469 | Min: -0.063821 | Max: 0.061717 | PkPk: 0.125538[0m
+[0;32mI (00:03:40.529) dsp: Peak: 29.12 Hz | 1747.2 RPM | 0.05241 g[0m
+D (00:03:40.823) dsp: Mean: 16739.33 | RMS: 0.022031 | Min: -0.064009 | Max: 0.062566 | PkPk: 0.126575[0m
+[0;32mI (00:03:40.827) dsp: Peak: 28.97 Hz | 1738.4 RPM | 0.04974 g[0m
+D (00:03:41.120) dsp: Mean: 16738.03 | RMS: 0.024327 | Min: -0.063320 | Max: 0.059961 | PkPk: 0.123281[0m
+[0;32mI (00:03:41.125) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.05802 g[0m
+D (00:03:41.418) dsp: Mean: 16728.28 | RMS: 0.028552 | Min: -0.072302 | Max: 0.067815 | PkPk: 0.140117[0m
+[0;32mI (00:03:41.422) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.07307 g[0m
+D (00:03:41.716) dsp: Mean: 16731.31 | RMS: 0.028636 | Min: -0.073402 | Max: 0.068423 | PkPk: 0.141825[0m
+[0;32mI (00:03:41.720) dsp: Peak: 29.10 Hz | 1745.7 RPM | 0.07223 g[0m
+D (00:03:42.013) dsp: Mean: 16738.35 | RMS: 0.027705 | Min: -0.068402 | Max: 0.072996 | PkPk: 0.141398[0m
+[0;32mI (00:03:42.018) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.07030 g[0m
+D (00:03:42.311) dsp: Mean: 16748.91 | RMS: 0.027665 | Min: -0.072279 | Max: 0.073694 | PkPk: 0.145973[0m
+[0;32mI (00:03:42.315) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.07054 g[0m
+D (00:03:42.609) dsp: Mean: 16763.74 | RMS: 0.028244 | Min: -0.068792 | Max: 0.077242 | PkPk: 0.146034[0m
+[0;32mI (00:03:42.613) dsp: Peak: 29.12 Hz | 1747.3 RPM | 0.07137 g[0m
+D (00:03:42.906) dsp: Mean: 16895.91 | RMS: 0.134186 | Min: -2.230825 | Max: 0.967954 | PkPk: 3.198779[0m
+[0;32mI (00:03:42.911) dsp: Peak: 31.06 Hz | 1863.7 RPM | 0.05932 g[0m
+D (00:03:42.912) system: abnormal evaluation: 1/5[0m
+D (00:03:43.204) dsp: Mean: 15388.29 | RMS: 0.089490 | Min: -0.563963 | Max: 0.296320 | PkPk: 0.860283[0m
+[0;32mI (00:03:43.208) dsp: Peak: 7.87 Hz | 472.3 RPM | 0.11542 g[0m
+D (00:03:43.209) system: abnormal evaluation: 2/5[0m
+D (00:03:43.502) dsp: Mean: 14768.63 | RMS: 0.483714 | Min: -2.899490 | Max: 1.097718 | PkPk: 3.997208[0m
+[0;32mI (00:03:43.506) dsp: Peak: 8.13 Hz | 487.8 RPM | 0.47545 g[0m
+D (00:03:43.507) system: abnormal evaluation: 3/5[0m
+D (00:03:43.799) dsp: Mean: 16759.09 | RMS: 0.029720 | Min: -0.075463 | Max: 0.093080 | PkPk: 0.168543[0m
+[0;32mI (00:03:43.804) dsp: Peak: 29.06 Hz | 1743.8 RPM | 0.07100 g[0m
+D (00:03:44.097) dsp: Mean: 16766.44 | RMS: 0.033130 | Min: -0.270623 | Max: 0.100074 | PkPk: 0.370697[0m
+[0;32mI (00:03:44.101) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.07686 g[0m
+D (00:03:44.395) dsp: Mean: 16768.76 | RMS: 0.030707 | Min: -0.093803 | Max: 0.086574 | PkPk: 0.180377[0m
+[0;32mI (00:03:44.399) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.06952 g[0m
+D (00:03:44.692) dsp: Mean: 16751.74 | RMS: 0.029163 | Min: -0.079040 | Max: 0.097921 | PkPk: 0.176961[0m
+[0;32mI (00:03:44.697) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.06657 g[0m
+D (00:03:44.990) dsp: Mean: 16740.65 | RMS: 0.030836 | Min: -0.087269 | Max: 0.082738 | PkPk: 0.170007[0m
+[0;32mI (00:03:44.994) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.06995 g[0m
+D (00:03:45.288) dsp: Mean: 16727.57 | RMS: 0.034926 | Min: -0.089339 | Max: 0.086890 | PkPk: 0.176229[0m
+[0;32mI (00:03:45.292) dsp: Peak: 29.07 Hz | 1744.4 RPM | 0.08598 g[0m
+D (00:03:45.585) dsp: Mean: 16719.76 | RMS: 0.037694 | Min: -0.093010 | Max: 0.095602 | PkPk: 0.188612[0m
+[0;32mI (00:03:45.590) dsp: Peak: 29.11 Hz | 1746.6 RPM | 0.09608 g[0m
+D (00:03:45.883) dsp: Mean: 16709.11 | RMS: 0.035119 | Min: -0.089005 | Max: 0.093507 | PkPk: 0.182512[0m
+[0;32mI (00:03:45.887) dsp: Peak: 29.12 Hz | 1747.2 RPM | 0.08809 g[0m
+D (00:03:46.181) dsp: Mean: 16708.24 | RMS: 0.032887 | Min: -0.083036 | Max: 0.094596 | PkPk: 0.177632[0m
+[0;32mI (00:03:46.185) dsp: Peak: 29.09 Hz | 1745.5 RPM | 0.07863 g[0m
+D (00:03:46.478) dsp: Mean: 16701.08 | RMS: 0.031724 | Min: -0.079122 | Max: 0.092715 | PkPk: 0.171837[0m
+[0;32mI (00:03:46.483) dsp: Peak: 29.11 Hz | 1746.3 RPM | 0.07551 g[0m
+D (00:03:46.776) dsp: Mean: 16704.54 | RMS: 0.031457 | Min: -0.087507 | Max: 0.094090 | PkPk: 0.181597[0m
+[0;32mI (00:03:46.780) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.07248 g[0m
+D (00:03:47.074) dsp: Mean: 16701.12 | RMS: 0.031434 | Min: -0.081686 | Max: 0.086369 | PkPk: 0.168055[0m
+[0;32mI (00:03:47.078) dsp: Peak: 29.06 Hz | 1743.9 RPM | 0.07270 g[0m
+D (00:03:47.371) dsp: Mean: 16705.14 | RMS: 0.031578 | Min: -0.087421 | Max: 0.082525 | PkPk: 0.169946[0m
+[0;32mI (00:03:47.376) dsp: Peak: 29.07 Hz | 1744.0 RPM | 0.07350 g[0m
+D (00:03:47.669) dsp: Mean: 16712.74 | RMS: 0.031818 | Min: -0.089227 | Max: 0.089869 | PkPk: 0.179096[0m
+[0;32mI (00:03:47.673) dsp: Peak: 29.08 Hz | 1744.5 RPM | 0.07497 g[0m
+D (00:03:47.967) dsp: Mean: 16713.18 | RMS: 0.032680 | Min: -0.086082 | Max: 0.092099 | PkPk: 0.178181[0m
+[0;32mI (00:03:47.971) dsp: Peak: 29.10 Hz | 1745.8 RPM | 0.07716 g[0m
+D (00:03:48.264) dsp: Mean: 16725.91 | RMS: 0.032851 | Min: -0.086127 | Max: 0.088211 | PkPk: 0.174338[0m
+[0;32mI (00:03:48.269) dsp: Peak: 29.09 Hz | 1745.4 RPM | 0.07659 g[0m
+D (00:03:48.562) dsp: Mean: 16729.12 | RMS: 0.033319 | Min: -0.098462 | Max: 0.090333 | PkPk: 0.188795[0m
+[0;32mI (00:03:48.566) dsp: Peak: 29.10 Hz | 1745.9 RPM | 0.07732 g[0m
+D (00:03:48.860) dsp: Mean: 16726.67 | RMS: 0.033370 | Min: -0.083977 | Max: 0.097864 | PkPk: 0.181841[0m
+[0;32mI (00:03:48.864) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.07608 g[0m
+D (00:03:49.157) dsp: Mean: 16725.16 | RMS: 0.033075 | Min: -0.096268 | Max: 0.103507 | PkPk: 0.199775[0m
+[0;32mI (00:03:49.161) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.07522 g[0m
+D (00:03:49.455) dsp: Mean: 16722.57 | RMS: 0.032859 | Min: -0.090742 | Max: 0.094332 | PkPk: 0.185074[0m
+[0;32mI (00:03:49.459) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.07437 g[0m
+D (00:03:49.753) dsp: Mean: 16723.69 | RMS: 0.032659 | Min: -0.095690 | Max: 0.105122 | PkPk: 0.200812[0m
+[0;32mI (00:03:49.757) dsp: Peak: 29.09 Hz | 1745.2 RPM | 0.07393 g[0m
+D (00:03:50.050) dsp: Mean: 16712.72 | RMS: 0.032109 | Min: -0.094716 | Max: 0.090663 | PkPk: 0.185379[0m
+[0;32mI (00:03:50.054) dsp: Peak: 29.08 Hz | 1744.6 RPM | 0.07383 g[0m
+D (00:03:50.348) dsp: Mean: 16713.99 | RMS: 0.032257 | Min: -0.086620 | Max: 0.079788 | PkPk: 0.166408[0m
+[0;32mI (00:03:50.352) dsp: Peak: 29.11 Hz | 1746.4 RPM | 0.07510 g[0m
+D (00:03:50.645) dsp: Mean: 16714.32 | RMS: 0.031895 | Min: -0.083894 | Max: 0.093982 | PkPk: 0.177876[0m
+[0;32mI (00:03:50.650) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.07462 g[0m
+D (00:03:50.943) dsp: Mean: 16719.26 | RMS: 0.031765 | Min: -0.078462 | Max: 0.095693 | PkPk: 0.174155[0m
+[0;32mI (00:03:50.947) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.07447 g[0m
+D (00:03:51.241) dsp: Mean: 16724.02 | RMS: 0.032331 | Min: -0.082473 | Max: 0.100222 | PkPk: 0.182695[0m
+[0;32mI (00:03:51.245) dsp: Peak: 29.10 Hz | 1746.3 RPM | 0.07531 g[0m
+D (00:03:51.539) dsp: Mean: 16722.61 | RMS: 0.031972 | Min: -0.098125 | Max: 0.097502 | PkPk: 0.195627[0m
+[0;32mI (00:03:51.543) dsp: Peak: 29.09 Hz | 1745.3 RPM | 0.07417 g[0m
+D (00:03:51.836) dsp: Mean: 16728.31 | RMS: 0.031819 | Min: -0.085114 | Max: 0.083368 | PkPk: 0.168482[0m
+[0;32mI (00:03:51.840) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.07445 g[0m
+D (00:03:52.134) dsp: Mean: 16731.06 | RMS: 0.031208 | Min: -0.085160 | Max: 0.092655 | PkPk: 0.177815[0m
+[0;32mI (00:03:52.138) dsp: Peak: 29.08 Hz | 1745.0 RPM | 0.07155 g[0m
+D (00:03:52.431) dsp: Mean: 16727.32 | RMS: 0.031597 | Min: -0.085663 | Max: 0.087028 | PkPk: 0.172691[0m
+[0;32mI (00:03:52.436) dsp: Peak: 29.10 Hz | 1746.0 RPM | 0.07277 g[0m
+D (00:03:52.729) dsp: Mean: 16728.59 | RMS: 0.032500 | Min: -0.095318 | Max: 0.106775 | PkPk: 0.202093[0m
+[0;32mI (00:03:52.733) dsp: Peak: 29.07 Hz | 1744.3 RPM | 0.07477 g[0m
+D (00:03:53.027) dsp: Mean: 16718.97 | RMS: 0.033872 | Min: -0.097476 | Max: 0.090770 | PkPk: 0.188246[0m
+[0;32mI (00:03:53.031) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.07771 g[0m
+D (00:03:53.324) dsp: Mean: 16707.17 | RMS: 0.033850 | Min: -0.098403 | Max: 0.116073 | PkPk: 0.214476[0m
+[0;32mI (00:03:53.329) dsp: Peak: 29.08 Hz | 1744.8 RPM | 0.07726 g[0m
+D (00:03:53.622) dsp: Mean: 16718.07 | RMS: 0.033520 | Min: -0.105412 | Max: 0.100463 | PkPk: 0.205875[0m
+[0;32mI (00:03:53.626) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.07475 g[0m
+D (00:03:53.920) dsp: Mean: 16718.15 | RMS: 0.033562 | Min: -0.104502 | Max: 0.091491 | PkPk: 0.195993[0m
+[0;32mI (00:03:53.924) dsp: Peak: 29.11 Hz | 1746.5 RPM | 0.07717 g[0m
+D (00:03:54.218) dsp: Mean: 16717.49 | RMS: 0.033266 | Min: -0.094763 | Max: 0.105195 | PkPk: 0.199958[0m
+[0;32mI (00:03:54.222) dsp: Peak: 29.09 Hz | 1745.6 RPM | 0.07625 g[0m
+D (00:03:54.515) dsp: Mean: 16714.10 | RMS: 0.032701 | Min: -0.097972 | Max: 0.092226 | PkPk: 0.190198[0m
+[0;32mI (00:03:54.519) dsp: Peak: 29.08 Hz | 1744.9 RPM | 0.07534 g[0m
+D (00:03:54.813) dsp: Mean: 16721.87 | RMS: 0.032521 | Min: -0.101557 | Max: 0.086811 | PkPk: 0.188368[0m
+[0;32mI (00:03:54.817) dsp: Peak: 29.06 Hz | 1743.3 RPM | 0.07464 g[0m
+D (00:03:55.111) dsp: Mean: 16723.42 | RMS: 0.032834 | Min: -0.092135 | Max: 0.093732 | PkPk: 0.185867[0m
+[0;32mI (00:03:55.115) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.07554 g[0m
+D (00:03:55.408) dsp: Mean: 16728.74 | RMS: 0.033450 | Min: -0.090203 | Max: 0.100178 | PkPk: 0.190381[0m
+[0;32mI (00:03:55.413) dsp: Peak: 29.07 Hz | 1744.2 RPM | 0.07851 g[0m
+D (00:03:55.706) dsp: Mean: 16725.38 | RMS: 0.032805 | Min: -0.085606 | Max: 0.081839 | PkPk: 0.167445[0m
+[0;32mI (00:03:55.710) dsp: Peak: 29.06 Hz | 1743.7 RPM | 0.07844 g[0m
+D (00:03:56.004) dsp: Mean: 16728.76 | RMS: 0.032962 | Min: -0.087154 | Max: 0.093223 | PkPk: 0.180377[0m
+[0;32mI (00:03:56.008) dsp: Peak: 29.07 Hz | 1744.1 RPM | 0.07737 g[0m
+[0;31mE (241206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (241206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (241206) task_wdt: Tasks currently running:[0m
+[0;31mE (241206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (241206) task_wdt: CPU 1: accel[0m
+[0;31mE (241206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB6200 0x4037CFF6:0x3FCB6210 0x4037642C:0x3FCB6230 0x4037708D:0x3FCB6250 0x42015272:0x3FCB6270 0x42004C3D:0x3FCB6290 0x4200D036:0x3FCB62B0 0x4200D0ED:0x3FCB62F0 0x4200B064:0x3FCB6320 0x4200B0A4:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (246206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (246206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (246206) task_wdt: Tasks currently running:[0m
+[0;31mE (246206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (246206) task_wdt: CPU 1: accel[0m
+[0;31mE (246206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB6200 0x4037CFF6:0x3FCB6210 0x4037642C:0x3FCB6230 0x4037708D:0x3FCB6250 0x42015272:0x3FCB6270 0x42004C3D:0x3FCB6290 0x4200D036:0x3FCB62B0 0x4200D0ED:0x3FCB62F0 0x4200B064:0x3FCB6320 0x4200B0A4:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (251206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (251206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (251206) task_wdt: Tasks currently running:[0m
+[0;31mE (251206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (251206) task_wdt: CPU 1: accel[0m
+[0;31mE (251206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB6200 0x4037CFF6:0x3FCB6210 0x4037642C:0x3FCB6230 0x4037708D:0x3FCB6250 0x42015272:0x3FCB6270 0x42004C3D:0x3FCB6290 0x4200D036:0x3FCB62B0 0x4200D0ED:0x3FCB62F0 0x4200B064:0x3FCB6320 0x4200B0B0:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (256206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (256206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (256206) task_wdt: Tasks currently running:[0m
+[0;31mE (256206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (256206) task_wdt: CPU 1: accel[0m
+[0;31mE (256206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB6200 0x4037CFF6:0x3FCB6210 0x4037642C:0x3FCB6230 0x4037708D:0x3FCB6250 0x42015272:0x3FCB6270 0x42004C3D:0x3FCB6290 0x4200D036:0x3FCB62B0 0x4200D0ED:0x3FCB62F0 0x4200B064:0x3FCB6320 0x4200B0A4:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (261206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (261206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (261206) task_wdt: Tasks currently running:[0m
+[0;31mE (261206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (261206) task_wdt: CPU 1: accel[0m
+[0;31mE (261206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB6200 0x4037CFF6:0x3FCB6210 0x4037642C:0x3FCB6230 0x4037708D:0x3FCB6250 0x42015272:0x3FCB6270 0x42004C3D:0x3FCB6290 0x4200D036:0x3FCB62B0 0x4200D0ED:0x3FCB62F0 0x4200B064:0x3FCB6320 0x4200B0A4:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (266206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (266206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (266206) task_wdt: Tasks currently running:[0m
+[0;31mE (266206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (266206) task_wdt: CPU 1: accel[0m
+[0;31mE (266206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB62B0 0x4037CFF6:0x3FCB62C0 0x42018583:0x3FCB62E0 0x4200B057:0x3FCB6320 0x4200B0A4:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (271206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (271206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (271206) task_wdt: Tasks currently running:[0m
+[0;31mE (271206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (271206) task_wdt: CPU 1: accel[0m
+[0;31mE (271206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB6200 0x4037CFF6:0x3FCB6210 0x4037642C:0x3FCB6230 0x4037708D:0x3FCB6250 0x42015272:0x3FCB6270 0x42004C3D:0x3FCB6290 0x4200D036:0x3FCB62B0 0x4200D0ED:0x3FCB62F0 0x4200B064:0x3FCB6320 0x4200B0B0:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (276206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (276206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (276206) task_wdt: Tasks currently running:[0m
+[0;31mE (276206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (276206) task_wdt: CPU 1: accel[0m
+[0;31mE (276206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB6200 0x4037CFF6:0x3FCB6210 0x4037642C:0x3FCB6230 0x4037708D:0x3FCB6250 0x42015272:0x3FCB6270 0x42004C3D:0x3FCB6290 0x4200D036:0x3FCB62B0 0x4200D0ED:0x3FCB62F0 0x4200B064:0x3FCB6320 0x4200B0A4:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (281206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (281206) task_wdt:  - IDLE1 (CPU 1)[0m
+[0;31mE (281206) task_wdt: Tasks currently running:[0m
+[0;31mE (281206) task_wdt: CPU 0: IDLE0[0m
+[0;31mE (281206) task_wdt: CPU 1: accel[0m
+[0;31mE (281206) task_wdt: Print CPU 1 backtrace[0m
+
+
+Backtrace: 0x4037864A:0x3FC94580 0x40377F1D:0x3FC945A0 0x400559DD:0x3FCB61E0 0x4037CFF6:0x3FCB61F0 0x4037EF4E:0x3FCB6210 0x4037EEFD:0x3FCB6230 0x40375FF2:0x3FCB6250 0x4037C4AD:0x3FCB6270 0x40377075:0x3FCB6290 0x4200D0BF:0x3FCB62B0 0x4200D0FA:0x3FCB62F0 0x4200B064:0x3FCB6320 0x4200B0B0:0x3FCB6370 0x4200B42B:0x3FCB63A0 0x42017D6E:0x3FCB63D0
+
+[0;31mE (286206) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:[0m
+[0;31mE (286206) task_wdt:  - IDLE1 (CPU 1)[0m
