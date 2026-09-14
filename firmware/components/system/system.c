@@ -145,6 +145,10 @@ static void process_pending_sensor_results(app_context_t *ctx);
 static void publish_hmi_data(app_context_t *ctx,
                              const dsp_result_t *result);
 
+
+static void publish_telemetry_data(app_context_t *ctx,
+                                   const dsp_result_t *result);
+                             
 static void log_baseline(void);
 
 static const char *state_to_string(system_state_t state);
@@ -236,6 +240,7 @@ void task_system(void *arg)
         }
 
         publish_hmi_data(ctx, &result);
+        publish_telemetry_data(ctx, &result);
     }
 }
 
@@ -692,6 +697,60 @@ static void log_baseline(void)
         s_system.baseline.bin_1xrpm_amplitude.stddev,
         s_system.baseline.bin_1xrpm_amplitude.valid
     );
+}
+
+static void publish_telemetry_data(app_context_t *ctx,
+                                   const dsp_result_t *result)
+{
+    telemetry_data_t data = {0};
+
+    if (ctx == NULL || result == NULL) {
+        return;
+    }
+
+    data.state = s_system.state;
+
+    data.rms = result->rms;
+    data.kurtosis = result->kurtosis;
+    data.crest_factor = result->crest_factor;
+
+    data.bin_1xrpm_amplitude = result->bin_1xrpm_amplitude;
+    data.frequency_hz = result->frequency_hz;
+    data.rpm = result->rpm;
+
+    data.temperature_c =
+        s_system.latest_sensor.temperature_c;
+
+    data.temperature_valid =
+        s_system.latest_sensor.temperature_valid;
+
+    data.rms_zscore =
+        s_system.diagnostics.rms_zscore;
+
+    data.kurtosis_zscore =
+        s_system.diagnostics.kurtosis_zscore;
+
+    data.bin_1xrpm_zscore =
+        s_system.diagnostics.bin_1xrpm_zscore;
+
+    data.rms_abnormal =
+        s_system.diagnostics.rms_abnormal;
+
+    data.kurtosis_abnormal =
+        s_system.diagnostics.kurtosis_abnormal;
+
+    data.bin_1xrpm_abnormal =
+        s_system.diagnostics.bin_1xrpm_abnormal;
+
+    if (xQueueOverwrite(
+            ctx->queue_system_to_telemetry,
+            &data) != pdPASS) {
+
+        ESP_LOGW(
+            TAG,
+            "Telemetry data queue overwrite failed"
+        );
+    }
 }
 
 static const char *state_to_string(system_state_t state)
