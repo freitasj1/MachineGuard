@@ -12,6 +12,8 @@
 #include <string.h>
 
 #include "app_context.h"
+#include "telemetry.h"
+
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/projdefs.h"
@@ -646,6 +648,15 @@ static void publish_hmi_data(app_context_t *ctx,
     if (ctx == NULL || result == NULL) {
         return;
     }
+
+
+    data.telemetry.wifi_connected = telemetry_is_wifi_connected();
+
+    data.telemetry.mqtt_connected = telemetry_is_mqtt_connected();
+
+    data.telemetry.last_publish_ok = telemetry_get_last_publish_status();
+
+    data.telemetry.last_publish_timestamp_ms = telemetry_get_last_publish_timestamp_ms();
 
     data.state.state = s_system.state;
 

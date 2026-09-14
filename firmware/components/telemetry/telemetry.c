@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/_timeval.h>
+#include <sys/time.h>
 
 #include "app_context.h"
 
@@ -71,6 +73,9 @@ static esp_mqtt_client_handle_t s_mqtt_client = NULL;
 static bool s_wifi_connected = false;
 static bool s_mqtt_connected = false;
 
+static bool s_last_publish_ok = false;
+static uint64_t s_last_publish_timestamp_ms = 0U;
+
 /* ============================================================================
  * Private function prototypes
  * ========================================================================== */
@@ -96,6 +101,16 @@ static esp_err_t mqtt_init(void);
 static esp_err_t publish_telemetry( const telemetry_data_t *data);
 
 static const char *state_to_string(system_state_t state);
+
+
+bool telemetry_is_wifi_connected(void);
+
+bool telemetry_is_mqtt_connected(void);
+
+bool telemetry_get_last_publish_status(void);
+
+uint64_t telemetry_get_last_publish_timestamp_ms(void);
+
 
 /* ============================================================================
  * Public function implementations
@@ -544,7 +559,20 @@ static esp_err_t publish_telemetry(
             "MQTT publish failed"
         );
 
+        s_last_publish_ok = false;
+
         return ESP_FAIL;
+    }
+
+    s_last_publish_ok = true;
+
+    struct timeval tv;
+
+    if (gettimeofday(&tv, NULL) == 0) {
+
+        s_last_publish_timestamp_ms =
+            ((uint64_t)tv.tv_sec * 1000ULL) +
+            ((uint64_t)tv.tv_usec / 1000ULL);
     }
 
     ESP_LOGI(
@@ -692,4 +720,25 @@ static void mqtt_event_handler(
         default:
             break;
     }
+}
+
+
+bool telemetry_is_wifi_connected(void)
+{
+    return s_wifi_connected;
+}
+
+bool telemetry_is_mqtt_connected(void)
+{
+    return s_mqtt_connected;
+}
+
+bool telemetry_get_last_publish_status(void)
+{
+    return s_last_publish_ok;
+}
+
+uint64_t telemetry_get_last_publish_timestamp_ms(void)
+{
+    return s_last_publish_timestamp_ms;
 }
