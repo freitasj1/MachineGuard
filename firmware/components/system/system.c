@@ -43,6 +43,29 @@ static const char *TAG = "system";
  */
 #define SYSTEM_MIN_BIN_VALID_EVALUATIONS (100U)
 
+/**
+ * @brief Number of consecutive abnormal evaluations required to enter ALARM.
+ */
+#define SYSTEM_ALARM_CONSECUTIVE_COUNT  (5U)
+
+/**
+ * @brief Number of consecutive normal evaluations required to return HEALTHY.
+ */
+#define SYSTEM_HEALTHY_CONSECUTIVE_COUNT (5U)
+
+/**
+ * @brief Number of consecutive invalid vibration evaluations required
+ *        to consider that no motor is connected.
+ *
+ * An evaluation is considered invalid when DSP reports peak_valid=false.
+ */
+#define SYSTEM_NO_MOTOR_CONSECUTIVE_COUNT (15U)
+
+/**
+ * @brief Initial Z-score threshold.
+ */
+#define SYSTEM_ZSCORE_THRESHOLD         (3.0f)
+
 /* ============================================================================
  * Private types
  * ========================================================================== */
@@ -105,6 +128,7 @@ typedef struct
 
     uint8_t consecutive_abnormal;
     uint8_t consecutive_normal;
+    uint8_t consecutive_no_motor;
 
 } system_context_t;
 
@@ -155,6 +179,9 @@ static void log_baseline(void);
 
 static const char *state_to_string(system_state_t state);
 
+static void reset_monitoring_context(void);
+
+static bool process_motor_presence(const dsp_result_t *result);
 /* ============================================================================
  * Public function implementations
  * ========================================================================== */
@@ -198,6 +225,113 @@ void task_system(void *arg)
         process_pending_commands(ctx);
         process_pending_sensor_results(ctx);
 
+        /*
+         * NO_MOTOR has special handling.
+         *
+         * While the system is already in NO_MOTOR, remain there until
+         * a valid vibration peak is detected again.
+         */
+        if (s_system.state == SYSTEM_STATE_NO_MOTOR) {
+
+            if (!result.peak_valid) {
+
+                publish_hmi_data(ctx, &result);
+                publish_telemetry_data(ctx, &result);
+
+                continue;
+            }
+
+            /*
+             * Motor vibration detected again.
+             *
+             * If a validated baseline already exists, return directly
+             * to monitoring. Otherwise start a new warm-up.
+             */
+            s_system.consecutive_no_motor = 0U;
+
+            if (s_system.baseline.valid) {
+
+                s_system.state = SYSTEM_STATE_HEALTHY;
+
+                s_system.consecutive_abnormal = 0U;
+                s_system.consecutive_normal = 0U;
+
+                ESP_LOGI(
+                    TAG,
+                    "valid vibration detected, resuming monitoring"
+                );
+
+                ESP_LOGI(
+                    TAG,
+                    "state: %s",
+                    state_to_string(s_system.state)
+                );
+
+                process_monitoring(&result);
+
+            } else {
+
+                s_system.state = SYSTEM_STATE_WARMUP;
+
+                /*
+                 * Start a fresh baseline acquisition.
+                 */
+                s_system.warmup_count = 0U;
+                s_system.bin_valid_count = 0U;
+
+                s_system.rms_stats =
+                    (system_online_stats_t){0};
+
+                s_system.kurtosis_stats =
+                    (system_online_stats_t){0};
+
+                s_system.bin_stats =
+                    (system_online_stats_t){0};
+
+                s_system.consecutive_abnormal = 0U;
+                s_system.consecutive_normal = 0U;
+
+                ESP_LOGI(
+                    TAG,
+                    "valid vibration detected, starting warm-up"
+                );
+
+                ESP_LOGI(
+                    TAG,
+                    "state: %s",
+                    state_to_string(s_system.state)
+                );
+
+                process_warmup(&result);
+            }
+
+            publish_hmi_data(ctx, &result);
+            publish_telemetry_data(ctx, &result);
+
+            continue;
+        }
+
+        /*
+         * Detect motor absence.
+         *
+         * A valid peak resets the no-motor counter.
+         * Fifteen consecutive invalid evaluations move the
+         * system to NO_MOTOR.
+         */
+        process_motor_presence(&result);
+
+        /*
+         * The current result may have caused a transition to NO_MOTOR.
+         * Do not process it as WARMUP/HEALTHY/ALARM anymore.
+         */
+        if (s_system.state == SYSTEM_STATE_NO_MOTOR) {
+
+            publish_hmi_data(ctx, &result);
+            publish_telemetry_data(ctx, &result);
+
+            continue;
+        }
+
         switch (s_system.state) {
 
             case SYSTEM_STATE_INIT:
@@ -226,6 +360,13 @@ void task_system(void *arg)
 
                 process_monitoring(&result);
 
+                break;
+
+            case SYSTEM_STATE_NO_MOTOR:
+
+                /*
+                 * NO_MOTOR is handled before the state switch.
+                 */
                 break;
 
             default:
@@ -267,9 +408,24 @@ static void reset_context(void)
     s_system.consecutive_abnormal = 0U;
     s_system.consecutive_normal = 0U;
 }
+
 static void process_warmup(const dsp_result_t *result)
 {
     if (result == NULL) {
+        return;
+    }
+
+    /*
+     * Only valid vibration evaluations are allowed to contribute
+     * to the healthy baseline.
+     */
+    if (!result->peak_valid) {
+
+        ESP_LOGD(
+            TAG,
+            "warm-up evaluation ignored: invalid vibration"
+        );
+
         return;
     }
 
@@ -283,16 +439,12 @@ static void process_warmup(const dsp_result_t *result)
         result->kurtosis
     );
 
-    if (result->peak_valid) {
+    update_online_stats(
+        &s_system.bin_stats,
+        result->bin_1xrpm_amplitude
+    );
 
-        update_online_stats(
-            &s_system.bin_stats,
-            result->bin_1xrpm_amplitude
-        );
-
-        s_system.bin_valid_count++;
-    }
-
+    s_system.bin_valid_count++;
     s_system.warmup_count++;
 
     if ((s_system.warmup_count % 50U) == 0U ||
@@ -311,7 +463,6 @@ static void process_warmup(const dsp_result_t *result)
 
         finalize_baseline();
 
-        
         if (s_system.baseline.valid) {
 
             s_system.state = SYSTEM_STATE_HEALTHY;
@@ -337,13 +488,36 @@ static void process_warmup(const dsp_result_t *result)
             );
 
             /*
-            * Keep the system out of HEALTHY until a valid baseline
-            * is available.
-            */
+             * The baseline acquisition failed.
+             *
+             * Start a completely new 600-valid-evaluation
+             * acquisition window.
+             */
+            s_system.warmup_count = 0U;
+            s_system.bin_valid_count = 0U;
+
+            s_system.rms_stats =
+                (system_online_stats_t){0};
+
+            s_system.kurtosis_stats =
+                (system_online_stats_t){0};
+
+            s_system.bin_stats =
+                (system_online_stats_t){0};
+
+            s_system.baseline =
+                (system_baseline_t){0};
+
             s_system.state = SYSTEM_STATE_WARMUP;
+
+            ESP_LOGW(
+                TAG,
+                "baseline invalid, restarting warm-up"
+            );
         }
     }
 }
+
 static void finalize_baseline(void)
 {
     s_system.baseline.rms =
@@ -780,7 +954,97 @@ static const char *state_to_string(system_state_t state)
         case SYSTEM_STATE_ALARM:
             return "ALARM";
 
+        case SYSTEM_STATE_NO_MOTOR:
+            return "NO_MOTOR";
+
         default:
             return "UNKNOWN";
     }
+}
+
+
+static void reset_monitoring_context(void)
+{
+    /*
+     * Preserve the validated baseline.
+     *
+     * This reset is used when the motor disappears and therefore
+     * must not force a new calibration if a valid baseline already
+     * exists.
+     */
+
+    s_system.warmup_count = 0U;
+    s_system.bin_valid_count = 0U;
+
+    s_system.rms_stats = (system_online_stats_t){0};
+    s_system.kurtosis_stats = (system_online_stats_t){0};
+    s_system.bin_stats = (system_online_stats_t){0};
+
+    s_system.diagnostics = (system_diagnostics_t){0};
+
+    s_system.consecutive_abnormal = 0U;
+    s_system.consecutive_normal = 0U;
+    s_system.consecutive_no_motor = 0U;
+}
+
+static bool process_motor_presence(const dsp_result_t *result)
+{
+    if (result == NULL) {
+        return false;
+    }
+
+    if (result->peak_valid) {
+
+        /*
+         * A valid vibration detection breaks the consecutive
+         * no-motor sequence.
+         */
+        s_system.consecutive_no_motor = 0U;
+
+        return true;
+    }
+
+    /*
+     * No valid vibration detected.
+     */
+    s_system.consecutive_no_motor++;
+
+    ESP_LOGD(
+        TAG,
+        "invalid vibration: %u/%u",
+        s_system.consecutive_no_motor,
+        SYSTEM_NO_MOTOR_CONSECUTIVE_COUNT
+    );
+
+    if (s_system.consecutive_no_motor >=
+        SYSTEM_NO_MOTOR_CONSECUTIVE_COUNT) {
+
+        if (s_system.state != SYSTEM_STATE_NO_MOTOR) {
+
+            ESP_LOGW(
+                TAG,
+                "no valid vibration for %u consecutive evaluations",
+                SYSTEM_NO_MOTOR_CONSECUTIVE_COUNT
+            );
+
+            s_system.state = SYSTEM_STATE_NO_MOTOR;
+
+            /*
+             * Clear the current monitoring context but preserve
+             * an already validated baseline.
+             */
+            reset_monitoring_context();
+
+            s_system.consecutive_no_motor =
+                SYSTEM_NO_MOTOR_CONSECUTIVE_COUNT;
+
+            ESP_LOGW(
+                TAG,
+                "state changed: %s",
+                state_to_string(s_system.state)
+            );
+        }
+    }
+
+    return false;
 }

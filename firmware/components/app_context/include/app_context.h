@@ -38,12 +38,16 @@ enum {
 /**
  * @brief Machine operating state.
  */
+/**
+ * @brief Machine operating state.
+ */
 typedef enum
 {
     SYSTEM_STATE_INIT = 0,
     SYSTEM_STATE_WARMUP,
     SYSTEM_STATE_HEALTHY,
-    SYSTEM_STATE_ALARM
+    SYSTEM_STATE_ALARM,
+    SYSTEM_STATE_NO_MOTOR
 
 } system_state_t;
 

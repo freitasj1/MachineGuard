@@ -120,11 +120,15 @@ static const char *state_text(
         case SYSTEM_STATE_ALARM:
             return "ALARM";
 
+        case SYSTEM_STATE_NO_MOTOR:
+            return "NO MOTOR";
+
         case SYSTEM_STATE_INIT:
         default:
             return "INIT";
     }
 }
+
 
 static hmi_color_t state_color(
     system_state_t state
@@ -140,6 +144,9 @@ static hmi_color_t state_color(
 
         case SYSTEM_STATE_ALARM:
             return HMI_COLOR_RED;
+
+        case SYSTEM_STATE_NO_MOTOR:
+            return HMI_COLOR_YELLOW;
 
         case SYSTEM_STATE_INIT:
         default:

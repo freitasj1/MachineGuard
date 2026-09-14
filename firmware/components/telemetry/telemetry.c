@@ -608,6 +608,9 @@ static const char *state_to_string(
         case SYSTEM_STATE_ALARM:
             return "ALARM";
 
+        case SYSTEM_STATE_NO_MOTOR:
+            return "NO_MOTOR";
+
         default:
             return "UNKNOWN";
     }
