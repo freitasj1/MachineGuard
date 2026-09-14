@@ -1,0 +1,296 @@
+Executing action: monitor
+Serial port /dev/ttyACM0:
+Connecting....
+Detecting chip type... ESP32-S3
+Running idf_monitor in directory /home/freitasj1/Documentos/Embedded/MachineGuard/firmware
+Executing "/home/freitasj1/.espressif/tools/python/v6.0.2/venv/bin/python /home/freitasj1/.espressif/v6.0.2/esp-idf/tools/idf_monitor.py -p /dev/ttyACM0 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /home/freitasj1/Documentos/Embedded/MachineGuard/firmware/build/MachineGuard.elf /home/freitasj1/Documentos/Embedded/MachineGuard/firmware/build/bootloader/bootloader.elf -m '/home/freitasj1/.espressif/tools/python/v6.0.2/venv/bin/python' '/home/freitasj1/.espressif/v6.0.2/esp-idf/tools/idf.py'"...
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x28 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40048ede
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xda0
+load:0x403cb700,len:0x2f54
+entry 0x403c8908
+[0;32mI (24) boot: ESP-IDF v6.0.2 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Aug  4 2026 17:50:14[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (28) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (43) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (50) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (76) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0ccc4h ( 52420) map[0m
+[0;32mI (96) esp_image: segment 1: paddr=0001ccec vaddr=3fc92b00 size=0332ch ( 13100) load[0m
+[0;32mI (99) esp_image: segment 2: paddr=00020020 vaddr=42000020 size=18cb0h (101552) map[0m
+[0;32mI (120) esp_image: segment 3: paddr=00038cd8 vaddr=3fc95e2c size=00390h (   912) load[0m
+[0;32mI (120) esp_image: segment 4: paddr=00039070 vaddr=40374000 size=0eab0h ( 60080) load[0m
+[0;32mI (137) esp_image: segment 5: paddr=00047b28 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (144) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (144) boot: Disabling RNG early entropy source...[0m
+[0;32mI (155) cpu_start: Multicore app[0m
+D (155) cpu_start: Pro cpu up[0m
+D (155) cpu_start: Starting app cpu, entry point is 0x40375628[0m
+D (0) cpu_start: App cpu up[0m
+D (165) clk: RTC_SLOW_CLK calibration value: 3226061[0m
+[0;32mI (176) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+D (177) cpu_start: calling init function: 0x42001c94 on core: 0[0m
+D (178) cpu_start: calling init function: 0x42002464 on core: 0[0m
+[0;32mI (184) cpu_start: Pro cpu start user code[0m
+[0;32mI (188) cpu_start: cpu freq: 160000000 Hz[0m
+D (193) cpu_start: calling init function: 0x42001bc4 on core: 0[0m
+[0;32mI (199) app_init: Application information:[0m
+[0;32mI (204) app_init: Project name:     MachineGuard[0m
+[0;32mI (209) app_init: App version:      dsp-test-001-1-g80614d1-dirty[0m
+[0;32mI (216) app_init: Compile time:     Aug  5 2026 11:21:26[0m
+[0;32mI (222) app_init: ELF file SHA256:  6ed8464b0...[0m
+[0;32mI (227) app_init: ESP-IDF:          v6.0.2[0m
+D (232) cpu_start: calling init function: 0x42001ca8 on core: 0[0m
+[0;32mI (238) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (243) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (248) efuse_init: Chip rev:         v0.2[0m
+D (252) cpu_start: calling init function: 0x42003c24 on core: 0[0m
+D (258) memory_layout: Checking 6 reserved memory ranges:[0m
+D (264) memory_layout: Reserved memory range 0x3fc84000 - 0x3fc92b00[0m
+D (270) memory_layout: Reserved memory range 0x3fc92b00 - 0x3fca3cb0[0m
+D (277) memory_layout: Reserved memory range 0x3fceee34 - 0x3fcf0000[0m
+D (283) memory_layout: Reserved memory range 0x40374000 - 0x40382b00[0m
+D (290) memory_layout: Reserved memory range 0x600fe000 - 0x600fe000[0m
+D (296) memory_layout: Reserved memory range 0x600fffe8 - 0x60100000[0m
+D (302) memory_layout: Building list of available memory regions:[0m
+D (309) memory_layout: Available memory region 0x3fca3cb0 - 0x3fcb0000[0m
+D (315) memory_layout: Available memory region 0x3fcb0000 - 0x3fcc0000[0m
+D (322) memory_layout: Available memory region 0x3fcc0000 - 0x3fcd0000[0m
+D (328) memory_layout: Available memory region 0x3fcd0000 - 0x3fce0000[0m
+D (335) memory_layout: Available memory region 0x3fce0000 - 0x3fce9710[0m
+D (342) memory_layout: Available memory region 0x3fce9710 - 0x3fceee34[0m
+D (348) memory_layout: Available memory region 0x3fcf0000 - 0x3fcf8000[0m
+D (355) memory_layout: Available memory region 0x600fe000 - 0x600fffe8[0m
+[0;32mI (361) heap_init: Initializing. RAM available for dynamic allocation:[0m
+D (369) heap_init: New heap initialised at 0x3fca3cb0[0m
+[0;32mI (374) heap_init: At 3FCA3CB0 len 00045A60 (278 KiB): RAM[0m
+[0;32mI (380) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+D (386) heap_init: New heap initialised at 0x3fcf0000[0m
+[0;32mI (391) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+D (397) heap_init: New heap initialised at 0x600fe000[0m
+[0;32mI (402) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+D (409) cpu_start: calling init function: 0x42007924 on core: 0[0m
+D (415) cpu_start: calling init function: 0x4200720c on core: 0[0m
+D (421) cpu_start: calling init function: 0x420024b0 on core: 0[0m
+D (427) intr_alloc: Connected src 39 to int 1 (cpu 0)[0m
+D (432) cpu_start: calling init function: 0x420024c0 on core: 0[0m
+D (438) cpu_start: calling init function: 0x4200826c on core: 0[0m
+D (444) cpu_start: calling init function: 0x420089d0 on core: 0[0m
+D (450) cpu_start: calling init function: 0x42009638 on core: 0[0m
+D (456) cpu_start: calling init function: 0x42001b14 on core: 0[0m
+D (462) cpu_start: calling init function: 0x42007218 on core: 0[0m
+D (468) cpu_start: calling init function: 0x42001f44 on core: 0[0m
+D (474) spi_flash: trying chip: issi[0m
+D (477) spi_flash: trying chip: gd[0m
+D (481) spi_flash: trying chip: mxic[0m
+D (484) spi_flash: trying chip: winbond[0m
+D (488) spi_flash: trying chip: boya[0m
+D (492) spi_flash: trying chip: th[0m
+D (495) spi_flash: trying chip: mxic (opi)[0m
+D (500) spi_flash: trying chip: generic[0m
+[0;32mI (503) spi_flash: detected chip: generic[0m
+[0;32mI (508) spi_flash: flash io: dio[0m
+[0;33mW (512) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+D (525) cpu_start: calling init function: 0x42001d44 on core: 0[0m
+D (531) cpu_start: calling init function: 0x42013ce8 on core: 0[0m
+D (537) cpu_start: calling init function: 0x4200f7e8 on core: 0[0m
+D (543) cpu_start: calling init function: 0x42004e4c on core: 0[0m
+[0;32mI (549) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (557) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+D (564) cpu_start: calling init function: 0x420024cc on core: 0[0m
+D (570) cpu_start: calling init function: 0x42008344 on core: 0[0m
+D (576) cpu_start: calling init function: 0x420024d8 on core: 0[0m
+D (582) intr_alloc: Connected src 79 to int 2 (cpu 0)[0m
+D (587) app_start: Starting scheduler on CPU0[0m
+D (592) intr_alloc: Connected src 57 to int 3 (cpu 0)[0m
+D (592) intr_alloc: Connected src 80 to int 0 (cpu 1)[0m
+D (602) app_start: Starting scheduler on CPU1[0m
+D (602) intr_alloc: Connected src 58 to int 1 (cpu 1)[0m
+[0;32mI (00:00:35.044) main_task: Started on CPU0[0m
+D (612) heap_init: New heap initialised at 0x3fce9710[0m
+D (612) intr_alloc: Connected src 52 to int 5 (cpu 0)[0m
+[0;32mI (00:00:35.073) main_task: Calling app_main()[0m
+[0;32mI (00:00:35.079) main: MachineGuard iniciando...[0m
+[0;32mI (00:00:35.084) app_context: context initialized[0m
+D (00:00:35.090) spi_common: SPI2 use iomux pins.[0m
+D (642) intr_alloc: Connected src 21 to int 8 (cpu 0)[0m
+D (652) spi_hal: eff: 10000, limit: 80000k(/0), 0 dummy, -1 delay[0m
+D (00:00:35.105) spi_master: SPI2: New device added to CS0, effective clock: 10000000 Hz[0m
+[0;32mI (00:00:35.114) accelerometer: LSM6DS3TR-C ready: 6.66 kHz, +/-2g, FIFO continuous[0m
+[0;32mI (00:00:35.533) dsp: task started[0m
+[0;32mI (00:00:35.561) dsp: Mean: 16946.84 | RMS: 139.78 | Min: -5685.84 | Max: 1119.16 | PkPk: 6805.00[0m
+[0;32mI (00:00:35.598) sensors: task_sensors started[0m
+[0;32mI (00:00:35.607) hmi: task_hmi iniciada[0m
+D (00:00:35.607) gpio: GPIO[48]| InputEn: 1| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (00:00:35.610) dac: task_dac iniciada no Core 1[0m
+[0;32mI (00:00:35.615) storage: task_sd iniciada no Core 1[0m
+[0;32mI (00:00:35.615) main_task: Returned from app_main()[0m
+[0;32mI (00:00:35.737) dsp: Mean: 16910.23 | RMS: 46.62 | Min: -157.23 | Max: 141.77 | PkPk: 299.00[0m
+[0;32mI (00:00:36.034) dsp: Mean: 16894.04 | RMS: 47.37 | Min: -208.04 | Max: 151.96 | PkPk: 360.00[0m
+[0;32mI (00:00:36.331) dsp: Mean: 16889.29 | RMS: 271.62 | Min: -1848.29 | Max: 1583.71 | PkPk: 3432.00[0m
+[0;32mI (00:00:36.628) dsp: Mean: 16881.12 | RMS: 482.00 | Min: -1497.12 | Max: 1385.88 | PkPk: 2883.00[0m
+[0;32mI (00:00:36.925) dsp: Mean: 16875.07 | RMS: 101.43 | Min: -428.07 | Max: 381.93 | PkPk: 810.00[0m
+[0;32mI (00:00:37.222) dsp: Mean: 16880.09 | RMS: 55.92 | Min: -185.09 | Max: 193.91 | PkPk: 379.00[0m
+[0;32mI (00:00:37.519) dsp: Mean: 16874.58 | RMS: 47.76 | Min: -149.58 | Max: 154.42 | PkPk: 304.00[0m
+[0;32mI (00:00:37.816) dsp: Mean: 16873.62 | RMS: 56.58 | Min: -168.62 | Max: 231.38 | PkPk: 400.00[0m
+[0;32mI (00:00:38.113) dsp: Mean: 16873.37 | RMS: 181.07 | Min: -1090.37 | Max: 797.63 | PkPk: 1888.00[0m
+[0;32mI (00:00:38.410) dsp: Mean: 16876.23 | RMS: 81.26 | Min: -258.23 | Max: 472.77 | PkPk: 731.00[0m
+[0;32mI (00:00:38.707) dsp: Mean: 16874.45 | RMS: 50.74 | Min: -169.45 | Max: 174.55 | PkPk: 344.00[0m
+[0;32mI (00:00:39.004) dsp: Mean: 16876.14 | RMS: 51.17 | Min: -189.14 | Max: 256.86 | PkPk: 446.00[0m
+[0;32mI (00:00:39.302) dsp: Mean: 16875.14 | RMS: 49.12 | Min: -194.14 | Max: 199.86 | PkPk: 394.00[0m
+[0;32mI (00:00:39.599) dsp: Mean: 16875.80 | RMS: 105.74 | Min: -435.80 | Max: 526.20 | PkPk: 962.00[0m
+[0;32mI (00:00:39.896) dsp: Mean: 16872.95 | RMS: 52.76 | Min: -186.95 | Max: 165.05 | PkPk: 352.00[0m
+[0;32mI (00:00:40.193) dsp: Mean: 16876.53 | RMS: 50.55 | Min: -155.53 | Max: 175.47 | PkPk: 331.00[0m
+[0;32mI (00:00:40.490) dsp: Mean: 16872.88 | RMS: 46.62 | Min: -153.88 | Max: 161.12 | PkPk: 315.00[0m
+[0;32mI (00:00:40.787) dsp: Mean: 16871.87 | RMS: 48.32 | Min: -146.87 | Max: 144.13 | PkPk: 291.00[0m
+[0;32mI (00:00:41.084) dsp: Mean: 16874.12 | RMS: 47.09 | Min: -141.12 | Max: 149.88 | PkPk: 291.00[0m
+[0;32mI (00:00:41.382) dsp: Mean: 16871.48 | RMS: 47.12 | Min: -190.48 | Max: 153.52 | PkPk: 344.00[0m
+[0;32mI (00:00:41.679) dsp: Mean: 16873.77 | RMS: 46.54 | Min: -144.77 | Max: 136.23 | PkPk: 281.00[0m
+[0;32mI (00:00:41.976) dsp: Mean: 16873.74 | RMS: 46.96 | Min: -169.74 | Max: 164.26 | PkPk: 334.00[0m
+[0;32mI (00:00:42.273) dsp: Mean: 16873.64 | RMS: 47.85 | Min: -176.64 | Max: 166.36 | PkPk: 343.00[0m
+[0;32mI (00:00:42.570) dsp: Mean: 16875.82 | RMS: 48.04 | Min: -165.82 | Max: 157.18 | PkPk: 323.00[0m
+[0;32mI (00:00:42.867) dsp: Mean: 16873.14 | RMS: 60.61 | Min: -201.14 | Max: 222.86 | PkPk: 424.00[0m
+[0;32mI (00:00:43.164) dsp: Mean: 16874.36 | RMS: 54.21 | Min: -159.36 | Max: 168.64 | PkPk: 328.00[0m
+[0;32mI (00:00:43.461) dsp: Mean: 16877.08 | RMS: 61.26 | Min: -625.08 | Max: 559.92 | PkPk: 1185.00[0m
+[0;32mI (00:00:43.759) dsp: Mean: 16873.44 | RMS: 114.96 | Min: -702.44 | Max: 995.56 | PkPk: 1698.00[0m
+[0;32mI (00:00:44.056) dsp: Mean: 16877.98 | RMS: 59.77 | Min: -230.98 | Max: 169.02 | PkPk: 400.00[0m
+[0;32mI (00:00:44.353) dsp: Mean: 16873.91 | RMS: 53.01 | Min: -186.91 | Max: 188.09 | PkPk: 375.00[0m
+[0;32mI (00:00:44.650) dsp: Mean: 16876.45 | RMS: 50.92 | Min: -149.45 | Max: 180.55 | PkPk: 330.00[0m
+[0;32mI (00:00:44.947) dsp: Mean: 16873.26 | RMS: 47.59 | Min: -163.26 | Max: 181.74 | PkPk: 345.00[0m
+[0;32mI (00:00:45.244) dsp: Mean: 16870.36 | RMS: 48.18 | Min: -150.36 | Max: 147.64 | PkPk: 298.00[0m
+[0;32mI (00:00:45.541) dsp: Mean: 16865.21 | RMS: 3301.10 | Min[0;32mI (00:00:45.838) dsp: Mean: 16893.93 | RMS: 785.20 | Min: -2247.93 | Max: 1969.07 | PkPk: 4217.00[0m
+[0;32mI (00:00:46.135) dsp: Mean: 16873.33 | RMS: 849.36 | Min: -2060.33 | Max: 1883.67 | PkPk: 3944.00[0m
+[0;32mI (00:00:46.432) dsp: Mean: 16860.05 | RMS: 858.82 | Min: -2245.05 | Max: 2105.95 | PkPk: 4351.00[0m
+[0;32mI (00:00:46.729) dsp: Mean: 16852.65 | RMS: 843.94 | Min: -2067.65 | Max: 2197.35 | PkPk: 4265.00[0m
+[0;32mI (00:00:47.026) dsp: Mean: 16852.51 | RMS: 857.70 | Min: -2225.51 | Max: 2087.49 | PkPk: 4313.00[0m
+[0;32mI (00:00:47.324) dsp: Mean: 16857.52 | RMS: 851.50 | Min: -1937.52 | Max: 2162.48 | PkPk: 4100.00[0m
+[0;32mI (00:00:47.621) dsp: Mean: 16859.03 | RMS: 819.83 | Min: -2151.03 | Max: 1889.97 | PkPk: 4041.00[0m
+[0;32mI (00:00:47.918) dsp: Mean: 16869.60 | RMS: 828.90 | Min: -2350.60 | Max: 2088.40 | PkPk: 4439.00[0m
+[0;32mI (00:00:48.215) dsp: Mean: 16868.03 | RMS: 831.06 | Min: -2227.03 | Max: 1907.97 | PkPk: 4135.00[0m
+[0;32mI (00:00:48.512) dsp: Mean: 16868.96 | RMS: 842.58 | Min: -2195.96 | Max: 2161.04 | PkPk: 4357.00[0m
+[0;32mI (00:00:48.808) dsp: Mean: 16860.03 | RMS: 857.76 | Min: -2189.03 | Max: 2090.97 | PkPk: 4280.00[0m
+[0;32mI (00:00:49.105) dsp: Mean: 16847.54 | RMS: 831.17 | Min: -1901.54 | Max: 2062.46 | PkPk: 3964.00[0m
+[0;32mI (00:00:49.403) dsp: Mean: 16847.94 | RMS: 840.02 | Min: -2061.94 | Max: 2002.06 | PkPk: 4064.00[0m
+[0;32mI (00:00:49.700) dsp: Mean: 16855.43 | RMS: 822.71 | Min: -1827.43 | Max: 1904.57 | PkPk: 3732.00[0m
+[0;32mI (00:00:49.996) dsp: Mean: 16863.21 | RMS: 822.36 | Min: -2101.21 | Max: 2022.79 | PkPk: 4124.00[0m
+[0;32mI (00:00:50.293) dsp: Mean: 16880.93 | RMS: 808.71 | Min: -1841.93 | Max: 2011.07 | PkPk: 3853.00[0m
+[0;32mI (00:00:50.590) dsp: Mean: 16882.61 | RMS: 809.07 | Min: -2119.61 | Max: 1978.39 | PkPk: 4098.00[0m
+[0;32mI (00:00:50.888) dsp: Mean: 16876.78 | RMS: 798.94 | Min: -1835.78 | Max: 1787.22 | PkPk: 3623.00[0m
+[0;32mI (00:00:51.185) dsp: Mean: 16868.05 | RMS: 806.11 | Min: -1955.05 | Max: 1808.95 | PkPk: 3764.00[0m
+[0;32mI (00:00:51.482) dsp: Mean: 16864.16 | RMS: 820.41 | Min: -1895.16 | Max: 2085.84 | PkPk: 3981.00[0m
+[0;32mI (00:00:51.779) dsp: Mean: 16859.22 | RMS: 807.27 | Min: -2020.22 | Max: 2011.78 | PkPk: 4032.00[0m
+[0;32mI (00:00:52.076) dsp: Mean: 16852.24 | RMS: 808.76 | Min: -1876.24 | Max: 2019.76 | PkPk: 3896.00[0m
+[0;32mI (00:00:52.373) dsp: Mean: 16853.55 | RMS: 816.19 | Min: -1833.55 | Max: 1986.45 | PkPk: 3820.00[0m
+[0;32mI (00:00:52.670) dsp: Mean: 16863.15 | RMS: 830.83 | Min: -1950.15 | Max: 1897.85 | PkPk: 3848.00[0m
+ memory_layout: Building list of available memory regions:[0m
+[0;32mI (00:00:00.920) dsp: task started[0m
+[0;32mI (00:00:00.948) dsp: Mean: 16870.90 | RMS: 838.90 | Min: -5480.90 | Max: 1857.10 | PkPk: 7338.00[0m
+[0;32mI (00:00:00.985) sensors: task_sensors started[0m
+[0;32mI (00:00:00.994) hmi: task_hmi iniciada[0m
+D (00:00:00.995) gpio: GPIO[48]| InputEn: 1| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (00:00:00.998) dac: task_dac iniciada no Core 1[0m
+[0;32mI (00:00:01.003) storage: task_sd iniciada no Core 1[0m
+[0;32mI (00:00:01.003) main_task: Returned from app_main()[0m
+[0;32mI (00:00:01.124) dsp: Mean: 16864.02 | RMS: 833.52 | Min: -2080.02 | Max: 2080.98 | PkPk: 4161.00[0m
+[0;32mI (00:00:01.421) dsp: Mean: 16865.82 | RMS: 815.25 | Min: -1987.82 | Max: 2075.18 | PkPk: 4063.00[0m
+[0;32mI (00:00:01.718) dsp: Mean: 16869.96 | RMS: 780.52 | Min: -1990.96 | Max: 1789.04 | PkPk: 3780.00[0m
+[0;32mI (00:00:02.015) dsp: Mean: 16881.12 | RMS: 760.07 | Min: -2172.12 | Max: 2150.88 | PkPk: 4323.00[0m
+[0;32mI (00:00:02.312) dsp: Mean: 16879.84 | RMS: 741.90 | Min: -1773.84 | Max: 1869.16 | PkPk: 3643.00[0m
+[0;32mI (00:00:02.610) dsp: Mean: 16887.71 | RMS: 782.85 | Min: -2189.71 | Max: 1963.29 | PkPk: 4153.00[0m
+[0;32mI (00:00:02.907) dsp: Mean: 16888.53 | RMS: 815.77 | Min: -2069.53 | Max: 2030.47 | PkPk: 4100.00[0m
+[0;32mI (00:00:03.204) dsp: Mean: 16878.93 | RMS: 818.70 | Min: -2147.93 | Max: 1915.07 | PkPk: 4063.00[0m
+[0;32mI (00:00:03.501) dsp: Mean: 16869.54 | RMS: 825.44 | Min: -1978.54 | Max: 2030.46 | PkPk: 4009.00[0m
+[0;32mI (00:00:03.798) dsp: Mean: 16869.89 | RMS: 841.98 | Min: -2329.89 | Max: 2152.11 | PkPk: 4482.00[0m
+[0;32mI (00:00:04.095) dsp: Mean: 16868.03 | RMS: 831.58 | Min: -2224.03 | Max: 2009.97 | PkPk: 4234.00[0m
+[0;32mI (00:00:04.392) dsp: Mean: 16867.38 | RMS: 839.82 | Min: -2175.38 | Max: 2102.62 | PkPk: 4278.00[0m
+[0;32mI (00:00:04.689) dsp: Mean: 16871.39 | RMS: 840.26 | Min: -2190.39 | Max: 2108.61 | PkPk: 4299.00[0m
+[0;32mI (00:00:04.986) dsp: Mean: 16876.16 | RMS: 823.99 | Min: -2066.16 | Max: 2022.84 | PkPk: 4089.00[0m
+[0;32mI (00:00:05.283) dsp: Mean: 16877.56 | RMS: 826.17 | Min: -2279.56 | Max: 2251.44 | PkPk: 4531.00[0m
+[0;32mI (00:00:05.580) dsp: Mean: 16880.95 | RMS: 822.50 | Min: -2131.95 | Max: 1949.05 | PkPk: 4081.00[0m
+[0;32mI (00:00:05.877) dsp: Mean: 16875.02 | RMS: 824.84 | Min: -1931.02 | Max: 2197.98 | PkPk: 4129.00[0m
+[0;32mI (00:00:06.175) dsp: Mean: 16866.47 | RMS: 831.90 | Min: -1934.47 | Max: 2216.53 | PkPk: 4151.00[0m
+[0;32mI (00:00:06.472) dsp: Mean: 16861.98 | RMS: 823.74 | Min: -1882.98 | Max: 2023.02 | PkPk: 3906.00[0m
+[0;32mI (00:00:06.769) dsp: Mean: 16858.99 | RMS: 811.42 | Min: -1860.99 | Max: 2121.01 | PkPk: 3982.00[0m
+[0;32mI (00:00:07.066) dsp: Mean: 16859.42 | RMS: 824.96 | Min: -2042.42 | Max: 2095.58 | PkPk: 4138.00[0m
+[0;32mI (00:00:07.363) dsp: Mean: 16857.88 | RMS: 835.93 | Min: -2052.88 | Max: 2150.12 | PkPk: 4203.00[0m
+[0;32mI (00:00:07.660) dsp: Mean: 16865.86 | RMS: 824.89 | Min: -2132.86 | Max: 2238.14 | PkPk: 4371.00[0m
+[0;32mI (00:00:07.957) dsp: Mean: 16873.20 | RMS: 830.42 | Min: -2023.20 | Max: 2068.80 | PkPk: 4092.00[0m
+[0;32mI (00:00:08.254) dsp: Mean: 16873.71 | RMS: 817.04 | Min: -2534.71 | Max: 2109.29 | PkPk: 4644.00[0m
+[0;32mI (00:00:08.551) dsp: Mean: 16870.31 | RMS: 824.59 | Min: -2054.31 | Max: 1937.69 | PkPk: 3992.00[0m
+[0;32mI (00:00:08.848) dsp: Mean: 16871.03 | RMS: 838.06 | Min: -2102.03 | Max: 1925.97 | PkPk: 4028.00[0m
+[0;32mI (00:00:09.146) dsp: Mean: 16862.32 | RMS: 829.61 | Min: -2214.32 | Max: 2067.68 | PkPk: 4282.00[0m
+[0;32mI (00:00:09.443) dsp: Mean: 16853.46 | RMS: 853.44 | Min: -2171.46 | Max: 2261.54 | PkPk: 4433.00[0m
+[0;32mI (00:00:09.740) dsp: Mean: 16851.56 | RMS: 836.75 | Min: -2332.56 | Max: 2049.44 | PkPk: 4382.00[0m
+[0;32mI (00:00:10.037) dsp: Mean: 16850.60 | RMS: 843.03 | Min: -2363.60 | Max: 1982.40 | PkPk: 4346.00[0m
+[0;32mI (00:00:10.334) dsp: Mean: 16857.46 | RMS: 845.07 | Min: -2056.46 | Max: 2045.54 | PkPk: 4102.00[0m
+[0;32mI (00:00:10.631) dsp: Mean: 16871.45 | RMS: 835.13 | Min: -2394.45 | Max: 1995.55 | PkPk: 4390.00[0m
+[0;32mI (00:00:10.928) dsp: Mean: 16874.26 | RMS: 844.78 | Min: -2141.26 | Max: 2233.74 | PkPk: 4375.00[0m
+[0;32mI (00:00:11.225) dsp: Mean: 16880.26 | RMS: 834.22 | Min: -2088.26 | Max: 2165.74 | PkPk: 4254.00[0m
+[0;32mI (00:00:11.523) dsp: Mean: 16878.47 | RMS: 830.79 | Min: -1993.47 | Max: 1867.53 | PkPk: 3861.00[0m
+[0;32mI (00:00:11.820) dsp: Mean: 16875.04 | RMS: 838.41 | Min: -1984.04 | Max: 2041.96 | PkPk: 4026.00[0m
+[0;32mI (00:00:12.117) dsp: Mean: 16864.98 | RMS: 844.02 | Min: -1880.98 | Max: 2363.02 | PkPk: 4244.00[0m
+[0;32mI (00:00:12.414) dsp: Mean: 16858.75 | RMS: 832.12 | Min: -1946.75 | Max: 2146.25 | PkPk: 4093.00[0m
+[0;32mI (00:00:12.711) dsp: Mean: 16853.22 | RMS: 836.45 | Min: -2046.22 | Max: 1934.78 | PkPk: 3981.00[0m
+[0;32mI (00:00:13.008) dsp: Mean: 16860.26 | RMS: 841.53 | Min: -2251.26 | Max: 2079.74 | PkPk: 4331.00[0m
+[0;32mI (00:00:13.305) dsp: Mean: 16861.13 | RMS: 842.16 | Min: -1986.13 | Max: 1986.87 | PkPk: 3973.00[0m
+[0;32mI (00:00:13.602) dsp: Mean: 16868.36 | RMS: 858.03 | Min: -2090.36 | Max: 2126.64 | PkPk: 4217.00[0m
+[0;32mI (00:00:13.899) dsp: Mean: 16874.73 | RMS: 837.81 | Min: -2265.73 | Max: 2126.27 | PkPk: 4392.00[0m
+[0;32mI (00:00:14.196) dsp: Mean: 16875.17 | RMS: 831.41 | Min: -1816.17 | Max: 1854.83 | PkPk: 3671.00[0m
+[0;32mI (00:00:14.493) dsp: Mean: 16875.17 | RMS: 836.23 | Min: -2071.17 | Max: 2139.83 | PkPk: 4211.00[0m
+[0;32mI (00:00:14.790) dsp: Mean: 16872.41 | RMS: 830.99 | Min: -1954.41 | Max: 2110.59 | PkPk: 4065.00[0m
+[0;32mI (00:00:15.087) dsp: Mean: 16863.21 | RMS: 836.15 | Min: -2005.21 | Max: 1938.79 | PkPk: 3944.00[0m
+[0;32mI (00:00:15.384) dsp: Mean: 16854.42 | RMS: 833.10 | Min: -1921.42 | Max: 2100.58 | PkPk: 4022.00[0m
+[0;32mI (00:00:15.681) dsp: Mean: 16851.37 | RMS: 821.28 | Min: -2061.37 | Max: 1920.63 | PkPk: 3982.00[0m
+[0;32mI (00:00:15.979) dsp: Mean: 16846.56 | RMS: 841.34 | Min: -2283.56 | Max: 2089.44 | PkPk: 4373.00[0m
+[0;32mI (00:00:16.276) dsp: Mean: 16838.25 | RMS: 852.07 | Min: -2160.25 | Max: 2012.75 | PkPk: 4173.00[0m
+[0;32mI (00:00:16.573) dsp: Mean: 16839.43 | RMS: 859.15 | Min: -2102.43 | Max: 2183.57 | PkPk: 4286.00[0m
+[0;32mI (00:00:16.870) dsp: Mean: 16847.67 | RMS: 867.28 | Min: -2237.67 | Max: 2303.33 | PkPk: 4541.00[0m
+[0;32mI (00:00:17.167) dsp: Mean: 16853.79 | RMS: 843.67 | Min: -2014.79 | Max: 2027.21 | PkPk: 4042.00[0m
+[0;32mI (00:00:17.464) dsp: Mean: 16848.61 | RMS: 852.07 | Min: -2052.61 | Max: 2100.39 | PkPk: 4153.00[0m
+[0;32mI (00:00:17.761) dsp: Mean: 16840.68 | RMS: 843.74 | Min: -2155.68 | Max: 2066.32 | PkPk: 4222.00[0m
+[0;32mI (00:00:18.058) dsp: Mean: 16841.32 | RMS: 833.29 | Min: -1953.32 | Max: 2157.68 | PkPk: 4111.00[0m
+[0;32mI (00:00:18.355) dsp: Mean: 16840.56 | RMS: 846.56 | Min: -2134.56 | Max: 2093.44 | PkPk: 4228.00[0m
+[0;32mI (00:00:18.652) dsp: Mean: 16835.61 | RMS: 821.38 | Min: -1912.61 | Max: 1983.39 | PkPk: 3896.00[0m
+[0;32mI (00:00:18.949) dsp: Mean: 16841.16 | RMS: 830.20 | Min: -1951.16 | Max: 2225.84 | PkPk: 4177.00[0m
+[0;32mI (00:00:19.246) dsp: Mean: 16853.91 | RMS: 840.28 | Min: -2020.91 | Max: 2073.09 | PkPk: 4094.00[0m
+[0;32mI (00:00:19.543) dsp: Mean: 16865.61 | RMS: 829.88 | Min: -2181.61 | Max: 1963.39 | PkPk: 4145.00[0m
+[0;32mI (00:00:19.840) dsp: Mean: 16872.08 | RMS: 848.99 | Min: -2383.08 | Max: 2286.92 | PkPk: 4670.00[0m
+[0;32mI (00:00:20.137) dsp: Mean: 16875.63 | RMS: 844.18 | Min: -2831.63 | Max: 2074.37 | PkPk: 4906.00[0m
+[0;32mI (00:00:20.435) dsp: Mean: 16872.18 | RMS: 836.82 | Min: -2129.18 | Max: 2198.82 | PkPk: 4328.00[0m
+[0;32mI (00:00:20.732) dsp: Mean: 16865.06 | RMS: 863.16 | Min: -2529.06 | Max: 2127.94 | PkPk: 4657.00[0m
+[0;32mI (00:00:21.029) dsp: Mean: 16859.81 | RMS: 855.56 | Min: -2332.81 | Max: 2109.19 | PkPk: 4442.00[0m
+[0;32mI (00:00:21.326) dsp: Mean: 16855.70 | RMS: 850.17 | Min: -2323.70 | Max: 1987.30 | PkPk: 4311.00[0m
+[0;32mI (00:00:21.623) dsp: Mean: 16855.09 | RMS: 853.65 | Min: -2396.09 | Max: 2321.91 | PkPk: 4718.00[0m
+[0;32mI (00:00:21.920) dsp: Mean: 16856.75 | RMS: 856.03 | Min: -2115.75 | Max: 2047.25 | PkPk: 4163.00[0m
+[0;32mI (00:00:22.217) dsp: Mean: 16859.30 | RMS: 851.69 | Min: -2467.30 | Max: 2195.70 | PkPk: 4663.00[0m
+[0;32mI (00:00:22.514) dsp: Mean: 16864.44 | RMS: 854.13 | Min: -2273.44 | Max: 2133.56 | PkPk: 4407.00[0m
+[0;32mI (00:00:22.811) dsp: Mean: 16864.73 | RMS: 840.10 | Min: -2519.73 | Max: 1890.27 | PkPk: 4410.00[0m
+[0;32mI (00:00:23.108) dsp: Mean: 16868.98 | RMS: 843.79 | Min: -2060.98 | Max: 2069.02 | PkPk: 4130.00[0m
+[0;32mI (00:00:23.405) dsp: Mean: 16872.36 | RMS: 838.45 | Min: -2184.36 | Max: 2135.64 | PkPk: 4320.00[0m
+[0;32mI (00:00:23.702) dsp: Mean: 16861.40 | RMS: 852.11 | Min: -2270.40 | Max: 2184.60 | PkPk: 4455.00[0m
+[0;32mI (00:00:23.999) dsp: Mean: 16856.71 | RMS: 849.66 | Min: -2141.71 | Max: 2399.29 | PkPk: 4541.00[0m
+[0;32mI (00:00:24.296) dsp: Mean: 16848.34 | RMS: 841.80 | Min: -2056.34 | Max: 2023.66 | PkPk: 4080.00[0m
+[0;32mI (00:00:24.594) dsp: Mean: 16846.80 | RMS: 859.33 | Min: -2072.80 | Max: 2335.20 | PkPk: 4408.00[0m
+[0;32mI (00:00:24.891) dsp: Mean: 16847.55 | RMS: 842.18 | Min: -2061.55 | Max: 2283.45 | PkPk: 4345.00[0m
+[0;32mI (00:00:25.188) dsp: Mean: 16848.07 | RMS: 855.48 | Min: -2052.07 | Max: 2388.93 | PkPk: 4441.00[0m
+[0;32mI (00:00:25.485) dsp: Mean: 16852.64 | RMS: 843.07 | Min: -2024.64 | Max: 2351.36 | PkPk: 4376.00[0m
+[0;32mI (00:00:25.782) dsp: Mean: 16856.14 | RMS: 778.51 | Min: -1841.14 | Max: 1990.86 | PkPk: 3832.00[0m
+[0;32mI (00:00:26.079) dsp: Mean: 16853.32 | RMS: 769.89 | Min: -2172.32 | Max: 2152.68 | PkPk: 4325.00[0m
+[0;32mI (00:00:26.376) dsp: Mean: 16853.18 | RMS: 720.77 | Min: -1731.18 | Max: 2031.82 | PkPk: 3763.00[0m
+[0;32mI (00:00:26.673) dsp: Mean: 16850.06 | RMS: 731.95 | Min: -1948.06 | Max: 1823.94 | PkPk: 3772.00[0m
+[0;32mI (00:00:26.970) dsp: Mean: 16839.46 | RMS: 724.21 | Min: -1782.46 | Max: 1734.54 | PkPk: 3517.00[0m
+[0;32mI (00:00:27.267) dsp: Mean: 16829.34 | RMS: 807.37 | Min: -1990.34 | Max: 2183.66 | PkPk: 4174.00[0m

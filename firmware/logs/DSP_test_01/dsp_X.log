@@ -1,0 +1,342 @@
+Executing action: monitor
+Serial port /dev/ttyACM0:
+Connecting...
+Detecting chip type... ESP32-S3
+Running idf_monitor in directory /home/freitasj1/Documentos/Embedded/MachineGuard/firmware
+Executing "/home/freitasj1/.espressif/tools/python/v6.0.2/venv/bin/python /home/freitasj1/.espressif/v6.0.2/esp-idf/tools/idf_monitor.py -p /dev/ttyACM0 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /home/freitasj1/Documentos/Embedded/MachineGuard/firmware/build/MachineGuard.elf /home/freitasj1/Documentos/Embedded/MachineGuard/firmware/build/bootloader/bootloader.elf -m '/home/freitasj1/.espressif/tools/python/v6.0.2/venv/bin/python' '/home/freitasj1/.espressif/v6.0.2/esp-idf/tools/idf.py'"...
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x28 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40048d14
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x14f0
+load:0x403c8700,len:0xda0
+load:0x403cb700,len:0x2f54
+entry 0x403c8908
+[0;32mI (24) boot: ESP-IDF v6.0.2 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time Aug  4 2026 17:50:14[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (25) boot: chip revision: v0.2[0m
+[0;32mI (28) boot: efuse block revision: v1.3[0m
+[0;32mI (31) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (35) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32s3: SPI Flash Size : 2MB[0m
+[0;32mI (43) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (50) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (76) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=10c04h ( 68612) map[0m
+[0;32mI (99) esp_image: segment 1: paddr=00020c2c vaddr=3fc92c00 size=036dch ( 14044) load[0m
+[0;32mI (102) esp_image: segment 2: paddr=00024310 vaddr=40374000 size=0bd08h ( 48392) load[0m
+[0;32mI (114) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=197d8h (104408) map[0m
+[0;32mI (133) esp_image: segment 4: paddr=00049800 vaddr=4037fd08 size=02e3ch ( 11836) load[0m
+[0;32mI (136) esp_image: segment 5: paddr=0004c644 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (144) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (144) boot: Disabling RNG early entropy source...[0m
+[0;32mI (159) cpu_start: Multicore app[0m
+D (159) cpu_start: Pro cpu up[0m
+D (159) cpu_start: Starting app cpu, entry point is 0x4037562c[0m
+D (0) cpu_start: App cpu up[0m
+D (169) clk: RTC_SLOW_CLK calibration value: 3225357[0m
+[0;32mI (180) cpu_start: GPIO 44 and 43 are used as console UART I/O pins[0m
+D (181) cpu_start: calling init function: 0x42001d1c on core: 0[0m
+D (181) cpu_start: calling init function: 0x420024ec on core: 0[0m
+[0;32mI (187) cpu_start: Pro cpu start user code[0m
+[0;32mI (192) cpu_start: cpu freq: 160000000 Hz[0m
+D (197) cpu_start: calling init function: 0x42001c4c on core: 0[0m
+[0;32mI (203) app_init: Application information:[0m
+[0;32mI (208) app_init: Project name:     MachineGuard[0m
+[0;32mI (213) app_init: App version:      dsp-test-001-4-ge4f9789-dirty[0m
+[0;32mI (220) app_init: Compile time:     Aug  7 2026 17:38:13[0m
+[0;32mI (226) app_init: ELF file SHA256:  45cbb6271...[0m
+[0;32mI (231) app_init: ESP-IDF:          v6.0.2[0m
+D (236) cpu_start: calling init function: 0x42001d30 on core: 0[0m
+[0;32mI (242) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (246) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (251) efuse_init: Chip rev:         v0.2[0m
+D (256) cpu_start: calling init function: 0x42003cac on core: 0[0m
+D (262) memory_layout: Checking 6 reserved memory ranges:[0m
+D (268) memory_layout: Reserved memory range 0x3fc84000 - 0x3fc92c00[0m
+D (274) memory_layout: Reserved memory range 0x3fc92c00 - 0x3fca4df0[0m
+D (280) memory_layout: Reserved memory range 0x3fceee34 - 0x3fcf0000[0m
+D (287) memory_layout: Reserved memory range 0x40374000 - 0x40382c00[0m
+D (293) memory_layout: Reserved memory range 0x600fe000 - 0x600fe000[0m
+D (300) memory_layout: Reserved memory range 0x600fffe8 - 0x60100000[0m
+D (306) memory_layout: Building list of available memory regions:[0m
+D (312) memory_layout: Available memory region 0x3fca4df0 - 0x3fcb0000[0m
+D (319) memory_layout: Available memory region 0x3fcb0000 - 0x3fcc0000[0m
+D (326) memory_layout: Available memory region 0x3fcc0000 - 0x3fcd0000[0m
+D (332) memory_layout: Available memory region 0x3fcd0000 - 0x3fce0000[0m
+D (339) memory_layout: Available memory region 0x3fce0000 - 0x3fce9710[0m
+D (345) memory_layout: Available memory region 0x3fce9710 - 0x3fceee34[0m
+D (352) memory_layout: Available memory region 0x3fcf0000 - 0x3fcf8000[0m
+D (359) memory_layout: Available memory region 0x600fe000 - 0x600fffe8[0m
+[0;32mI (365) heap_init: Initializing. RAM available for dynamic allocation:[0m
+D (372) heap_init: New heap initialised at 0x3fca4df0[0m
+[0;32mI (377) heap_init: At 3FCA4DF0 len 00044920 (274 KiB): RAM[0m
+[0;32mI (384) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+D (390) heap_init: New heap initialised at 0x3fcf0000[0m
+[0;32mI (395) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+D (401) heap_init: New heap initialised at 0x600fe000[0m
+[0;32mI (406) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+D (412) cpu_start: calling init function: 0x420079ac on core: 0[0m
+D (418) cpu_start: calling init function: 0x42007294 on core: 0[0m
+D (424) cpu_start: calling init function: 0x42002538 on core: 0[0m
+D (431) intr_alloc: Connected src 39 to int 1 (cpu 0)[0m
+D (435) cpu_start: calling init function: 0x42002548 on core: 0[0m
+D (441) cpu_start: calling init function: 0x420082f4 on core: 0[0m
+D (447) cpu_start: calling init function: 0x42008a58 on core: 0[0m
+D (453) cpu_start: calling init function: 0x420096c0 on core: 0[0m
+D (459) cpu_start: calling init function: 0x42001b9c on core: 0[0m
+D (465) cpu_start: calling init function: 0x420072a0 on core: 0[0m
+D (471) cpu_start: calling init function: 0x42001fcc on core: 0[0m
+D (478) spi_flash: trying chip: issi[0m
+D (481) spi_flash: trying chip: gd[0m
+D (484) spi_flash: trying chip: mxic[0m
+D (488) spi_flash: trying chip: winbond[0m
+D (492) spi_flash: trying chip: boya[0m
+D (496) spi_flash: trying chip: th[0m
+D (499) spi_flash: trying chip: mxic (opi)[0m
+D (503) spi_flash: trying chip: generic[0m
+[0;32mI (507) spi_flash: detected chip: generic[0m
+[0;32mI (512) spi_flash: flash io: dio[0m
+[0;33mW (516) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+D (529) cpu_start: calling init function: 0x42001dcc on core: 0[0m
+D (535) cpu_start: calling init function: 0x42014760 on core: 0[0m
+D (541) cpu_start: calling init function: 0x42010184 on core: 0[0m
+D (547) cpu_start: calling init function: 0x42004ed4 on core: 0[0m
+[0;32mI (553) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (560) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+D (568) cpu_start: calling init function: 0x42002554 on core: 0[0m
+D (574) cpu_start: calling init function: 0x420083cc on core: 0[0m
+D (580) cpu_start: calling init function: 0x42002560 on core: 0[0m
+D (586) intr_alloc: Connected src 79 to int 2 (cpu 0)[0m
+D (591) app_start: Starting scheduler on CPU0[0m
+D (595) intr_alloc: Connected src 57 to int 3 (cpu 0)[0m
+D (595) intr_alloc: Connected src 80 to int 0 (cpu 1)[0m
+D (605) app_start: Starting scheduler on CPU1[0m
+D (605) intr_alloc: Connected src 58 to int 1 (cpu 1)[0m
+[0;32mI (00:01:20.912) main_task: Started on CPU0[0m
+D (615) heap_init: New heap initialised at 0x3fce9710[0m
+D (615) intr_alloc: Connected src 52 to int 5 (cpu 0)[0m
+[0;32mI (00:01:20.942) main_task: Calling app_main()[0m
+[0;32mI (00:01:20.947) main: MachineGuard iniciando...[0m
+[0;32mI (00:01:20.952) app_context: context initialized[0m
+D (00:01:20.958) spi_common: SPI2 use iomux pins.[0m
+D (645) intr_alloc: Connected src 21 to int 2 (cpu 1)[0m
+D (655) spi_hal: eff: 10000, limit: 80000k(/0), 0 dummy, -1 delay[0m
+D (00:01:20.974) spi_master: SPI2: New device added to CS0, effective clock: 10000000 Hz[0m
+[0;32mI (00:01:20.980) dsp: FFT initialized (2048 points)[0m
+[0;32mI (00:01:20.983) accelerometer: LSM6DS3TR-C ready: 6.66 kHz, +/-2g, FIFO continuous[0m
+[0;32mI (00:01:20.988) dsp: task started[0m
+[0;32mI (00:01:20.988) sensors: task_sensors started[0m
+[0;32mI (00:01:20.988) hmi: task_hmi iniciada[0m
+D (00:01:21.021) gpio: GPIO[48]| InputEn: 1| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (00:01:21.021) dac: task_dac iniciada no Core 1[0m
+[0;32mI (00:01:21.021) main_task: Returned from app_main()[0m
+[0;32mI (00:01:21.021) storage: task_sd iniciada no Core 1[0m
+D (00:01:21.285) dsp: Mean: 286.33 | RMS: 0.053930 | Min: -0.183630 | Max: 0.196766 | PkPk: 0.380396[0m
+[0;32mI (00:01:21.289) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0154[0m
+[0;32mI (00:01:21.291) dsp: Peak: 14.02 Hz | 840.9 RPM | 0.05410 g[0m
+D (00:01:21.584) dsp: Mean: 283.80 | RMS: 0.054888 | Min: -0.148645 | Max: 0.174106 | PkPk: 0.322751[0m
+[0;32mI (00:01:21.588) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0075[0m
+[0;32mI (00:01:21.590) dsp: Peak: 14.01 Hz | 840.5 RPM | 0.05267 g[0m
+D (00:01:21.882) dsp: Mean: 284.82 | RMS: 0.055696 | Min: -0.152306 | Max: 0.173251 | PkPk: 0.325557[0m
+[0;32mI (00:01:21.887) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0125[0m
+[0;32mI (00:01:21.888) dsp: Peak: 14.01 Hz | 840.7 RPM | 0.04756 g[0m
+D (00:01:22.181) dsp: Mean: 284.86 | RMS: 0.056199 | Min: -0.169449 | Max: 0.183741 | PkPk: 0.353190[0m
+[0;32mI (00:01:22.185) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=13.9974[0m
+[0;32mI (00:01:22.187) dsp: Peak: 14.00 Hz | 839.8 RPM | 0.03945 g[0m
+D (00:01:22.480) dsp: Mean: 282.35 | RMS: 0.055969 | Min: -0.185645 | Max: 0.186028 | PkPk: 0.371673[0m
+[0;32mI (00:01:22.484) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9881[0m
+[0;32mI (00:01:22.486) dsp: Peak: 13.99 Hz | 839.3 RPM | 0.02645 g[0m
+D (00:01:22.779) dsp: Mean: 286.36 | RMS: 0.056779 | Min: -0.168443 | Max: 0.184015 | PkPk: 0.352458[0m
+[0;32mI (00:01:22.783) dsp: Peak bin=1070218220  freq=15.03 Hz  amp=23.4879[0m
+[0;32mI (00:01:22.785) dsp: Peak: 23.49 Hz | 1409.3 RPM | 0.02553 g[0m
+D (00:01:23.077) dsp: Mean: 281.77 | RMS: 0.058649 | Min: -0.197260 | Max: 0.178439 | PkPk: 0.375699[0m
+[0;32mI (00:01:23.081) dsp: Peak bin=1070218220  freq=15.03 Hz  amp=23.4912[0m
+[0;32mI (00:01:23.083) dsp: Peak: 23.49 Hz | 1409.5 RPM | 0.02684 g[0m
+D (00:01:23.376) dsp: Mean: 283.01 | RMS: 0.059888 | Min: -0.188247 | Max: 0.199713 | PkPk: 0.387960[0m
+[0;32mI (00:01:23.380) dsp: Peak bin=1070218220  freq=15.04 Hz  amp=23.4971[0m
+[0;32mI (00:01:23.382) dsp: Peak: 23.50 Hz | 1409.8 RPM | 0.02530 g[0m
+D (00:01:23.675) dsp: Mean: 280.92 | RMS: 0.058129 | Min: -0.175126 | Max: 0.165864 | PkPk: 0.340990[0m
+[0;32mI (00:01:23.679) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0115[0m
+[0;32mI (00:01:23.681) dsp: Peak: 14.01 Hz | 840.7 RPM | 0.03145 g[0m
+D (00:01:23.973) dsp: Mean: 281.27 | RMS: 0.054107 | Min: -0.137449 | Max: 0.185973 | PkPk: 0.323422[0m
+[0;32mI (00:01:23.978) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=13.9964[0m
+[0;32mI (00:01:23.979) dsp: Peak: 14.00 Hz | 839.8 RPM | 0.04185 g[0m
+D (00:01:24.272) dsp: Mean: 281.35 | RMS: 0.053073 | Min: -0.190646 | Max: 0.155041 | PkPk: 0.345687[0m
+[0;32mI (00:01:24.276) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0079[0m
+[0;32mI (00:01:24.278) dsp: Peak: 14.01 Hz | 840.5 RPM | 0.05103 g[0m
+D (00:01:24.571) dsp: Mean: 280.57 | RMS: 0.053778 | Min: -0.158635 | Max: 0.169728 | PkPk: 0.328363[0m
+[0;32mI (00:01:24.575) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0156[0m
+[0;32mI (00:01:24.577) dsp: Peak: 14.02 Hz | 840.9 RPM | 0.05435 g[0m
+D (00:01:24.870) dsp: Mean: 282.68 | RMS: 0.055549 | Min: -0.177490 | Max: 0.196135 | PkPk: 0.373625[0m
+[0;32mI (00:01:24.874) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0184[0m
+[0;32mI (00:01:24.875) dsp: Peak: 14.02 Hz | 841.1 RPM | 0.05292 g[0m
+D (00:01:25.168) dsp: Mean: 277.71 | RMS: 0.055506 | Min: -0.168830 | Max: 0.201074 | PkPk: 0.369904[0m
+[0;32mI (00:01:25.172) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0122[0m
+[0;32mI (00:01:25.174) dsp: Peak: 14.01 Hz | 840.7 RPM | 0.04824 g[0m
+D (00:01:25.467) dsp: Mean: 282.67 | RMS: 0.052725 | Min: -0.151687 | Max: 0.164842 | PkPk: 0.316529[0m
+[0;32mI (00:01:25.471) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0038[0m
+[0;32mI (00:01:25.473) dsp: Peak: 14.00 Hz | 840.2 RPM | 0.04037 g[0m
+D (00:01:25.766) dsp: Mean: 280.40 | RMS: 0.053203 | Min: -0.154171 | Max: 0.157600 | PkPk: 0.311771[0m
+[0;32mI (00:01:25.770) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0016[0m
+[0;32mI (00:01:25.772) dsp: Peak: 14.00 Hz | 840.1 RPM | 0.02765 g[0m
+D (00:01:26.064) dsp: Mean: 281.19 | RMS: 0.052746 | Min: -0.134943 | Max: 0.170667 | PkPk: 0.305610[0m
+[0;32mI (00:01:26.069) dsp: Peak bin=1070218220  freq=15.04 Hz  amp=23.4979[0m
+[0;32mI (00:01:26.070) dsp: Peak: 23.50 Hz | 1409.9 RPM | 0.02711 g[0m
+D (00:01:26.363) dsp: Mean: 279.56 | RMS: 0.053942 | Min: -0.169004 | Max: 0.143987 | PkPk: 0.312991[0m
+[0;32mI (00:01:26.367) dsp: Peak bin=1070218220  freq=15.05 Hz  amp=23.5106[0m
+[0;32mI (00:01:26.369) dsp: Peak: 23.51 Hz | 1410.6 RPM | 0.02748 g[0m
+D (00:01:26.662) dsp: Mean: 280.36 | RMS: 0.055644 | Min: -0.167223 | Max: 0.189017 | PkPk: 0.356240[0m
+[0;32mI (00:01:26.666) dsp: Peak bin=1070218220  freq=15.04 Hz  amp=23.5064[0m
+[0;32mI (00:01:26.668) dsp: Peak: 23.51 Hz | 1410.4 RPM | 0.02547 g[0m
+D (00:01:26.960) dsp: Mean: 287.71 | RMS: 0.055015 | Min: -0.165414 | Max: 0.167036 | PkPk: 0.332450[0m
+[0;32mI (00:01:26.965) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=13.9991[0m
+[0;32mI (00:01:26.966) dsp: Peak: 14.00 Hz | 839.9 RPM | 0.03187 g[0m
+D (00:01:27.259) dsp: Mean: 279.52 | RMS: 0.054093 | Min: -0.143564 | Max: 0.166072 | PkPk: 0.309636[0m
+[0;32mI (00:01:27.263) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0082[0m
+[0;32mI (00:01:27.265) dsp: Peak: 14.01 Hz | 840.5 RPM | 0.04343 g[0m
+D (00:01:27.558) dsp: Mean: 283.85 | RMS: 0.054260 | Min: -0.177135 | Max: 0.172334 | PkPk: 0.349469[0m
+[0;32mI (00:01:27.562) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0127[0m
+[0;32mI (00:01:27.564) dsp: Peak: 14.01 Hz | 840.8 RPM | 0.05021 g[0m
+D (00:01:27.857) dsp: Mean: 280.54 | RMS: 0.054336 | Min: -0.172419 | Max: 0.165033 | PkPk: 0.337452[0m
+[0;32mI (00:01:27.861) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0006[0m
+[0;32mI (00:01:27.863) dsp: Peak: 14.00 Hz | 840.0 RPM | 0.05381 g[0m
+D (00:01:28.155) dsp: Mean: 284.93 | RMS: 0.054185 | Min: -0.168722 | Max: 0.185872 | PkPk: 0.354593[0m
+[0;32mI (00:01:28.160) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9920[0m
+[0;32mI (00:01:28.161) dsp: Peak: 13.99 Hz | 839.5 RPM | 0.05256 g[0m
+D (00:01:28.454) dsp: Mean: 282.42 | RMS: 0.054910 | Min: -0.164299 | Max: 0.163759 | PkPk: 0.328058[0m
+[0;32mI (00:01:28.458) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0039[0m
+[0;32mI (00:01:28.460) dsp: Peak: 14.00 Hz | 840.2 RPM | 0.04641 g[0m
+D (00:01:28.753) dsp: Mean: 283.52 | RMS: 0.055911 | Min: -0.162657 | Max: 0.185165 | PkPk: 0.347822[0m
+[0;32mI (00:01:28.757) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9914[0m
+[0;32mI (00:01:28.759) dsp: Peak: 13.99 Hz | 839.5 RPM | 0.03558 g[0m
+D (00:01:29.052) dsp: Mean: 286.13 | RMS: 0.057271 | Min: -0.166599 | Max: 0.184883 | PkPk: 0.351482[0m
+[0;32mI (00:01:29.056) dsp: Peak bin=1070218220  freq=15.04 Hz  amp=23.5034[0m
+[0;32mI (00:01:29.057) dsp: Peak: 23.50 Hz | 1410.2 RPM | 0.02438 g[0m
+D (00:01:29.350) dsp: Mean: 281.26 | RMS: 0.057282 | Min: -0.179295 | Max: 0.168283 | PkPk: 0.347578[0m
+[0;32mI (00:01:29.354) dsp: Peak bin=1070218220  freq=15.03 Hz  amp=23.4802[0m
+[0;32mI (00:01:29.356) dsp: Peak: 23.48 Hz | 1408.8 RPM | 0.02660 g[0m
+D (00:01:29.649) dsp: Mean: 284.91 | RMS: 0.058434 | Min: -0.190071 | Max: 0.171476 | PkPk: 0.361547[0m
+[0;32mI (00:01:29.653) dsp: Peak bin=1070218220  freq=15.03 Hz  amp=23.4772[0m
+[0;32mI (00:01:29.655) dsp: Peak: 23.48 Hz | 1408.6 RPM | 0.02617 g[0m
+D (00:01:29.948) dsp: Mean: 275.90 | RMS: 0.058508 | Min: -0.161522 | Max: 0.209114 | PkPk: 0.370636[0m
+[0;32mI (00:01:29.952) dsp: Peak bin=1070218220  freq=15.03 Hz  amp=23.4896[0m
+[0;32mI (00:01:29.954) dsp: Peak: 23.49 Hz | 1409.4 RPM | 0.02419 g[0m
+D (00:01:30.246) dsp: Mean: 282.24 | RMS: 0.059265 | Min: -0.156724 | Max: 0.188781 | PkPk: 0.345504[0m
+[0;32mI (00:01:30.250) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=13.9936[0m
+[0;32mI (00:01:30.252) dsp: Peak: 13.99 Hz | 839.6 RPM | 0.03399 g[0m
+D (00:01:30.545) dsp: Mean: 277.04 | RMS: 0.062207 | Min: -0.170131 | Max: 0.169212 | PkPk: 0.339343[0m
+[0;32mI (00:01:30.549) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0108[0m
+[0;32mI (00:01:30.551) dsp: Peak: 14.01 Hz | 840.6 RPM | 0.04371 g[0m
+D (00:01:30.844) dsp: Mean: 282.72 | RMS: 0.062069 | Min: -0.152666 | Max: 0.189544 | PkPk: 0.342210[0m
+[0;32mI (00:01:30.848) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0154[0m
+[0;32mI (00:01:30.850) dsp: Peak: 14.02 Hz | 840.9 RPM | 0.05027 g[0m
+D (00:01:31.143) dsp: Mean: 279.48 | RMS: 0.059345 | Min: -0.171500 | Max: 0.181141 | PkPk: 0.352641[0m
+[0;32mI (00:01:31.147) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=13.9965[0m
+[0;32mI (00:01:31.148) dsp: Peak: 14.00 Hz | 839.8 RPM | 0.05258 g[0m
+D (00:01:31.441) dsp: Mean: 276.32 | RMS: 0.055545 | Min: -0.166428 | Max: 0.180052 | PkPk: 0.346480[0m
+[0;32mI (00:01:31.445) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0134[0m
+[0;32mI (00:01:31.447) dsp: Peak: 14.01 Hz | 840.8 RPM | 0.04999 g[0m
+D (00:01:31.740) dsp: Mean: 285.44 | RMS: 0.056083 | Min: -0.173511 | Max: 0.163026 | PkPk: 0.336537[0m
+[0;32mI (00:01:31.744) dsp: Peak bin=1070218220  freq=9.02 Hz  amp=14.0871[0m
+[0;32mI (00:01:31.746) dsp: Peak: 14.09 Hz | 845.2 RPM | 0.04057 g[0m
+D (00:01:32.039) dsp: Mean: 278.81 | RMS: 0.054911 | Min: -0.158466 | Max: 0.153549 | PkPk: 0.312015[0m
+[0;32mI (00:01:32.043) dsp: Peak bin=1070218220  freq=9.03 Hz  amp=14.1029[0m
+[0;32mI (00:01:32.045) dsp: Peak: 14.10 Hz | 846.2 RPM | 0.02685 g[0m
+D (00:01:32.337) dsp: Mean: 284.79 | RMS: 0.056137 | Min: -0.187989 | Max: 0.161114 | PkPk: 0.349103[0m
+[0;32mI (00:01:32.342) dsp: Peak bin=1070218220  freq=9.00 Hz  amp=14.0552[0m
+[0;32mI (00:01:32.343) dsp: Peak: 14.06 Hz | 843.3 RPM | 0.01706 g[0m
+D (00:01:32.636) dsp: Mean: 282.07 | RMS: 0.055499 | Min: -0.199474 | Max: 0.151276 | PkPk: 0.350750[0m
+[0;32mI (00:01:32.640) dsp: Peak bin=1070218220  freq=15.05 Hz  amp=23.5184[0m
+[0;32mI (00:01:32.642) dsp: Peak: 23.52 Hz | 1411.1 RPM | 0.01580 g[0m
+D (00:01:32.935) dsp: Mean: 286.62 | RMS: 0.052742 | Min: -0.152172 | Max: 0.186256 | PkPk: 0.338428[0m
+[0;32mI (00:01:32.939) dsp: Peak bin=1070218220  freq=15.04 Hz  amp=23.4956[0m
+[0;32mI (00:01:32.941) dsp: Peak: 23.50 Hz | 1409.7 RPM | 0.01581 g[0m
+D (00:01:33.234) dsp: Mean: 282.82 | RMS: 0.051826 | Min: -0.163530 | Max: 0.172275 | PkPk: 0.335805[0m
+[0;32mI (00:01:33.238) dsp: Peak bin=1070218220  freq=15.05 Hz  amp=23.5155[0m
+[0;32mI (00:01:33.240) dsp: Peak: 23.52 Hz | 1410.9 RPM | 0.01535 g[0m
+D (00:01:33.532) dsp: Mean: 286.30 | RMS: 0.052422 | Min: -0.146113 | Max: 0.172917 | PkPk: 0.319030[0m
+[0;32mI (00:01:33.536) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9850[0m
+[0;32mI (00:01:33.538) dsp: Peak: 13.98 Hz | 839.1 RPM | 0.02083 g[0m
+D (00:01:33.831) dsp: Mean: 283.67 | RMS: 0.053397 | Min: -0.169133 | Max: 0.154899 | PkPk: 0.324032[0m
+[0;32mI (00:01:33.835) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0071[0m
+[0;32mI (00:01:33.837) dsp: Peak: 14.01 Hz | 840.4 RPM | 0.02756 g[0m
+D (00:01:34.130) dsp: Mean: 286.14 | RMS: 0.054973 | Min: -0.161171 | Max: 0.162800 | PkPk: 0.323971[0m
+[0;32mI (00:01:34.134) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9881[0m
+[0;32mI (00:01:34.136) dsp: Peak: 13.99 Hz | 839.3 RPM | 0.03069 g[0m
+D (00:01:34.428) dsp: Mean: 289.67 | RMS: 0.053986 | Min: -0.148454 | Max: 0.168502 | PkPk: 0.316956[0m
+[0;32mI (00:01:34.432) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0201[0m
+[0;32mI (00:01:34.434) dsp: Peak: 14.02 Hz | 841.2 RPM | 0.03078 g[0m
+D (00:01:34.727) dsp: Mean: 285.30 | RMS: 0.053987 | Min: -0.154592 | Max: 0.183104 | PkPk: 0.337696[0m
+[0;32mI (00:01:34.731) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9854[0m
+[0;32mI (00:01:34.733) dsp: Peak: 13.99 Hz | 839.1 RPM | 0.02834 g[0m
+D (00:01:35.026) dsp: Mean: 288.20 | RMS: 0.054205 | Min: -0.160259 | Max: 0.173533 | PkPk: 0.333792[0m
+[0;32mI (00:01:35.030) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0032[0m
+[0;32mI (00:01:35.032) dsp: Peak: 14.00 Hz | 840.2 RPM | 0.02351 g[0m
+D (00:01:35.325) dsp: Mean: 282.53 | RMS: 0.053654 | Min: -0.175591 | Max: 0.184370 | PkPk: 0.359961[0m
+[0;32mI (00:01:35.329) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9800[0m
+[0;32mI (00:01:35.330) dsp: Peak: 13.98 Hz | 838.8 RPM | 0.01525 g[0m
+D (00:01:35.623) dsp: Mean: 288.99 | RMS: 0.054047 | Min: -0.161466 | Max: 0.162322 | PkPk: 0.323788[0m
+[0;32mI (00:01:35.627) dsp: Peak bin=1070218220  freq=15.05 Hz  amp=23.5118[0m
+[0;32mI (00:01:35.629) dsp: Peak: 23.51 Hz | 1410.7 RPM | 0.01590 g[0m
+D (00:01:35.922) dsp: Mean: 280.79 | RMS: 0.054771 | Min: -0.169750 | Max: 0.175571 | PkPk: 0.345321[0m
+[0;32mI (00:01:35.926) dsp: Peak bin=1070218220  freq=15.04 Hz  amp=23.4956[0m
+[0;32mI (00:01:35.928) dsp: Peak: 23.50 Hz | 1409.7 RPM | 0.01540 g[0m
+D (00:01:36.221) dsp: Mean: 282.95 | RMS: 0.056843 | Min: -0.173115 | Max: 0.172023 | PkPk: 0.345138[0m
+[0;32mI (00:01:36.225) dsp: Peak bin=1070218220  freq=15.05 Hz  amp=23.5172[0m
+[0;32mI (00:01:36.227) dsp: Peak: 23.52 Hz | 1411.0 RPM | 0.01503 g[0m
+D (00:01:36.519) dsp: Mean: 286.62 | RMS: 0.058318 | Min: -0.162237 | Max: 0.174971 | PkPk: 0.337208[0m
+[0;32mI (00:01:36.523) dsp: Peak bin=1070218220  freq=9.00 Hz  amp=14.0646[0m
+[0;32mI (00:01:36.525) dsp: Peak: 14.06 Hz | 843.9 RPM | 0.01885 g[0m
+D (00:01:36.818) dsp: Mean: 284.17 | RMS: 0.057335 | Min: -0.188135 | Max: 0.167739 | PkPk: 0.355874[0m
+[0;32mI (00:01:36.822) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0054[0m
+[0;32mI (00:01:36.824) dsp: Peak: 14.01 Hz | 840.3 RPM | 0.02572 g[0m
+D (00:01:37.117) dsp: Mean: 281.09 | RMS: 0.059111 | Min: -0.174282 | Max: 0.173235 | PkPk: 0.347517[0m
+[0;32mI (00:01:37.121) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0000[0m
+[0;32mI (00:01:37.122) dsp: Peak: 14.00 Hz | 840.0 RPM | 0.02926 g[0m
+D (00:01:37.415) dsp: Mean: 286.54 | RMS: 0.059790 | Min: -0.192549 | Max: 0.193459 | PkPk: 0.386008[0m
+[0;32mI (00:01:37.419) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0022[0m
+[0;32mI (00:01:37.421) dsp: Peak: 14.00 Hz | 840.1 RPM | 0.03013 g[0m
+D (00:01:37.714) dsp: Mean: 281.39 | RMS: 0.062528 | Min: -0.192540 | Max: 0.216160 | PkPk: 0.408700[0m
+[0;32mI (00:01:37.718) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=13.9980[0m
+[0;32mI (00:01:37.720) dsp: Peak: 14.00 Hz | 839.9 RPM | 0.02693 g[0m
+D (00:01:38.013) dsp: Mean: 284.09 | RMS: 0.061518 | Min: -0.183005 | Max: 0.209042 | PkPk: 0.392047[0m
+[0;32mI (00:01:38.017) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=14.0016[0m
+[0;32mI (00:01:38.018) dsp: Peak: 14.00 Hz | 840.1 RPM | 0.02236 g[0m
+D (00:01:38.311) dsp: Mean: 281.54 | RMS: 0.058841 | Min: -0.186266 | Max: 0.159848 | PkPk: 0.346114[0m
+[0;32mI (00:01:38.315) dsp: Peak bin=1070218220  freq=8.93 Hz  amp=13.9585[0m
+[0;32mI (00:01:38.317) dsp: Peak: 13.96 Hz | 837.5 RPM | 0.01651 g[0m
+D (00:01:38.610) dsp: Mean: 286.37 | RMS: 0.056043 | Min: -0.171921 | Max: 0.170533 | PkPk: 0.342454[0m
+[0;32mI (00:01:38.614) dsp: Peak bin=1070218220  freq=15.04 Hz  amp=23.5070[0m
+[0;32mI (00:01:38.616) dsp: Peak: 23.51 Hz | 1410.4 RPM | 0.01435 g[0m
+D (00:01:38.909) dsp: Mean: 286.44 | RMS: 0.054994 | Min: -0.191750 | Max: 0.176873 | PkPk: 0.368623[0m
+[0;32mI (00:01:38.913) dsp: Peak bin=1070218220  freq=15.03 Hz  amp=23.4792[0m
+[0;32mI (00:01:38.915) dsp: Peak: 23.48 Hz | 1408.8 RPM | 0.01481 g[0m
+D (00:01:39.207) dsp: Mean: 287.85 | RMS: 0.055902 | Min: -0.173780 | Max: 0.169345 | PkPk: 0.343125[0m
+[0;32mI (00:01:39.211) dsp: Peak bin=1070218220  freq=15.05 Hz  amp=23.5114[0m
+[0;32mI (00:01:39.213) dsp: Peak: 23.51 Hz | 1410.7 RPM | 0.01446 g[0m
+D (00:01:39.506) dsp: Mean: 286.23 | RMS: 0.056306 | Min: -0.176975 | Max: 0.184755 | PkPk: 0.361730[0m
+[0;32mI (00:01:39.510) dsp: Peak bin=1070218220  freq=8.96 Hz  amp=13.9936[0m
+[0;32mI (00:01:39.512) dsp: Peak: 13.99 Hz | 839.6 RPM | 0.01892 g[0m
+D (00:01:39.804) dsp: Mean: 289.10 | RMS: 0.055900 | Min: -0.182823 | Max: 0.185800 | PkPk: 0.368623[0m
+[0;32mI (00:01:39.809) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9907[0m
+[0;32mI (00:01:39.810) dsp: Peak: 13.99 Hz | 839.4 RPM | 0.02580 g[0m
+D (00:01:40.103) dsp: Mean: 288.71 | RMS: 0.054599 | Min: -0.186093 | Max: 0.176857 | PkPk: 0.362950[0m
+[0;32mI (00:01:40.107) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0141[0m
+[0;32mI (00:01:40.109) dsp: Peak: 14.01 Hz | 840.8 RPM | 0.02857 g[0m
+D (00:01:40.402) dsp: Mean: 287.86 | RMS: 0.053472 | Min: -0.147612 | Max: 0.164525 | PkPk: 0.312137[0m
+[0;32mI (00:01:40.406) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0127[0m
+[0;32mI (00:01:40.408) dsp: Peak: 14.01 Hz | 840.8 RPM | 0.03049 g[0m
+D (00:01:40.701) dsp: Mean: 288.70 | RMS: 0.053324 | Min: -0.136683 | Max: 0.183689 | PkPk: 0.320372[0m
+[0;32mI (00:01:40.705) dsp: Peak bin=1070218220  freq=8.97 Hz  amp=14.0194[0m
+[0;32mI (00:01:40.707) dsp: Peak: 14.02 Hz | 841.2 RPM | 0.02980 g[0m
+D (00:01:40.999) dsp: Mean: 283.59 | RMS: 0.054888 | Min: -0.161869 | Max: 0.157344 | PkPk: 0.319213[0m
+[0;32mI (00:01:41.004) dsp: Peak bin=1070218220  freq=8.95 Hz  amp=13.9777[0m
+[0;32mI (00:01:41.005) dsp: Peak: 13.98 Hz | 838.7 RPM | 0.02464 g[0m
