@@ -46,8 +46,8 @@ static const char *TAG = "telemetry";
  *
  * Replace these values with the network used during testing.
  */
-#define TELEMETRY_WIFI_SSID              "Marcia"
-#define TELEMETRY_WIFI_PASSWORD          "jpgmoveis10"
+#define TELEMETRY_WIFI_SSID              "WLL-Inatel"
+#define TELEMETRY_WIFI_PASSWORD          "inatelsemfio"
 
 /**
  * @brief ThingsBoard MQTT configuration.

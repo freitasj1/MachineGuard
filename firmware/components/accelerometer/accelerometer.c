@@ -22,7 +22,7 @@
 
 /* SPI2 is initialized once by main.c. GPIO10 is the sensor CS pin. */
 #define ACCEL_SPI_HOST                 SPI2_HOST
-#define ACCEL_SPI_CS_GPIO              GPIO_NUM_10
+#define ACCEL_SPI_CS_GPIO              GPIO_NUM_13
 #define ACCEL_SPI_CLOCK_HZ             (10 * 1000 * 1000)
 #define ACCEL_SPI_MODE                 0
 
@@ -262,6 +262,7 @@ esp_err_t accel_init(app_context_t *context)
 
         return err;
     }
+    
 
     ESP_LOGI(
         TAG,
@@ -752,6 +753,7 @@ static esp_err_t sensor_configure(void)
         return err;
     }
 
+    ESP_LOGI(TAG, "WHO_AM_I = 0x%02X", who_am_i);
     if (who_am_i != LSM6DS3TR_C_WHO_AM_I_VALUE) {
 
         ESP_LOGE(

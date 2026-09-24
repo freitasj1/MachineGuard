@@ -43,14 +43,14 @@ static const char *TAG = "main";  /**< Tag para logs ESP-IDF */
 #define SPI2_HOST_USED      SPI2_HOST
 
 #define SPI2_PIN_MOSI       GPIO_NUM_11
-#define SPI2_PIN_MISO       GPIO_NUM_13
-#define SPI2_PIN_SCLK       GPIO_NUM_12
+#define SPI2_PIN_MISO       GPIO_NUM_12
+#define SPI2_PIN_SCLK       GPIO_NUM_10
 
 #define SPI3_HOST_USED      SPI3_HOST
 
-#define SPI3_PIN_MOSI       GPIO_NUM_39
-#define SPI3_PIN_MISO       GPIO_NUM_40
-#define SPI3_PIN_SCLK       GPIO_NUM_38
+#define SPI3_PIN_MOSI       GPIO_NUM_19
+#define SPI3_PIN_MISO       GPIO_NUM_45
+#define SPI3_PIN_SCLK       GPIO_NUM_20
 
 #define SPI_DMA_CHAN        SPI_DMA_CH_AUTO
 

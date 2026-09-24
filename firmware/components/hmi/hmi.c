@@ -10,6 +10,7 @@
 #include "hal/spi_types.h"
 #include "portmacro.h"
 #include "status.h"
+#include "esp_system.h"
 
 #include "hmi.h"
 #include "status.h"
@@ -30,6 +31,7 @@
 #include "freertos/queue.h"
 #include "freertos/task.h"
 
+
 static const char *TAG = "hmi";
 
 /* ========================================================================== */
@@ -41,11 +43,11 @@ static const char *TAG = "hmi";
 #define HMI_LCD_WIDTH       480U
 #define HMI_LCD_HEIGHT      320U
 
-#define HMI_PIN_CS          41
-#define HMI_PIN_DC          42
+#define HMI_PIN_CS          48 
+#define HMI_PIN_DC          47
 #define HMI_PIN_RST         21
 
-#define HMI_PIN_BUTTON      47
+#define HMI_PIN_BUTTON      42
 
 #define HMI_SPI_CLOCK_HZ    (20 * 1000 * 1000)
 
@@ -54,6 +56,8 @@ static const char *TAG = "hmi";
 #define HMI_REFRESH_PERIOD_MS 5000U
 
 #define HMI_BUTTON_DEBOUNCE_MS 150U
+
+#define HMI_BUTTON_LONG_PRESS_MS 7000U
 
 /* ========================================================================== */
 /* ILI9488 commands                                                           */
@@ -149,6 +153,7 @@ static volatile uint32_t button_interrupt_count = 0;
 
 static volatile TickType_t button_last_interrupt = 0;
 
+static TickType_t button_press_start = 0;
 /*
 
 * One complete RGB666 row.
@@ -169,6 +174,7 @@ static volatile TickType_t button_last_interrupt = 0;
   */
   static uint8_t glyph_buffer[2048];
 
+  
 /* ========================================================================== */
 /* Private prototypes                                                         */
 /* ========================================================================== */
@@ -231,28 +237,20 @@ void *arg
 * @param arg Unused interrupt argument.
   */
 static void IRAM_ATTR hmi_button_isr_handler(void *arg)
-
 {
-(void)arg;
+    (void)arg;
 
-const TickType_t now = xTaskGetTickCountFromISR();
+    const TickType_t now = xTaskGetTickCountFromISR();
 
-if ((now - button_last_interrupt) <
-    pdMS_TO_TICKS(HMI_BUTTON_DEBOUNCE_MS))
-{
+    if ((now - button_last_interrupt) < pdMS_TO_TICKS(HMI_BUTTON_DEBOUNCE_MS))
+    {
+        return;
+    }
 
-    return;
+    button_last_interrupt = now;
+    button_interrupt_count++;
+    button_pressed = true;
 }
-
-button_last_interrupt = now;
-
-button_interrupt_count++;
-
-button_pressed = true;
-
-
-}
-
 
 /* ========================================================================== */
 /* Public task                                                                */
@@ -262,11 +260,9 @@ void task_hmi(void *arg)
 {
     app_context_t *ctx = (app_context_t *)arg;
 
-
     if (ctx == NULL ||
         ctx->queue_system_to_hmi == NULL)
     {
-
         ESP_LOGE(TAG, "invalid HMI context");
 
         vTaskDelete(NULL);
@@ -277,46 +273,38 @@ void task_hmi(void *arg)
 
     esp_err_t err = hmi_init();
 
-    if (err != ESP_OK) {
+    if (err != ESP_OK)
+    {
+        ESP_LOGE(
+            TAG,
+            "HMI initialization failed: %s",
+            esp_err_to_name(err)
+        );
 
-
-    ESP_LOGE(
-        TAG,
-        "HMI initialization failed: %s",
-        esp_err_to_name(err)
-    );
-
-    vTaskDelete(NULL);
-    return;
-
-
+        vTaskDelete(NULL);
+        return;
     }
 
     /*
-
-    * STATUS is the default screen.
-    */
+     * STATUS is the default screen.
+     */
     current_screen = HMI_SCREEN_STATUS;
 
     err = status_init();
 
-    if (err != ESP_OK) {
+    if (err != ESP_OK)
+    {
+        ESP_LOGE(
+            TAG,
+            "STATUS initialization failed: %s",
+            esp_err_to_name(err)
+        );
 
-
-    ESP_LOGE(
-        TAG,
-        "STATUS initialization failed: %s",
-        esp_err_to_name(err)
-    );
-
-    vTaskDelete(NULL);
-    return;
-
-
+        vTaskDelete(NULL);
+        return;
     }
 
-    hmi_data_t last_data =
-    {0};
+    hmi_data_t last_data = {0};
 
     bool have_data = false;
     bool drawn_once = false;
@@ -326,72 +314,109 @@ void task_hmi(void *arg)
 
     while (true)
     {
-
+        /*
+         * Detect button press.
+         */
         if (button_pressed)
-    {
+        {
+            button_pressed = false;
 
+            button_press_start = xTaskGetTickCount();
 
-    button_pressed = false;
+            ESP_LOGI(
+                TAG,
+                "Button pressed | interrupts=%lu",
+                (unsigned long)button_interrupt_count
+            );
+        }
 
-    ESP_LOGI(
-        TAG,
-        "Button event detected | interrupts=%lu",
-        (unsigned long)button_interrupt_count
-    );
+        /*
+         * Handle button while it remains pressed.
+         */
+        if (button_press_start != 0)
+        {
+            if (gpio_get_level(HMI_PIN_BUTTON) == 0)
+            {
+                TickType_t now = xTaskGetTickCount();
 
-    hmi_screen_t next_screen;
+                /*
+                 * Long press: restart ESP32-S3.
+                 */
+                if ((now - button_press_start) >=
+                    pdMS_TO_TICKS(HMI_BUTTON_LONG_PRESS_MS))
+                {
+                    ESP_LOGW(
+                        TAG,
+                        "Long button press detected - restarting ESP32"
+                    );
 
-    if (current_screen == HMI_SCREEN_STATUS)
-    {
+                    vTaskDelay(pdMS_TO_TICKS(100));
 
-        next_screen = HMI_SCREEN_FFT;
+                    esp_restart();
+                }
+            }
+            else
+            {
+                /*
+                 * Button was released.
+                 */
+                TickType_t press_duration =
+                    xTaskGetTickCount() - button_press_start;
 
-    } else
-    {
+                button_press_start = 0;
 
-        next_screen = HMI_SCREEN_STATUS;
-    }
+                /*
+                 * Short press: switch screen.
+                 */
+                if (press_duration <
+                    pdMS_TO_TICKS(HMI_BUTTON_LONG_PRESS_MS))
+                {
+                    hmi_screen_t next_screen;
 
-    err = hmi_switch_screen(next_screen);
+                    if (current_screen == HMI_SCREEN_STATUS)
+                    {
+                        next_screen = HMI_SCREEN_FFT;
+                    }
+                    else
+                    {
+                        next_screen = HMI_SCREEN_STATUS;
+                    }
 
-    if (err != ESP_OK)
-    {
+                    err = hmi_switch_screen(next_screen);
 
-        ESP_LOGE(
-            TAG,
-            "screen switch failed: %s",
-            esp_err_to_name(err)
-        );
+                    if (err != ESP_OK)
+                    {
+                        ESP_LOGE(
+                            TAG,
+                            "screen switch failed: %s",
+                            esp_err_to_name(err)
+                        );
+                    }
+                    else
+                    {
+                        drawn_once = false;
+                        render_pending = have_data;
+                        next_render = 0;
 
-    } else
-    {
+                        ESP_LOGI(
+                            TAG,
+                            "screen changed to %s",
+                            next_screen == HMI_SCREEN_STATUS
+                                ? "STATUS"
+                                : "FFT"
+                        );
+                    }
+                }
+            }
+        }
 
-        drawn_once = false;
-        render_pending = have_data;
-        next_render = 0;
-
-        ESP_LOGI(
-            TAG,
-            "screen changed to %s",
-            next_screen == HMI_SCREEN_STATUS
-                ? "STATUS"
-                : "FFT"
-        );
-    }
-
-
-    }
-
-
-        hmi_data_t rx =
-    {0};
+        hmi_data_t rx = {0};
 
         if (xQueueReceive(
                 ctx->queue_system_to_hmi,
                 &rx,
                 pdMS_TO_TICKS(200)) == pdTRUE)
-    {
-
+        {
             last_data = rx;
 
             have_data = true;
@@ -399,31 +424,24 @@ void task_hmi(void *arg)
         }
 
         if (have_data && render_pending)
-    {
-
-            TickType_t now =
-                xTaskGetTickCount();
+        {
+            TickType_t now = xTaskGetTickCount();
 
             if (!drawn_once ||
                 (int32_t)(now - next_render) >= 0)
-    {
-
-                err = hmi_update_screen(
-                    &last_data
-                );
+            {
+                err = hmi_update_screen(&last_data);
 
                 if (err != ESP_OK)
-    {
-
+                {
                     ESP_LOGE(
                         TAG,
                         "HMI update failed: %s",
                         esp_err_to_name(err)
                     );
-
-                } else
-    {
-
+                }
+                else
+                {
                     drawn_once = true;
                     render_pending = false;
 
@@ -436,8 +454,6 @@ void task_hmi(void *arg)
             }
         }
     }
-
-
 }
 
 /* ========================================================================== */
