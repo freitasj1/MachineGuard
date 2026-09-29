@@ -1875,13 +1875,13 @@ deve continuar funcionando localmente.
 
 ## Detecção
 
-* [ ] 1/3 features anormais.
-* [ ] 2/3 features anormais.
-* [ ] 3/3 features anormais.
-* [ ] HEALTHY → ALARM.
-* [ ] ALARM → HEALTHY.
-* [ ] Interrupção da sequência anormal.
-* [ ] Interrupção da sequência de recuperação.
+* [X] 1/3 features anormais.
+* [X] 2/3 features anormais.
+* [X] 3/3 features anormais.
+* [X] HEALTHY → ALARM.
+* [X] ALARM → HEALTHY.
+* [X] Interrupção da sequência anormal.
+* [X] Interrupção da sequência de recuperação.
 
 ## NO_MOTOR
 
@@ -1905,8 +1905,8 @@ deve continuar funcionando localmente.
 * [x] TLS.
 * [x] ThingsBoard.
 * [x] Recebimento de dados.
-* [ ] Refinamento final do dashboard.
-* [ ] Teste com perda de conectividade.
+* [X] Refinamento final do dashboard.
+* [X] Teste com perda de conectividade.
 
 ## DAC
 

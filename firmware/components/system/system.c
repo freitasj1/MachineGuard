@@ -11,7 +11,12 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "driver/gpio.h"
 #include "app_context.h"
+#include "esp_err.h"
+#include "freertos/idf_additions.h"
+#include "hal/gpio_types.h"
+#include "soc/gpio_num.h"
 #include "telemetry.h"
 
 #include "esp_log.h"
@@ -65,6 +70,12 @@ static const char *TAG = "system";
  * @brief Initial Z-score threshold.
  */
 #define SYSTEM_ZSCORE_THRESHOLD         (3.0f)
+
+#define SYSTEM_BUZZER_GPIO              GPIO_NUM_16
+#define SYSTEM_BUZZER_ON_TIME_MS        200U
+#define SYSTEM_BUZZER_OFF_TIME_MS       200U
+#define SYSTEM_BUZZER_PAUSE_TIME_MS     800U
+
 
 /* ============================================================================
  * Private types
@@ -138,6 +149,8 @@ typedef struct
 
 static system_context_t s_system;
 
+static TaskHandle_t s_buzzer_task = NULL;
+
 /* ============================================================================
  * Private function prototypes
  * ========================================================================== */
@@ -182,6 +195,12 @@ static const char *state_to_string(system_state_t state);
 static void reset_monitoring_context(void);
 
 static bool process_motor_presence(const dsp_result_t *result);
+
+static void buzzer_init(void);
+static void task_buzzer(void *arg);
+static void buzzer_start(void);
+static void buzzer_stop(void);
+
 /* ============================================================================
  * Public function implementations
  * ========================================================================== */
@@ -202,6 +221,8 @@ void task_system(void *arg)
     }
 
     reset_context();
+
+    buzzer_init();
 
     ESP_LOGI(
         TAG,
@@ -734,6 +755,7 @@ static void process_monitoring(const dsp_result_t *result)
                 s_system.consecutive_abnormal = 0U;
                 s_system.consecutive_normal = 0U;
 
+
                 ESP_LOGW(
                     TAG,
                     "state changed: %s",
@@ -1047,4 +1069,86 @@ static bool process_motor_presence(const dsp_result_t *result)
     }
 
     return false;
+}
+
+static void buzzer_init(void)
+{
+    const gpio_config_t config = {
+        .pin_bit_mask = (1ULL << SYSTEM_BUZZER_GPIO),
+        .mode = GPIO_MODE_OUTPUT,
+        .pull_up_en = GPIO_PULLUP_DISABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_DISABLE,
+    };
+
+    ESP_ERROR_CHECK(gpio_config(&config));
+    ESP_ERROR_CHECK(gpio_set_level(SYSTEM_BUZZER_GPIO, 0));
+
+    if (xTaskCreatePinnedToCore(
+            task_buzzer,
+            "buzzer",
+            2048,
+            NULL,
+            5,
+            &s_buzzer_task,
+            1) != pdPASS) {
+
+        ESP_LOGE(TAG, "failed to create buzzer task");
+        s_buzzer_task = NULL;
+    }
+}
+
+static void task_buzzer(void *arg)
+{
+    (void)arg;
+
+    while (true) {
+
+        if (s_system.state != SYSTEM_STATE_ALARM) {
+
+            gpio_set_level(SYSTEM_BUZZER_GPIO, 0);
+
+            vTaskDelay(pdMS_TO_TICKS(100U));
+
+            continue;
+        }
+
+        gpio_set_level(SYSTEM_BUZZER_GPIO, 1);
+
+        vTaskDelay(
+            pdMS_TO_TICKS(SYSTEM_BUZZER_ON_TIME_MS)
+        );
+
+        gpio_set_level(SYSTEM_BUZZER_GPIO, 0);
+
+        vTaskDelay(
+            pdMS_TO_TICKS(SYSTEM_BUZZER_OFF_TIME_MS)
+        );
+
+        if (s_system.state != SYSTEM_STATE_ALARM) {
+            continue;
+        }
+
+        gpio_set_level(SYSTEM_BUZZER_GPIO, 1);
+
+        vTaskDelay(
+            pdMS_TO_TICKS(SYSTEM_BUZZER_ON_TIME_MS)
+        );
+
+        gpio_set_level(SYSTEM_BUZZER_GPIO, 0);
+
+        vTaskDelay(
+            pdMS_TO_TICKS(SYSTEM_BUZZER_PAUSE_TIME_MS)
+        );
+    }
+}
+
+static void buzzer_start(void)
+{
+    ESP_LOGW(TAG, "buzzer alarm activated");
+}
+
+static void buzzer_stop(void)
+{
+    gpio_set_level(SYSTEM_BUZZER_GPIO, 0);
 }
